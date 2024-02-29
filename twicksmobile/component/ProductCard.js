@@ -10,9 +10,12 @@ import React from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 
-const ProductCard = () => {
+const ProductCard = ({item}) => {
+
+  
   return (
     <Pressable
+    
       style={{
         marginHorizontal: 10,
         marginVertical: 15,
@@ -40,8 +43,8 @@ const ProductCard = () => {
       >
         <View style={{ marginTop: 30, display: "flex", flexDirection: "row" ,justifyContent:"space-between"}}>
           <View style={{marginLeft:10}}>
-            <Text style={{color:"#1E786F"}}>Water-Fertilizer</Text>
-            <Text>Rs.1052/-</Text>
+            <Text style={{color:"#1E786F"}}>{item?.title}</Text>
+            <Text>Rs. {item?.price}</Text>
           </View>
           <Pressable style={{ backgroundColor: "pink", borderRadius: 90,marginRight:10,height:30,width:30 }}>
             <AntDesign name="arrowright" size={24} color="black" />
