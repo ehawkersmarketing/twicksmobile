@@ -26,6 +26,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+
 // import { SliderBox } from "react-native-image-slider-box";
 
 const HomeScreen = () => {
