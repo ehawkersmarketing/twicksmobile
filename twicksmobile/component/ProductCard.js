@@ -9,14 +9,17 @@ import {
 import React from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+
 
 const ProductCard = ({item}) => {
+  const navigation = useNavigation();
 
-  
   return (
     <Pressable
-    
-      style={{
+    onPress={() => navigation.navigate("SingleShop")}
+    style={{
+
         marginHorizontal: 10,
         marginVertical: 15,
         backgroundColor: "white",

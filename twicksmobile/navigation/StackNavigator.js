@@ -51,9 +51,9 @@ const StackNavigator = () => {
             headerShown: false,
             tabBarIcon: ({ focused }) =>
               focused ? (
-                <Entypo name="home" size={24} color="#008E97" />
+                <Entypo name="shop" size={24} color="#008E97" />
               ) : (
-                <AntDesign name="home" size={24} color="black" />
+                <Entypo name="shop" size={24} color="black" />
               ),
           }}
         />
@@ -72,42 +72,34 @@ const StackNavigator = () => {
               ),
           }}
         />
-        <Tab.Screen
-          name="Cart"
-          component={CartScreen}
-          options={{
-            tabBarLabel: "Cart",
-            tabBarLabelStyle: { color: "#008E97" },
-            headerShown: true,
-            tabBarIcon: ({ focused }) =>
-              focused ? (
-                <AntDesign name="shoppingcart" size={24} color="#008E97" />
-              ) : (
-                <AntDesign name="shoppingcart" size={24} color="black" />
-              ),
-          }}
-        />
-        <Tab.Screen
-          name="Profile"
-          component={ProfileScreen}
-          options={{
-            tabBarLabel: "Profile",
-            tabBarLabelStyle: { color: "#008E97" },
-            headerShown: true,
-            tabBarIcon: ({ focused }) =>
-              focused ? (
-                <Ionicons name="person" size={24} color="#008E97" />
-              ) : (
-                <Ionicons name="person-outline" size={24} color="black" />
-              ),
-          }}
-        />
       </Tab.Navigator>
     );
   }
   return (
     <NavigationContainer>
-      <BottomTabs />
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Main"
+          component={BottomTabs}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Profile"
+          component={ProfileScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Cart"
+          component={CartScreen}
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+          name="SingleShop"
+          component={SingleShopScreen}
+          options={{ headerShown: false }}
+        />
+      </Stack.Navigator>
     </NavigationContainer>
   );
 };
