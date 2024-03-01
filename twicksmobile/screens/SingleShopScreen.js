@@ -12,24 +12,18 @@ import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/core";
 
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from "axios";
 import { Feather } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { Fontisto } from "@expo/vector-icons";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../redux/cartReducer";
 
-const SingleShopScreen = () => {
-  const navigation = useNavigation();
-
-  const [addedToCart, setAddedToCart] = useState(false);
-  const dispatch = useDispatch();
-  const addItemToCart = (item) => {
-    setAddedToCart(true);
-    dispatch(addToCart(item));
-    setTimeout(() => {
-      setAddedToCart(false);
-    }, 60000);
-  };
+const SingleShopScreen = ({item, route}) => {
+  
+  const { productId, productName, productDetais, productImage, productCategory, productPrice} = route.params;
+  
   return (
     <SafeAreaView>
       <ScrollView style={{ backgroundColor: "#1E786F", height: "100%" }}>
@@ -50,7 +44,7 @@ const SingleShopScreen = () => {
             onPress={() => navigation.navigate("Shop")}
 
           />
-          <Text style={{ fontSize: 28, color: "white" }}>Title</Text>
+          <Text style={{ fontSize: 28, color: "white" }}>{ }</Text>
           <Feather
             name="search"
             size={24}
@@ -68,7 +62,7 @@ const SingleShopScreen = () => {
               width: "100%",
               backgroundColor: "transparent",
              }}
-            source={require("../assets/product.png")}
+            source={{uri: productImage}}
           />
         </View>
         <ImageBackground
@@ -80,8 +74,8 @@ const SingleShopScreen = () => {
           }}
         >
           <View style={{ alignItems: "flex-start",paddingTop:40 }}>
-            <Text style={{ color: "#28635D", fontSize: 25 }}>Seeds</Text>
-            <Text style={{ fontSize: 40 }}>Emmoter</Text>
+            <Text style={{ color: "#28635D", fontSize: 25 }}>{productCategory}</Text>
+            <Text style={{ fontSize: 40 }}>{productName}</Text>
             <View
               style={{
                 display: "flex",
@@ -115,15 +109,12 @@ const SingleShopScreen = () => {
             >
               Description
             </Text>
-            <Text>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna. Lorem ipsum
-              dolor sit amet, consectetur adipiscing elit.
+            <Text>{productDetais}
             </Text>
           </View>
           <View>
             <View>
-              <Text style={{ fontSize: 25 }}>Rs. 1000/-</Text>
+              <Text style={{ fontSize: 25 }}>{productPrice}</Text>
               <Text style={{ color: "gray" }}>Total Price</Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>

@@ -13,13 +13,9 @@ import ProfileScreen from "../screens/ProfileScreen";
 import ShopScreen from "../screens/ShopScreen";
 import ServiceScreen from "../screens/ServiceScreen";
 import SingleShopScreen from "../screens/SingleShopScreen";
-
-import { Feather } from "@expo/vector-icons";
-import { Ionicons } from "@expo/vector-icons";
-import { MaterialIcons } from "@expo/vector-icons";
+import OrderConfirmationScreen from "../screens/OrderConfirmationScreen";
 import { Entypo } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
 
 const StackNavigator = () => {
   const Stack = createNativeStackNavigator();
@@ -79,25 +75,39 @@ const StackNavigator = () => {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
-          name="Main"
+          name="BottomTabs"
           component={BottomTabs}
           options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Profile"
           component={ProfileScreen}
-          options={{ headerShown: false }}
+          options={{ headerShown: true }}
         />
         <Stack.Screen
           name="Cart"
           component={CartScreen}
-          options={{ headerShown: false }}
+          options={{ headerShown: true }}
         />
-
         <Stack.Screen
-          name="SingleShop"
+          name="Product"
           component={SingleShopScreen}
-          options={{ headerShown: false }}
+          options={{ headerShown: true }}
+        />
+        <Stack.Screen
+          name="Login"
+          component={LoginScreen}
+          options={{ headerShown: true }}
+        />
+        <Stack.Screen
+          name="Register"
+          component={RegisterScreen}
+          options={{ headerShown: true }}
+        />
+        <Stack.Screen
+          name="OrderConfirmation"
+          component={OrderConfirmationScreen}
+          options={{ headerShown: true }}
         />
       </Stack.Navigator>
     </NavigationContainer>
