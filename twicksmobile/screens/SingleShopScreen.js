@@ -17,9 +17,6 @@ import axios from "axios";
 import { Feather } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { Fontisto } from "@expo/vector-icons";
-import { useDispatch } from "react-redux";
-import { addToCart } from "../redux/cartReducer";
-
 const SingleShopScreen = ({item, route}) => {
   
   const { productId, productName, productDetais, productImage, productCategory, productPrice} = route.params;
@@ -27,31 +24,7 @@ const SingleShopScreen = ({item, route}) => {
   return (
     <SafeAreaView>
       <ScrollView style={{ backgroundColor: "#1E786F", height: "100%" }}>
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            padding: "3%",
-            flex: 1,
-          }}
-        >
-          <Ionicons
-            name="arrow-back"
-            size={24}
-            color="white"
-            style={{ marginLeft: 20 }}
-            onPress={() => navigation.navigate("Shop")}
-
-          />
-          <Text style={{ fontSize: 28, color: "white" }}>{ }</Text>
-          <Feather
-            name="search"
-            size={24}
-            color="white"
-            style={{ marginRight: 20 }}
-          />
-        </View>
+        
         <View style={{}}>
           <Image
             style={{
@@ -101,7 +74,7 @@ const SingleShopScreen = ({item, route}) => {
           <View>
             <Text
               style={{
-                fontSize: 20,
+                fontSize: 25,
                 fontWeight: 600,
                 paddingBottom: 20,
                 paddingTop: "4%",
@@ -109,12 +82,12 @@ const SingleShopScreen = ({item, route}) => {
             >
               Description
             </Text>
-            <Text>{productDetais}
+            <Text style={{fontSize:20}}>{productDetais}
             </Text>
           </View>
-          <View>
+          <View style={{flexDirection:"row",justifyContent:"space-between",paddingVertical:"8%"}}>
             <View>
-              <Text style={{ fontSize: 25 }}>{productPrice}</Text>
+              <Text style={{ fontSize: 25 }}>{productPrice}/-</Text>
               <Text style={{ color: "gray" }}>Total Price</Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -125,7 +98,6 @@ const SingleShopScreen = ({item, route}) => {
           </View>
           <View
             style={{
-              flex: 1,
               alignItems: "center",
               justifyContent: "center",
               flexDirection: "row",
