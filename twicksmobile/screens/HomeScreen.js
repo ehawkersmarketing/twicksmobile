@@ -11,26 +11,119 @@ import {
   Button,
 } from "react-native";
 import React, { useState, useEffect, useCallback, useContext } from "react";
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from "react-native-responsive-screen";
+import { useFetch } from "../hooks/api_hook";
 import ProductCard from "../component/ProductCard";
 import HomeImage from "../component/HomeImage";
 import CategoryComponent from "../component/CategoryComponent";
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { Feather } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
-import { MaterialIcons } from "@expo/vector-icons";
-import { Entypo } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import axios from 'axios';
-// import { SliderBox } from "react-native-image-slider-box";
+import axios from "axios";
 
 const HomeScreen = () => {
+  const navigate = useNavigation();
+  const [open, setOpen] = useState(false);
+  const [activeFilter, setActiveFilter] = useState({
+    filter: "",
+  });
+  const [openForSort, setOpenForSort] = useState(false);
+  // const user = JSON.parse(AsyncStorage.getItem("user"));
+  // const { data: cart } = useFetch(`/api/getCartByUser/${user?._id}`);
+  const [searchField, setSearchField] = useState("");
+  // const filter = ["Price: High To Low", "Price: Low To High"];
+  const { data: products, setData: setProducts } = useFetch("/api/allProducts");
+  const [searchProducts, setSearchProducts] = useState([]);
+
+  const search = async (text) => {
+    if (text !== "") {
+      try {
+        const { data } = await axios.post(
+          `http://localhost:8080/api/searchProduct`,
+          {
+            search: text,
+          }
+        );
+        setSearchProducts(data.data);
+      } catch (error) {
+        toast.error(`${error.message}`, {
+          position: "bottom-right",
+          autoClose: 8000,
+          pauseOnHover: true,
+          draggable: true,
+          theme: "dark",
+        });
+      }
+    } else {
+      setSearchProducts(undefined);
+      setActiveFilter({ ["filter"]: "" });
+    }
+  };
+
+  useEffect(() => {
+    search(searchField);
+  }, [searchField]);
+
+  const { data: categories } = useFetch("/api/allCategory");
+
+  const applyFilter = (e, index) => {
+    if (index == 2) {
+      if (e.target.value === "select the Category") {
+        setSearchField("");
+        setActiveFilter({ [e.target.name]: "" });
+      } else {
+        setSearchField(e.target.value);
+        setActiveFilter({ [e.target.name]: e.target.value });
+      }
+      setOpen(false);
+    } else {
+      if (index == 1) {
+        if (activeFilter.filter === "") {
+          setProducts(
+            products.sort(function (a, b) {
+              return a.price - b.price;
+            })
+          );
+          setActiveFilter({ ["filter"]: `` });
+          document
+            .getElementById("allproduct")
+            .scrollIntoView({ behavior: "smooth", block: "start" });
+        } else {
+          setProducts(
+            searchProducts.sort(function (a, b) {
+              return a.price - b.price;
+            })
+          );
+          setActiveFilter({ ["filter"]: `` });
+        }
+      } else {
+        if (activeFilter.filter === "") {
+          setProducts(
+            products.sort(function (a, b) {
+              return b.price - a.price;
+            })
+          );
+
+          setActiveFilter({ ["filter"]: `` });
+          document
+            .getElementById("allproduct")
+            .scrollIntoView({ behavior: "smooth", block: "start" });
+        } else {
+          setProducts(
+            searchProducts.sort(function (a, b) {
+              return b.price - a.price;
+            })
+          );
+          setActiveFilter({ ["filter"]: `` });
+        }
+      }
+      setOpen(false);
+    }
+    setOpenForSort(false);
+    setOpen(false);
+  };
+
   const navigation = useNavigation();
+  
   return (
     <>
       <SafeAreaView style={styles.homemain}>
@@ -46,8 +139,18 @@ const HomeScreen = () => {
               />
             </Pressable>
             <Pressable style={styles.headericons}>
-              <Ionicons name="person-outline" size={24} color="black" onPress={() => navigation.navigate("Profile")}/>
-              <AntDesign name="shoppingcart" size={24} color="black" onPress={() => navigation.navigate("Cart")}/>
+              <Ionicons
+                name="person-outline"
+                size={24}
+                color="black"
+                onPress={() => navigation.navigate("Profile")}
+              />
+              <AntDesign
+                name="shoppingcart"
+                size={24}
+                color="black"
+                onPress={() => navigation.navigate("Cart")}
+              />
             </Pressable>
           </View>
           <View style={styles.searchmain}>
@@ -57,6 +160,7 @@ const HomeScreen = () => {
                 style={{
                   marginLeft: 20,
                 }}
+                s
               />
               <AntDesign
                 style={{ paddingLeft: 10, marginRight: 20 }}
@@ -76,27 +180,18 @@ const HomeScreen = () => {
               />
             </View>
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              {/* {list.map((item, index) => ( */}
-              <CategoryComponent />
-              <CategoryComponent />
-              <CategoryComponent />
-              <CategoryComponent />
-              <CategoryComponent />
-              <CategoryComponent />
-              <CategoryComponent />
-              <CategoryComponent />
-              <CategoryComponent />
-              <CategoryComponent />
-              <CategoryComponent />
-              <CategoryComponent />
-              {/* ))} */}
+            {activeFilter.filter === "" &&
+              searchField === "" &&
+              categories &&
+              categories?.map((item, index) => {
+                return <CategoryComponent item={item} key={index} />;
+              })}
             </ScrollView>
           </View>
           <View>
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               <HomeImage />
-              {/* <HomeImage />
-              <HomeImage /> */}
+             
             </ScrollView>
           </View>
           <View>
@@ -119,8 +214,12 @@ const HomeScreen = () => {
               flexWrap: "wrap",
             }}
           >
-            <ProductCard />
-            
+            {activeFilter.filter === "" &&
+              searchField === "" &&
+              products &&
+              products?.map((item, index) => {
+                return <ProductCard item={item} key={index} />;
+              })}
           </View>
         </ScrollView>
       </SafeAreaView>

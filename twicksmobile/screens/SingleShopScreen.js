@@ -9,6 +9,8 @@ import {
   Pressable,
 } from "react-native";
 import React, { useState } from "react";
+import { useNavigation } from "@react-navigation/core";
+
 
 import { Feather } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
@@ -17,6 +19,8 @@ import { useDispatch } from "react-redux";
 import { addToCart } from "../redux/cartReducer";
 
 const SingleShopScreen = () => {
+  const navigation = useNavigation();
+
   const [addedToCart, setAddedToCart] = useState(false);
   const dispatch = useDispatch();
   const addItemToCart = (item) => {
@@ -43,6 +47,8 @@ const SingleShopScreen = () => {
             size={24}
             color="white"
             style={{ marginLeft: 20 }}
+            onPress={() => navigation.navigate("Shop")}
+
           />
           <Text style={{ fontSize: 28, color: "white" }}>Title</Text>
           <Feather
@@ -103,36 +109,35 @@ const SingleShopScreen = () => {
               style={{
                 fontSize: 20,
                 fontWeight: 600,
-                // paddingBottom: 20,
-                paddingTop: "6%",
+                paddingBottom: 20,
+                paddingTop: "4%",
               }}
             >
               Description
             </Text>
-            <Text style={{paddingVertical:20}}>
+            <Text>
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
               eiusmod tempor incididunt ut labore et dolore magna. Lorem ipsum
               dolor sit amet, consectetur adipiscing elit.
             </Text>
           </View>
-          <View style={{flexDirection:"row",justifyContent:"space-between",paddingTop:60
-}}>
+          <View>
             <View>
               <Text style={{ fontSize: 25 }}>Rs. 1000/-</Text>
               <Text style={{ color: "gray" }}>Total Price</Text>
             </View>
-            <View style={{ flexDirection: "row", alignItems: "center" ,paddingRight:10}}>
-              <Text style={{ backgroundColor: "#C8A33D", padding: 10,borderRadius:10 }}>-</Text>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Text style={{ backgroundColor: "#C8A33D", padding: 10 }}>-</Text>
               <Text style={{ padding: 10 }}>1</Text>
               <Text style={{ backgroundColor: "#C8A33D", padding: 10 }}>+</Text>
             </View>
           </View>
           <View
             style={{
+              flex: 1,
               alignItems: "center",
               justifyContent: "center",
               flexDirection: "row",
-              paddingVertical:10
             }}
           >
             <Pressable
@@ -143,6 +148,7 @@ const SingleShopScreen = () => {
                 borderRadius: 10,
                 justifyContent: "center",
                 alignItems: "center",
+                // marginHorizontal: 10,
                 marginTop: 10,
               }}
             >

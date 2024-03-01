@@ -22,6 +22,7 @@ const ShopScreen = () => {
   //   } catch(e) {
   //   }
   //  }
+  
   const navigate = useNavigation();
   const [open, setOpen] = useState(false);
   const [activeFilter, setActiveFilter] = useState({
@@ -137,12 +138,16 @@ const ShopScreen = () => {
             justifyContent: "space-between",
           }}
         >
-          <Text style={{ fontSize: 23 }}>Categories</Text>
-          <Feather name="search" size={24} color="black" />
+          <Text style={{ fontSize: 23 ,padding:10}}>Categories</Text>
+          <Feather name="search" size={24} color="black" style={{padding:10}}/>
         </View>
         <ScrollView horizontal showsHorizontalScrollIndicator>
-          <ShopCategory />
-          <ShopCategory />
+        {activeFilter.filter === "" &&
+              searchField === "" &&
+              categories &&
+              categories?.map((item, index) => {
+                return <ShopCategory item={item} key={index} />;
+              })}
         </ScrollView>
         <View
           style={{
