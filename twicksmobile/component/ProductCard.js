@@ -17,7 +17,7 @@ const ProductCard = ({item}) => {
 
   return (
     <Pressable
-    onPress={() => navigation.navigate("SingleShop")}
+    onPress={() => navigation.navigate('SingleShop', {productId: '{item?._Id}'} )}
     style={{
 
         marginHorizontal: 10,
@@ -30,15 +30,15 @@ const ProductCard = ({item}) => {
       }}
     >
       <View style={{flexDirection: 'row', padding: 10,alignContent:"center", justifyContent:"space-between"}}>
-        <Text style={{fontSize:15}}>Fertilizer</Text>
+        <Text style={{fontSize:15}}>{item?.category.category}</Text>
         <View style={{flexDirection: 'row', alignItems:"center"}}>
           <FontAwesome name="star" size={24} color="yellow" />
-          <Text>4.5</Text>
+          <Text>{item?.reviews}</Text>
         </View>
       </View>
       <Image
         style={{ width: 150, height: 130, resizeMode: "contain" ,marginTop:-20}}
-        source={require("../assets/product.png")}
+        source={{uri: item?.image}}
       />
       <ImageBackground
         style={{ width: 175, height: 90, marginTop: -30 ,resizeMode:"contain"}}

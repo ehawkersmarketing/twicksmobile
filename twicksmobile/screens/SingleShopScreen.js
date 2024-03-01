@@ -9,23 +9,17 @@ import {
   Pressable,
 } from "react-native";
 import React, { useState } from "react";
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from "axios";
 import { Feather } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { Fontisto } from "@expo/vector-icons";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../redux/cartReducer";
 
-const SingleShopScreen = () => {
-  const [addedToCart, setAddedToCart] = useState(false);
-  const dispatch = useDispatch();
-  const addItemToCart = (item) => {
-    setAddedToCart(true);
-    dispatch(addToCart(item));
-    setTimeout(() => {
-      setAddedToCart(false);
-    }, 60000);
-  };
+const SingleShopScreen = (item, route) => {
+ 
+   
   return (
     <SafeAreaView>
       <ScrollView style={{ backgroundColor: "#1E786F", height: "100%" }}>
@@ -44,7 +38,7 @@ const SingleShopScreen = () => {
             color="white"
             style={{ marginLeft: 20 }}
           />
-          <Text style={{ fontSize: 28, color: "white" }}>Title</Text>
+          <Text style={{ fontSize: 28, color: "white" }}>{item?.title}</Text>
           <Feather
             name="search"
             size={24}
@@ -62,7 +56,7 @@ const SingleShopScreen = () => {
               width: "100%",
               backgroundColor: "transparent",
              }}
-            source={require("../assets/product.png")}
+            source={{uri: item?.image}}
           />
         </View>
         <ImageBackground
