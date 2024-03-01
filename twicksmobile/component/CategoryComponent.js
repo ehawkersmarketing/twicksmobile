@@ -6,20 +6,22 @@ const CategoryComponent = ({ item}) => {
     <Pressable
       key={item?._id}
       style={{
-        margin: 18,
+        // margin: 18,
+        marginHorizontal:12,
         justifyContent: "center",
         alignItems: "center",
+        width:"5%",
+        // backgroundColor:"pink"
         // flex: 1,
       }}
     >
       <View
         style={{
-          backgroundColor: "white",
-          borderRadius: 10,
+          // backgroundColor: "white",
+          // borderRadius: 10,
           // padding: 10,
-          height: 65,
-          width: 65,
-          padding: 5,
+          height: 85,
+          width: 85,
           display: "flex",
           alignContent: "center",
           justifyContent: "center",
@@ -30,8 +32,8 @@ const CategoryComponent = ({ item}) => {
         <Image
           style={{
             resizeMode: "contain",
-            height: 55,
-            width: 55,
+            height: "100%",
+            width: 85,
 
             alignContent: "center",
             justifyContent: "center",
@@ -44,6 +46,7 @@ const CategoryComponent = ({ item}) => {
       <Text
         style={{
           textAlign: "center",
+          justifyContent:"center",
           fontSize: 12,
           fontWeight: "500",
           marginTop: 5,

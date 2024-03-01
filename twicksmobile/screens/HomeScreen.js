@@ -21,7 +21,6 @@ import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 
 const HomeScreen = () => {
-  const navigate = useNavigation();
   const [open, setOpen] = useState(false);
   const [activeFilter, setActiveFilter] = useState({
     filter: "",
@@ -123,12 +122,23 @@ const HomeScreen = () => {
   };
 
   const navigation = useNavigation();
-  
+
   return (
     <>
       <SafeAreaView style={styles.homemain}>
         <ScrollView>
-          <View style={styles.header}>
+          <View
+            style={{
+              flex: 1,
+              flexDirection: "row",
+              backgroundColor: "#FAFAFA",
+              justifyContent: "space-between",
+              alignItems: "center",
+              // gap: 10,
+              height: 60,
+              // backgroundColor: "yellow",
+            }}
+          >
             <Pressable
               onPress={() => navigation.navigate("Home")}
               style={styles.headerlogo}
@@ -180,18 +190,17 @@ const HomeScreen = () => {
               />
             </View>
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            {activeFilter.filter === "" &&
-              searchField === "" &&
-              categories &&
-              categories?.map((item, index) => {
-                return <CategoryComponent item={item} key={index} />;
-              })}
+              {activeFilter.filter === "" &&
+                searchField === "" &&
+                categories &&
+                categories?.map((item, index) => {
+                  return <CategoryComponent item={item} key={index} />;
+                })}
             </ScrollView>
           </View>
           <View>
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               <HomeImage />
-             
             </ScrollView>
           </View>
           <View>
@@ -239,8 +248,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#FAFAFA",
     justifyContent: "space-between",
     alignItems: "center",
-    gap: 10,
-    height: 60,
+    // gap: 10,
+    height: 40,
+    // backgroundColor: "yellow",
   },
   headerlogo: {
     flexDirection: "row",

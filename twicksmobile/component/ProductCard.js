@@ -6,18 +6,26 @@ import {
   ImageBackground,
   Pressable,
 } from "react-native";
-
 import React from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
-const ProductCard = ({item}) => {
+const ProductCard = ({ item }) => {
   const navigation = useNavigation();
 
   return (
     <Pressable
-    key={item._id}
-      onPress={() => navigation.navigate("SingleShop", { productId: item._id })}
+      key={item?._id}
+      onPress={() =>
+        navigation.navigate("Product", {
+          productId: item?._id,
+          productName: item?.title,
+          productImage: item?.image,
+          productDetais: item?.description,
+          productPrice: item?.price,
+          productCategory: item?.category.category,
+        })
+      }
       style={{
         marginHorizontal: 10,
         marginVertical: 15,
@@ -36,16 +44,16 @@ const ProductCard = ({item}) => {
           justifyContent: "space-between",
         }}
       >
-        <Text style={{ fontSize: 15 }}>{item.category.category}</Text>
+        <Text style={{ fontSize: 15 }}>{item?.category.category}</Text>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <FontAwesome name="star" size={15} color="#FFBB56" />
-          <Text>{item.reviews}</Text>
+          <Text>{item?.rating}</Text>
         </View>
       </View>
       <Image
         style={{
-          width: 150,
-          height: 130,
+          width: "100%",
+          height: 140,
           resizeMode: "contain",
           marginTop: -20,
         }}
