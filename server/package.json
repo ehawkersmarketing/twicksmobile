@@ -10,6 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@react-native-community/masked-view": "^0.1.11",
+    "@react-navigation/native": "^6.1.14",
     "aws-sdk": "^2.1540.0",
     "axios": "^1.6.5",
     "cookie-session": "^2.0.0",
@@ -23,6 +25,10 @@
     "nodemon": "^3.0.2",
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
+    "react-native-gesture-handler": "^2.15.0",
+    "react-native-reanimated": "^3.7.1",
+    "react-native-safe-area-context": "^4.9.0",
+    "react-native-screens": "^3.29.0",
     "uniqid": "^5.4.0"
   }
 }

@@ -1,11 +1,11 @@
 import { StyleSheet, Pressable, Text, View } from "react-native";
 import React from "react";
 
-const ShopCategory = ({ categoryName }) => {
+const ShopCategory = ({ item }) => {
   return (
     <Pressable style={styles.container}>
       <View style={styles.category}>
-        <Text style={styles.text}>All</Text>
+        <Text style={styles.text}>{item.category}</Text>
       </View>
     </Pressable>
   );

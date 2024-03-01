@@ -1,13 +1,10 @@
 import { StyleSheet, Pressable, Text, View, Image } from "react-native";
 import React from "react";
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from "react-native-responsive-screen";
 
-const CategoryComponent = () => {
+const CategoryComponent = ({ item}) => {
   return (
     <Pressable
+      key={item?._id}
       style={{
         margin: 18,
         justifyContent: "center",
@@ -22,11 +19,11 @@ const CategoryComponent = () => {
           // padding: 10,
           height: 65,
           width: 65,
-          padding:5,
+          padding: 5,
           display: "flex",
           alignContent: "center",
           justifyContent: "center",
-          textAlign:"center",
+          textAlign: "center",
           // padding:"auto"
         }}
       >
@@ -35,12 +32,12 @@ const CategoryComponent = () => {
             resizeMode: "contain",
             height: 55,
             width: 55,
-            
+
             alignContent: "center",
             justifyContent: "center",
             // padding:10
           }}
-          source={require("../assets/Category1.png")}
+          source={{uri: item?.mobIcon}}
         />
       </View>
 
@@ -52,8 +49,7 @@ const CategoryComponent = () => {
           marginTop: 5,
         }}
       >
-        {/* {item?.name} */}
-        Hydroponics
+        {item.category}
       </Text>
     </Pressable>
   );
