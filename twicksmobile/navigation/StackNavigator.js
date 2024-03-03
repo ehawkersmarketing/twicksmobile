@@ -14,6 +14,13 @@ import ShopScreen from "../screens/ShopScreen";
 import ServiceScreen from "../screens/ServiceScreen";
 import SingleShopScreen from "../screens/SingleShopScreen";
 import OrderConfirmationScreen from "../screens/OrderConfirmationScreen";
+import CheckoutScreen from "../screens/CheckoutScreen";
+import CustomerDashboardScreen from "../screens/CustomerDashboardScreen";
+import PrivacyPolicyScreen from "../screens/PrivacyPolicyScreen";
+import ReturnAndRefundScreen from "../screens/ReturnAndRefundScreen";
+import SingleServiceScreen from "../screens/SingleServiceScreen";
+import TermAndConditionScreen from "../screens/TermAndConditionScreen";
+
 import { Entypo } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 
@@ -75,7 +82,7 @@ const StackNavigator = () => {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
-          name="BottomTabs"
+          name="Back"
           component={BottomTabs}
           options={{ headerShown: false }}
         />
@@ -85,9 +92,15 @@ const StackNavigator = () => {
           options={{ headerShown: true }}
         />
         <Stack.Screen
+          name="ReturnAndRefund"
+          component={ReturnAndRefundScreen}
+          options={{ headerShown: true }}
+        />
+
+        <Stack.Screen
           name="Cart"
           component={CartScreen}
-          options={{ headerShown: true }}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Product"
@@ -107,6 +120,32 @@ const StackNavigator = () => {
         <Stack.Screen
           name="OrderConfirmation"
           component={OrderConfirmationScreen}
+          options={{ headerShown: true }}
+        />
+        <Stack.Screen
+          name="Checkout"
+          component={CheckoutScreen}
+          options={{ headerShown: true }}
+        />
+        <Stack.Screen
+          name="CustomerDashboard"
+          component={CustomerDashboardScreen}
+          options={{ headerShown: true }}
+        />
+        <Stack.Screen
+          name="PrivacyPolicy"
+          component={PrivacyPolicyScreen}
+          options={{ headerShown: true }}
+        />
+
+        <Stack.Screen
+          name="SingleService"
+          component={SingleServiceScreen}
+          options={{ headerShown: true }}
+        />
+        <Stack.Screen
+          name="TermAndCondition"
+          component={TermAndConditionScreen}
           options={{ headerShown: true }}
         />
       </Stack.Navigator>

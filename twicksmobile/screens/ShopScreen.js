@@ -40,7 +40,7 @@ const ShopScreen = () => {
     if (text !== "") {
       try {
         const { data } = await axios.post(
-          `http://localhost:8080/api/searchProduct`,
+          `https:/backend.twicks.in/api/searchProduct`,
           {
             search: text,
           }
