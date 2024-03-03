@@ -1,7 +1,7 @@
 import axios from "axios";
 import Toast from 'react-native-toast-message';
 
-const baseUrl = "http://localhost:8081";
+const baseUrl = "https://backend.twicks.in";
 
 export const getRequestWithAuth = async (url) => {
 

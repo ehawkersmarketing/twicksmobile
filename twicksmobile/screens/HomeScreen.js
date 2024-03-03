@@ -10,6 +10,7 @@ import {
   Image,
   Button,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useState, useEffect, useCallback, useContext } from "react";
 import { useFetch } from "../hooks/api_hook";
 import ProductCard from "../component/ProductCard";
@@ -20,7 +21,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 
-const HomeScreen = () => {
+const HomeScreen = ({ navigation }) => {
   const [open, setOpen] = useState(false);
   const [activeFilter, setActiveFilter] = useState({
     filter: "",
@@ -37,7 +38,7 @@ const HomeScreen = () => {
     if (text !== "") {
       try {
         const { data } = await axios.post(
-          `http://localhost:8080/api/searchProduct`,
+          `https://backend.twicks.in/api/searchProduct`,
           {
             search: text,
           }
@@ -121,12 +122,42 @@ const HomeScreen = () => {
     setOpen(false);
   };
 
-  const navigation = useNavigation();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  useEffect(() => {
+    const checkToken = async () => {
+      try {
+        const token = await AsyncStorage.getItem("token");
+        console.log("Token:", token); // Debugging line
+        if (token !== null) {
+          setIsLoggedIn(true);
+        } else {
+          setIsLoggedIn(false);
+        }
+      } catch (error) {
+        console.error("Error checking token:", error);
+      }
+    };
+
+    checkToken();
+  }, []);
+
+  const onLogOut = async () => {
+    try {
+      await AsyncStorage.clear();
+      navigation.navigate("Service");
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
+  };
   return (
     <>
       <SafeAreaView style={styles.homemain}>
         <ScrollView>
+          
+            {isLoggedIn && <Button title="Log Out" onPress={onLogOut} />}
+          
+
           <View
             style={{
               flex: 1,
