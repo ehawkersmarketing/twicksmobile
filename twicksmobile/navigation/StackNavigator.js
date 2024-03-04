@@ -15,7 +15,6 @@ import ServiceScreen from "../screens/ServiceScreen";
 import SingleShopScreen from "../screens/SingleShopScreen";
 import OrderConfirmationScreen from "../screens/OrderConfirmationScreen";
 import CheckoutScreen from "../screens/CheckoutScreen";
-import CustomerDashboardScreen from "../screens/CustomerDashboardScreen";
 import PrivacyPolicyScreen from "../screens/PrivacyPolicyScreen";
 import ReturnAndRefundScreen from "../screens/ReturnAndRefundScreen";
 import SingleServiceScreen from "../screens/SingleServiceScreen";
@@ -100,7 +99,7 @@ const StackNavigator = () => {
         <Stack.Screen
           name="Cart"
           component={CartScreen}
-          options={{ headerShown: false }}
+          options={{ headerShown: true }}
         />
         <Stack.Screen
           name="Product"
@@ -125,11 +124,6 @@ const StackNavigator = () => {
         <Stack.Screen
           name="Checkout"
           component={CheckoutScreen}
-          options={{ headerShown: true }}
-        />
-        <Stack.Screen
-          name="CustomerDashboard"
-          component={CustomerDashboardScreen}
           options={{ headerShown: true }}
         />
         <Stack.Screen

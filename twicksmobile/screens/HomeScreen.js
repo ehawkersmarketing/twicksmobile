@@ -128,7 +128,7 @@ const HomeScreen = ({ navigation }) => {
     const checkToken = async () => {
       try {
         const token = await AsyncStorage.getItem("token");
-        console.log("Token:", token); // Debugging line
+        // console.log("Token:", token); // Debugging line
         if (token !== null) {
           setIsLoggedIn(true);
         } else {
