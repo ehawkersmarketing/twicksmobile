@@ -17,14 +17,52 @@ import axios from "axios";
 import { Feather } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { Fontisto } from "@expo/vector-icons";
-const SingleShopScreen = ({item, route}) => {
-  
-  const { productId, productName, productDetais, productImage, productCategory, productPrice} = route.params;
-  
+import { useDispatch } from "react-redux";
+import { addToCart } from "../redux/cartReducer";
+
+const SingleShopScreen = () => {
+  const navigation = useNavigation();
+
+  const [addedToCart, setAddedToCart] = useState(false);
+  const dispatch = useDispatch();
+  const addItemToCart = (item) => {
+    setAddedToCart(true);
+    dispatch(addToCart(item));
+    setTimeout(() => {
+      setAddedToCart(false);
+    }, 60000);
+  };
+const SingleShopScreen = (item, route) => {
+ 
+   
   return (
     <SafeAreaView>
       <ScrollView style={{ backgroundColor: "#1E786F", height: "100%" }}>
-        
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            padding: "3%",
+            flex: 1,
+          }}
+        >
+          <Ionicons
+            name="arrow-back"
+            size={24}
+            color="white"
+            style={{ marginLeft: 20 }}
+            onPress={() => navigation.navigate("Shop")}
+
+          />
+          <Text style={{ fontSize: 28, color: "white" }}>{item?.title}</Text>
+          <Feather
+            name="search"
+            size={24}
+            color="white"
+            style={{ marginRight: 20 }}
+          />
+        </View>
         <View style={{}}>
           <Image
             style={{
@@ -35,7 +73,7 @@ const SingleShopScreen = ({item, route}) => {
               width: "100%",
               backgroundColor: "transparent",
              }}
-            source={{uri: productImage}}
+            source={{uri: item?.image}}
           />
         </View>
         <ImageBackground
@@ -47,8 +85,8 @@ const SingleShopScreen = ({item, route}) => {
           }}
         >
           <View style={{ alignItems: "flex-start",paddingTop:40 }}>
-            <Text style={{ color: "#28635D", fontSize: 25 }}>{productCategory}</Text>
-            <Text style={{ fontSize: 40 }}>{productName}</Text>
+            <Text style={{ color: "#28635D", fontSize: 25 }}>Seeds</Text>
+            <Text style={{ fontSize: 40 }}>Emmoter</Text>
             <View
               style={{
                 display: "flex",
@@ -74,7 +112,7 @@ const SingleShopScreen = ({item, route}) => {
           <View>
             <Text
               style={{
-                fontSize: 25,
+                fontSize: 20,
                 fontWeight: 600,
                 paddingBottom: 20,
                 paddingTop: "4%",
@@ -82,12 +120,15 @@ const SingleShopScreen = ({item, route}) => {
             >
               Description
             </Text>
-            <Text style={{fontSize:20}}>{productDetais}
+            <Text>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+              eiusmod tempor incididunt ut labore et dolore magna. Lorem ipsum
+              dolor sit amet, consectetur adipiscing elit.
             </Text>
           </View>
-          <View style={{flexDirection:"row",justifyContent:"space-between",paddingVertical:"8%"}}>
+          <View>
             <View>
-              <Text style={{ fontSize: 25 }}>{productPrice}/-</Text>
+              <Text style={{ fontSize: 25 }}>Rs. 1000/-</Text>
               <Text style={{ color: "gray" }}>Total Price</Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -98,6 +139,7 @@ const SingleShopScreen = ({item, route}) => {
           </View>
           <View
             style={{
+              flex: 1,
               alignItems: "center",
               justifyContent: "center",
               flexDirection: "row",
