@@ -5,7 +5,7 @@ import { useNavigation } from "@react-navigation/native";
 
 const ServiceCard = (props) => {
   const navigation = useNavigation();
-  console.log(props);
+  // console.log(props);
   const item = props.item; 
 
   return (

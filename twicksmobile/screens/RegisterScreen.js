@@ -13,7 +13,6 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
-import { useToast } from "react-native-toast-notifications";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LinearGradient } from "expo-linear-gradient";
 
@@ -25,8 +24,7 @@ const RegisterScreen = () => {
     name: "",
     checkbox: 0,
   });
-  const toast = useToast();
-
+let token ;
   useEffect(() => {
     checkToken();
   }, []);
@@ -54,8 +52,8 @@ const RegisterScreen = () => {
           phone: formField.phone,
         }
       );
-      console.log(response);
-      console.log("hiii");
+      token = response.data.token;
+      console.log(response.data.token);
       if (response.data.success) {
         Alert.alert(
           "Success",
@@ -69,7 +67,9 @@ const RegisterScreen = () => {
           ],
           { cancelable: false }
         );
+        
         await AsyncStorage.setItem("token", response.data.token);
+       
       } else if (response.data.message === "User already registered") {
         Alert.alert(
           "Error",
@@ -112,21 +112,74 @@ const RegisterScreen = () => {
       );
     }
   };
-
   const onSignUp = async () => {
     try {
-      const response = await axios.post(
-        "https://backend.twicks.in/auth/signup",
-        {
-          phone: formField.phone,
-          name: formField.userName,
-          otp: formField.otp,
+      console.log("token" , token )
+      if (token) {
+        console.log("token")
+        const { data } = await axios.post(
+          "https://backend.twicks.in/auth/verifyOtp",
+          {
+            otp: formField.otp,
+            token: token,
+          }
+        );
+  console.log("data sucess" , data)
+        if (data.success) {
+          const response = await axios.post(
+            "https://backend.twicks.in/auth/signup",
+            {
+              phone: formField.phone,
+              userName: formField.name,
+              otp: formField.otp,
+            }
+          );
+          console.log(response);
+          console.log(response.data);
+          if (response.data.success) {
+            Alert.alert(
+              "Success",
+              "User registered successfully",
+              [
+                {
+                  text: "OK",
+                  onPress: () => console.log("OK Pressed"),
+                  style: "default",
+                },
+              ],
+              { cancelable: false }
+            );
+
+            navigation.navigate("Home");
+          } else {
+            Alert.alert(
+              "Error",
+              response.data.message,
+              [
+                {
+                  text: "OK",
+                  onPress: () => console.log("OK Pressed"),
+                  style: "default",
+                },
+              ],
+              { cancelable: false }
+            );
+          }
+        } else {
+          console.log("otp does not verifed");
         }
-      );
-      if (response.data.success) {
+      }else{
+        console.log("token not found")
+      }
+    } catch (error) {
+      console.log(error)
+      if (
+        error.response &&
+        error.response.data.message === "User Already Exist"
+      ) {
         Alert.alert(
-          "Success",
-          "User registered successfully",
+          "Error",
+          "User already registered",
           [
             {
               text: "OK",
@@ -136,11 +189,10 @@ const RegisterScreen = () => {
           ],
           { cancelable: false }
         );
-        navigation.navigate("Home");
       } else {
         Alert.alert(
           "Error",
-          response.data.message,
+          "Error registering user",
           [
             {
               text: "OK",
@@ -151,8 +203,6 @@ const RegisterScreen = () => {
           { cancelable: false }
         );
       }
-    } catch (error) {
-      // Handle errors
     }
   };
 
@@ -184,27 +234,19 @@ const RegisterScreen = () => {
                 />
               </Pressable>
             </View>
-            <View
-              style={{
-                margin: 10,
-                flex: 2,
-                backgroundColor: "#20756C",
-                alignItems: "center",
-                flexDirection: "row",
-              }}
-            >
+            <View style={{ flex: 2, backgroundColor: "#20756C" }}>
               <Image
-                style={{ width: 80, height: 80 }}
+                style={{ width: "45%", height: 240 }}
                 source={require("../assets/login.png")}
               />
-              <View style={{ marginVertical: 20, alignItems: "center" }}>
-                <Text colors={["#cc2b5e", "#753a88"]} style={styles.text}>
-                  Register
-                </Text>
-              </View>
             </View>
             <View style={{ paddingHorizontal: 15, flex: 2 }}>
               <View style={styles.container}>
+                <View style={{ marginVertical: 20 }}>
+                  <Text colors={["#cc2b5e", "#753a88"]} style={styles.text}>
+                    Register
+                  </Text>
+                </View>
                 <View>
                   <View
                     style={{
@@ -294,10 +336,9 @@ const RegisterScreen = () => {
                       backgroundColor: "green",
                       borderRadius: 25,
                     }}
-                    onPress={onSignUp}
                   >
                     <Text style={{ fontSize: 30, color: "white" }}>
-                      Register
+                      Register here
                     </Text>
                   </LinearGradient>
                 </Pressable>
@@ -340,16 +381,17 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 40,
+    // borderColor: "gray",
+    // borderWidth: 1,
     padding: 10,
     backgroundColor: "#EBF6F5",
     borderLeftColor: "#44A98B",
     borderLeftWidth: 8,
   },
   text: {
-    fontSize: 55,
+    fontSize: 35,
     fontFamily: "Gill Sans",
     fontWeight: "bold",
-    color: "white",
   },
 });
 
