@@ -14,9 +14,9 @@ import generateInvoiceHTML from './../component/invoice/InvoiceTemplete';
 
 
 
-const OrderConfirmationScreen = (route) => {
-  const orderId = "65d992287644354ab1bc4137" ;
-  // const{orderId, userName } = route.params;
+const OrderConfirmationScreen = ({route}) => {
+  // const orderId = "65d992287644354ab1bc4137" ;
+  const {orderId, orderAmount } = route.params;
 
 
   const [pdfPath, setPdfPath] = useState('');
@@ -165,7 +165,7 @@ const OrderConfirmationScreen = (route) => {
                   <Text
                     style={{ color: "white", fontSize: 17, color: "#BAD8D5" }}
                   >
-                    Order Total:
+                    Order Total: {orderAmount}
                   </Text>
                 </View>
                 <View style={{ flex: 1 }}>

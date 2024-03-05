@@ -1,8 +1,8 @@
 // invoiceTemplate.js
-
+// import re
 import './invoiceTemplete.css';
-const generateInvoiceHTML = (userDetails, route) => {
-    const {OrderId} = route.params;
+const generateInvoiceHTML = ({item, userName, userEmail, userPhone, orderDate, Address, City, ZipCode, shipCharge, orderAmount}) => {
+    // const {OrderId} = route.params;
   return `
       <html>
         <head>
@@ -17,7 +17,7 @@ const generateInvoiceHTML = (userDetails, route) => {
           <div className="invoice-header">
               <div className="title">
                   <h1>
-                      <img src=${TafiLogo} />
+                      <img src="" />
                   </h1>
               </div>
           </div>
@@ -25,32 +25,32 @@ const generateInvoiceHTML = (userDetails, route) => {
             <div class="section col-6">
                 <div class="section-title">Buyer Information</div>
                 <div class="details row">
-                    <p>Name: ${order?.user.userName}</p>
-                    <p>Email: ${order?.user.email}</p>
-                    <p>Phone: +91 ${order?.user.phone}</p>
+                    <p>Name: ${userName}</p>
+                    <p>Email: ${userEmail}</p>
+                    <p>Phone: +91 ${userPhone}</p>
                 </div>
             </div>
             <div class="section col-6">
                 <div class="section-title">Invoice Details</div>
                 <div class="details row">
-                    <p>Date: ${dayjs(order?.timestamps).format('MMM D, YYYY')}</p>
-                    <p>Invoice Number: ${order?.transactionId}</p>
+                    <p>Date: {dayjs(orderDate).format('MMM D, YYYY')}</p>
+                    <p>Invoice Number: {item?.transactionId}</p>
                 </div>
             </div>
             <div class="section col-6">
                 <div class="section-title">Billing To</div>
                 <div class="details row">
-                    <p>Address: ${order?.userAddress.street}</p>
-                    <p>City: ${order?.userAddress.city}</p>
-                    <p>Pin: ${order?.userAddress.zipCode}</p>
+                    <p>Address: ${Address}</p>
+                    <p>City: ${City}</p>
+                    <p>Pin: ${ZipCode}</p>
                 </div>
             </div>
             <div class="section col-6">
                 <div class="section-title">Shipping To</div>
                 <div class="details row">
-                    <p>Address: ${order?.userAddress.street}</p>
-                    <p>City: ${order?.userAddress.city}</p>
-                    <p>Pin: ${order?.userAddress.zipCode}</p>
+                    <p>Address: ${Address}</p>
+                    <p>City: ${City}</p>
+                    <p>Pin: ${ZipCode}</p>
                 </div>
             </div>
             <div className="table-details">
@@ -69,12 +69,12 @@ const generateInvoiceHTML = (userDetails, route) => {
                         {
                             products && products.map((item, index) => {
                                 return (
-                                    <tr className="table-row" key=${index}>
-                                        <td>${index + 1}</td>
-                                        <td>${item.productId?.title}</td>
-                                        <td>${item.units}</td>
-                                        <td>${(item.productId?.price)?.toLocaleString("en-IN")}</td>
-                                        <td>${(item.productId?.price * item?.units)?.toLocaleString("en-IN")}</td>
+                                    <tr className="table-row" key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{item.productId?.title}</td>
+                                        <td>{item.units}</td>
+                                        <td>{(item.productId?.price)?.toLocaleString("en-IN")}</td>
+                                        <td>{(item.productId?.price * item?.units)?.toLocaleString("en-IN")}</td>
                                     </tr>
                                 );
                             })
@@ -86,14 +86,14 @@ const generateInvoiceHTML = (userDetails, route) => {
                             <td></td>
                             <td></td>
                             <td></td>
-                            <td>${(order?.shipment_charge)?.toLocaleString("en-IN")}</td>
+                            <td>${shipCharge?.toLocaleString("en-IN")}</td>
                         </tr>
                         <tr>
                             <td>Total Gross</td>
                             <td></td>
                             <td></td>
                             <td></td>
-                            <td>${(order?.amount + order?.shipment_charge)?.toLocaleString("en-IN")}</td>
+                            <td>${(orderAmount + shipCharge)?.toLocaleString("en-IN")}</td>
                         </tr>
                     </tfoot>
                 </table>
