@@ -1,18 +1,24 @@
-import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
-import React, {useState, useEffect} from "react";
+import {
+  SafeAreaView,
+  ScrollView,
+  Pressable,
+  StyleSheet,
+  Image,
+  TextInput,
+  View,
+} from "react-native";
+import React, { useState, useEffect } from "react";
 import { useFetch } from "../hooks/api_hook";
 import ShopCategory from "../component/ShopCategory";
 import ProductCard from "../component/ProductCard";
 import { AntDesign } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/core";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 
-
 const ShopScreen = () => {
-
-  
   //  To read data
   //  const user = async () => {
   //   try {
@@ -22,7 +28,7 @@ const ShopScreen = () => {
   //   } catch(e) {
   //   }
   //  }
-  
+
   const navigate = useNavigation();
   const [open, setOpen] = useState(false);
   const [activeFilter, setActiveFilter] = useState({
@@ -61,8 +67,6 @@ const ShopScreen = () => {
     }
   };
 
-
-
   useEffect(() => {
     search(searchField);
   }, [searchField]);
@@ -81,7 +85,7 @@ const ShopScreen = () => {
       setOpen(false);
     } else {
       if (index == 1) {
-        if (activeFilter.filter === "" ) {
+        if (activeFilter.filter === "") {
           setProducts(
             products.sort(function (a, b) {
               return a.price - b.price;
@@ -126,28 +130,70 @@ const ShopScreen = () => {
     setOpen(false);
   };
 
-
-
   return (
     <SafeAreaView>
       <ScrollView>
         <View
           style={{
-            display: "flex",
+            flex: 1,
             flexDirection: "row",
+            backgroundColor: "#FAFAFA",
             justifyContent: "space-between",
+            alignItems: "center",
+            // gap: 10,
+            height: 60,
+            // backgroundColor: "yellow",
           }}
         >
-          <Text style={{ fontSize: 23 ,padding:10}}>Categories</Text>
-          <Feather name="search" size={24} color="black" style={{padding:10}}/>
+          <Pressable
+            onPress={() => navigate.navigate("Home")}
+            style={styles.headerlogo}
+          >
+            <Image
+              style={{ width: 130, height: 48 }}
+              source={require("../assets/logo.png")}
+            />
+          </Pressable>
+          <Pressable style={styles.headericons}>
+            <Ionicons
+              name="person-outline"
+              size={24}
+              color="black"
+              onPress={() => navigate.navigate("Profile")}
+            />
+            <AntDesign
+              name="shoppingcart"
+              size={24}
+              color="black"
+              onPress={() => navigate.navigate("Cart")}
+            />
+          </Pressable>
         </View>
+        <View style={styles.searchmain}>
+          <Pressable style={styles.searchpress}>
+            <TextInput
+              placeholder="Search"
+              style={{
+                marginLeft: 20,
+              }}
+              s
+            />
+            <AntDesign
+              style={{ paddingLeft: 10, marginRight: 20 }}
+              name="search1"
+              size={22}
+              color="black"
+            />
+          </Pressable>
+        </View>
+
         <ScrollView horizontal showsHorizontalScrollIndicator>
-        {activeFilter.filter === "" &&
-              searchField === "" &&
-              categories &&
-              categories?.map((item, index) => {
-                return <ShopCategory item={item} key={index} />;
-              })}
+          {activeFilter.filter === "" &&
+            searchField === "" &&
+            categories &&
+            categories?.map((item, index) => {
+              return <ShopCategory item={item} key={index} />;
+            })}
         </ScrollView>
         <View
           style={{
@@ -157,16 +203,11 @@ const ShopScreen = () => {
           }}
         >
           {activeFilter.filter === "" &&
-              searchField === "" &&
-              products &&
-              products?.map((item, index) => {
-                return (
-                  <ProductCard
-                    item={item}
-                    key={index}
-                  />
-                );
-              })}
+            searchField === "" &&
+            products &&
+            products?.map((item, index) => {
+              return <ProductCard item={item} key={index} />;
+            })}
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -175,4 +216,49 @@ const ShopScreen = () => {
 
 export default ShopScreen;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  homemain: {
+    backgroundColor: "#FAFAFA",
+  },
+  header: {
+    flex: 1,
+    flexDirection: "row",
+    backgroundColor: "#FAFAFA",
+    justifyContent: "space-between",
+    alignItems: "center",
+    // gap: 10,
+    height: 40,
+    // backgroundColor: "yellow",
+  },
+  headerlogo: {
+    flexDirection: "row",
+    alignItems: "center",
+    width: 10,
+    height: 130,
+    marginLeft: 20,
+    // flex:1
+  },
+  headericons: {
+    flexDirection: "row",
+    marginRight: 20,
+    gap: 10,
+    // flex:3
+  },
+  searchmain: {
+    backgroundColor: "#FAFAFA",
+    padding: 10,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  searchpress: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginHorizontal: 7,
+    gap: 10,
+    backgroundColor: "white",
+    borderRadius: 50,
+    height: 38,
+    flex: 1,
+    justifyContent: "space-between",
+  },
+});

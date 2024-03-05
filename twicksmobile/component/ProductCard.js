@@ -27,7 +27,7 @@ const ProductCard = ({ item }) => {
         })
       }
       style={{
-        marginHorizontal: 10,
+        // marginHorizontal: 10,
         marginVertical: 15,
         backgroundColor: "white",
         borderRadius: 20,
