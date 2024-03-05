@@ -9,13 +9,29 @@ import {
 import { useNavigation } from "@react-navigation/core";
 import React from "react";
 import { Entypo } from "@expo/vector-icons";
-const CartCard = () => {
+const CartCard = ({item, order}) => {
   const navigation = useNavigation();
 
   return (
     <>
       <View style={{ paddingHorizontal: 10 }}>
         <Pressable
+          key={item?._id}
+          onPress={() =>
+            navigation.navigate("OrderConfirmation", {
+              orderId: 123,
+              userName: order?.user.userName,
+              userEmail: order?.user.email,
+              userPhone: order?.user.phone,
+              orderDate: order?.timestamps,
+              Address: order?.userAddress.street,
+              City: order?.userAddress.city,
+              ZipCode: order?.userAddress.zipCode,
+              shipCharge: order?.shipment_charge,
+              orderAmount: order?.amount
+
+            })
+          }
           // onPress={navigation.navigate("SingleShop")}
           style={{
             flexDirection: "row",
