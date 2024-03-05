@@ -8,9 +8,57 @@ import {
   Image,
   Button,
 } from "react-native";
-import React from "react";
+import React, { useState, useEffect } from 'react';
+import RNHTMLtoPDF from 'react-native-html-to-pdf';
+import generateInvoiceHTML from './../component/invoice/InvoiceTemplete';
 
-const OrderConfirmationScreen = () => {
+
+
+const OrderConfirmationScreen = (route) => {
+  const orderId = "65d992287644354ab1bc4137" ;
+  // const{orderId, userName } = route.params;
+
+
+  const [pdfPath, setPdfPath] = useState('');
+ const [invoiceDetails, setInvoiceDetails] = useState(null);
+
+ const fetchInvoiceDetails = async (orderId) => {
+    try {
+      // Replace this URL with your actual API endpoint, including the ID as a query parameter
+      const response = await fetch(`https://backend.twicks.in/api/getOrderById/${orderId}`);
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Error fetching invoice details:', error);
+      return null;
+    }
+ };
+
+ useEffect(() => {
+    const fetchData = async () => {
+      const details = await fetchInvoiceDetails(orderId);
+      setInvoiceDetails(details);
+    };
+
+    fetchData();
+ }, [orderId]);
+
+ const generateInvoice = async () => {
+    if (!invoiceDetails) return;
+
+    const htmlContent = generateInvoiceHTML(invoiceDetails);
+
+    const options = {
+      html: htmlContent,
+      fileName: 'invoice',
+      directory: 'Documents',
+    };
+
+    const file = await RNHTMLtoPDF.convert(options);
+    setPdfPath(file.filePath);
+ };
+
+
   return (
     <SafeAreaView style={styles.homemain}>
       <ScrollView>
@@ -44,7 +92,7 @@ const OrderConfirmationScreen = () => {
               gap:10
             }}
           >
-            <Pressable
+            <Pressable onPress={generateInvoice} disabled={!invoiceDetails}
               style={{
                 backgroundColor: "white",
                 borderRadius: 6,
@@ -112,7 +160,7 @@ const OrderConfirmationScreen = () => {
                   <Text
                     style={{ color: "white", fontSize: 17, color: "#BAD8D5" }}
                   >
-                    Order ID:
+                    Order ID: {orderId}
                   </Text>
                   <Text
                     style={{ color: "white", fontSize: 17, color: "#BAD8D5" }}
