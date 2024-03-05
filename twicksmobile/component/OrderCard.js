@@ -19,16 +19,26 @@ const CartCard = ({item, order}) => {
           key={item?._id}
           onPress={() =>
             navigation.navigate("OrderConfirmation", {
-              orderId: 123,
-              userName: order?.user.userName,
-              userEmail: order?.user.email,
-              userPhone: order?.user.phone,
-              orderDate: order?.timestamps,
-              Address: order?.userAddress.street,
-              City: order?.userAddress.city,
-              ZipCode: order?.userAddress.zipCode,
-              shipCharge: order?.shipment_charge,
-              orderAmount: order?.amount
+              orderId: "65d892c06a86ee167fb1ccd3",
+              // userName: order?.user.userName,
+              // userEmail: order?.user.email,
+              // userPhone: order?.user.phone,
+              // orderDate: order?.timestamps,
+              // Address: order?.userAddress.street,
+              // City: order?.userAddress.city,
+              // ZipCode: order?.userAddress.zipCode,
+              // shipCharge: order?.shipment_charge,
+              // orderAmount: order?.amount
+
+              userName: "userName",
+              userEmail: "email",
+              userPhone: "phone",
+              orderDate: "timestamps",
+              Address: "street",
+              City: "city",
+              ZipCode: "zipCode",
+              shipCharge: "shipment_charge",
+              orderAmount: "amount"
 
             })
           }

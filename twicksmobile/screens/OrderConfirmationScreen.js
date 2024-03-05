@@ -18,10 +18,6 @@ const OrderConfirmationScreen = ({route}) => {
   // const orderId = "65d992287644354ab1bc4137" ;
   const {orderId, orderAmount } = route.params;
 
-
-  const [pdfPath, setPdfPath] = useState('');
- const [invoiceDetails, setInvoiceDetails] = useState(null);
-
  const fetchInvoiceDetails = async (orderId) => {
     try {
       // Replace this URL with your actual API endpoint, including the ID as a query parameter
@@ -33,31 +29,31 @@ const OrderConfirmationScreen = ({route}) => {
       return null;
     }
  };
+ const product = [
+  { name: 'Product 1', price: 10.99, quantity: 2 },
+  { name: 'Product 2', price: 5.99, quantity: 1 },
+ ];
 
- useEffect(() => {
-    const fetchData = async () => {
-      const details = await fetchInvoiceDetails(orderId);
-      setInvoiceDetails(details);
-    };
-
-    fetchData();
- }, [orderId]);
-
- const generateInvoice = async () => {
-    if (!invoiceDetails) return;
-
-    const htmlContent = generateInvoiceHTML(invoiceDetails);
-
+  const generatePDF = async () => {
+    // Wrap the product in an array to match the expected format for generateInvoiceHTML
+    const products = [product];
+    const html = generateInvoiceHTML(products);
+   
     const options = {
-      html: htmlContent,
-      fileName: 'invoice',
-      directory: 'Documents',
+       html,
+       fileName: 'invoice',
+       directory: 'Documents',
     };
-
-    const file = await RNHTMLtoPDF.convert(options);
-    setPdfPath(file.filePath);
- };
-
+   
+    try {
+       const file = await RNHTMLtoPDF.convert(options);
+       console.log(file.filePath);
+       // You can now use the file path to share, save, or open the PDF
+    } catch (error) {
+       console.error(error);
+    }
+   };
+   
 
   return (
     <SafeAreaView style={styles.homemain}>
@@ -92,7 +88,7 @@ const OrderConfirmationScreen = ({route}) => {
               gap:10
             }}
           >
-            <Pressable onPress={generateInvoice} disabled={!invoiceDetails}
+            <Pressable onPress={generatePDF}
               style={{
                 backgroundColor: "white",
                 borderRadius: 6,

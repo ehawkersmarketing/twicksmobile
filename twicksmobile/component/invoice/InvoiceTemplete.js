@@ -1,9 +1,10 @@
 // invoiceTemplate.js
 // import re
 import './invoiceTemplete.css';
-const generateInvoiceHTML = ({item, userName, userEmail, userPhone, orderDate, Address, City, ZipCode, shipCharge, orderAmount}) => {
+  
+const generateInvoiceHTML = ({ item, userName, userEmail, userPhone, orderDate, Address, City, ZipCode, shipCharge, orderAmount}) => {
     // const {OrderId} = route.params;
-  return `
+  let html =  `
       <html>
         <head>
           <style>
@@ -66,19 +67,20 @@ const generateInvoiceHTML = ({item, userName, userEmail, userPhone, orderDate, A
                         </tr>
                     </thead>
                     <tbody>
-                        {
-                            products && products.map((item, index) => {
-                                return (
-                                    <tr className="table-row" key={index}>
-                                        <td>{index + 1}</td>
-                                        <td>{item.productId?.title}</td>
-                                        <td>{item.units}</td>
-                                        <td>{(item.productId?.price)?.toLocaleString("en-IN")}</td>
-                                        <td>{(item.productId?.price * item?.units)?.toLocaleString("en-IN")}</td>
-                                    </tr>
-                                );
-                            })
-                        }
+                        
+                        // let total = 0;
+                //         products && products.map((item, index) => {
+                //                 return (
+                //                     <tr className="table-row" key={index}>
+                //                         <td>{index + 1}</td>
+                //                         <td>{item.productId?.title}</td>
+                //                         <td>{item.units}</td>
+                //                         <td>{(item.productId?.price)?.toLocaleString("en-IN")}</td>
+                //                         <td>{(item.productId?.price * item?.units)?.toLocaleString("en-IN")}</td>
+                //                     </tr>
+                //                 );
+                //             });
+                //  html += 
                     </tbody>
                     <tfoot>
                         <tr>
@@ -119,6 +121,16 @@ const generateInvoiceHTML = ({item, userName, userEmail, userPhone, orderDate, A
       </body>
     </html>
  `;
+ return html;
 };
-
+// export const fetchProducts = async () => {
+//     try {
+//        const response = await fetch('https://your-api-url.com/products');
+//        const data = await response.json();
+//        return data; // Assuming the API returns an array of products
+//     } catch (error) {
+//        console.error('Error fetching products:', error);
+//        return [];
+//     }
+//    };
 export default generateInvoiceHTML;
