@@ -19,6 +19,9 @@ import PrivacyPolicyScreen from "../screens/PrivacyPolicyScreen";
 import ReturnAndRefundScreen from "../screens/ReturnAndRefundScreen";
 import SingleServiceScreen from "../screens/SingleServiceScreen";
 import TermAndConditionScreen from "../screens/TermAndConditionScreen";
+import LegalScreen from "../screens/LegalScreen";
+import EditScreen from "../screens/EditScreen";
+import OrderScreen from "../screens/OrderScreen";
 
 import { Entypo } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
@@ -65,7 +68,7 @@ const StackNavigator = () => {
           options={{
             tabBarLabel: "Service",
             tabBarLabelStyle: { color: "#008E97" },
-            headerShown: true,
+            headerShown: false,
             tabBarIcon: ({ focused }) =>
               focused ? (
                 <Entypo name="home" size={24} color="#008E97" />
@@ -140,6 +143,21 @@ const StackNavigator = () => {
         <Stack.Screen
           name="TermAndCondition"
           component={TermAndConditionScreen}
+          options={{ headerShown: true }}
+        />
+        <Stack.Screen
+          name="Legal"
+          component={LegalScreen}
+          options={{ headerShown: true }}
+        />
+        <Stack.Screen
+          name="Edit"
+          component={EditScreen}
+          options={{ headerShown: true }}
+        />
+        <Stack.Screen
+          name="Order"
+          component={OrderScreen}
           options={{ headerShown: true }}
         />
       </Stack.Navigator>
