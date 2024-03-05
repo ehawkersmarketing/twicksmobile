@@ -10,7 +10,6 @@ import {
   Image,
   Button,
 } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useState, useEffect, useCallback, useContext } from "react";
 import { useFetch } from "../hooks/api_hook";
 import ProductCard from "../component/ProductCard";
@@ -122,42 +121,10 @@ const HomeScreen = ({ navigation }) => {
     setOpen(false);
   };
 
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    const checkToken = async () => {
-      try {
-        const token = await AsyncStorage.getItem("token");
-        // console.log("Token:", token); // Debugging line
-        if (token !== null) {
-          setIsLoggedIn(true);
-        } else {
-          setIsLoggedIn(false);
-        }
-      } catch (error) {
-        console.error("Error checking token:", error);
-      }
-    };
-
-    checkToken();
-  }, []);
-
-  const onLogOut = async () => {
-    try {
-      await AsyncStorage.clear();
-      navigation.navigate("Service");
-    } catch (error) {
-      console.error("Error logging out:", error);
-    }
-  };
   return (
     <>
       <SafeAreaView style={styles.homemain}>
         <ScrollView>
-          
-            {isLoggedIn && <Button title="Log Out" onPress={onLogOut} />}
-          
-
           <View
             style={{
               flex: 1,
@@ -165,9 +132,7 @@ const HomeScreen = ({ navigation }) => {
               backgroundColor: "#FAFAFA",
               justifyContent: "space-between",
               alignItems: "center",
-              // gap: 10,
               height: 60,
-              // backgroundColor: "yellow",
             }}
           >
             <Pressable
@@ -201,7 +166,6 @@ const HomeScreen = ({ navigation }) => {
                 style={{
                   marginLeft: 20,
                 }}
-                s
               />
               <AntDesign
                 style={{ paddingLeft: 10, marginRight: 20 }}
@@ -214,11 +178,6 @@ const HomeScreen = ({ navigation }) => {
           <View>
             <View style={styles.header}>
               <Text style={{ fontSize: 20, paddingLeft: 15 }}>Categories</Text>
-              <Button
-                title="See All"
-                color="#1E786F"
-                accessibilityLabel="Learn more about this purple button"
-              />
             </View>
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               {activeFilter.filter === "" &&
@@ -249,9 +208,11 @@ const HomeScreen = ({ navigation }) => {
           </View>
           <View
             style={{
+              width: "90%",
               flexDirection: "row",
               alignItems: "center",
               flexWrap: "wrap",
+              justifyContent: "space-around",
             }}
           >
             {activeFilter.filter === "" &&
