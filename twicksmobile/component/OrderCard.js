@@ -9,13 +9,16 @@ import {
 import { useNavigation } from "@react-navigation/core";
 import React from "react";
 import { Entypo } from "@expo/vector-icons";
+
 const CartCard = ({item}) => {
+
   const navigation = useNavigation();
 
   return (
     <>
       <View style={{ paddingHorizontal: 10 }}>
         <Pressable
+
         key={item?._id}
         onPress={() =>
           navigation.navigate("Product", {
@@ -25,6 +28,7 @@ const CartCard = ({item}) => {
             orderPrice: item?.price,
           })
         }
+
           style={{
             flexDirection: "row",
             borderColor: "#DDDEDF",
