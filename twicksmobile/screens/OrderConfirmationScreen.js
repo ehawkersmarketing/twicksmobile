@@ -9,18 +9,14 @@ import {
   Button,
 } from "react-native";
 import React, { useState, useEffect } from 'react';
-import RNHTMLtoPDF from 'react-native-html-to-pdf';
-import generateInvoiceHTML from './../component/invoice/InvoiceTemplete';
+// import RNHTMLtoPDF from 'react-native-html-to-pdf';
+// import generateInvoiceHTML from './../component/invoice/InvoiceTemplete';
 
 
 
 const OrderConfirmationScreen = ({route}) => {
   // const orderId = "65d992287644354ab1bc4137" ;
   const {orderId, orderAmount } = route.params;
-
-
-  const [pdfPath, setPdfPath] = useState('');
- const [invoiceDetails, setInvoiceDetails] = useState(null);
 
  const fetchInvoiceDetails = async (orderId) => {
     try {
@@ -33,31 +29,29 @@ const OrderConfirmationScreen = ({route}) => {
       return null;
     }
  };
-
- useEffect(() => {
-    const fetchData = async () => {
-      const details = await fetchInvoiceDetails(orderId);
-      setInvoiceDetails(details);
-    };
-
-    fetchData();
- }, [orderId]);
-
- const generateInvoice = async () => {
-    if (!invoiceDetails) return;
-
-    const htmlContent = generateInvoiceHTML(invoiceDetails);
-
-    const options = {
-      html: htmlContent,
-      fileName: 'invoice',
-      directory: 'Documents',
-    };
-
-    const file = await RNHTMLtoPDF.convert(options);
-    setPdfPath(file.filePath);
+ const product = [
+  { name: 'Product 1', price: 10.99, quantity: 2 },
+  { name: 'Product 2', price: 5.99, quantity: 1 },
+ ];
+ const generatePDF = async () => {
+  const html = '<h1>Hello World</h1>';
+  const response = await fetch('https://localhost:8080/generate-pdf', {
+     method: 'POST',
+     headers: {
+       'Content-Type': 'application/json',
+     },
+     body: JSON.stringify({ html }),
+  });
+ 
+  if (!response.ok) {
+    console.error('Error generating PDF:', response.status, await response.text());
+ } else {
+    const blob = await response.blob();
+    // Handle the PDF blob
+ }
  };
-
+ 
+   
 
   return (
     <SafeAreaView style={styles.homemain}>
@@ -92,7 +86,7 @@ const OrderConfirmationScreen = ({route}) => {
               gap:10
             }}
           >
-            <Pressable onPress={generateInvoice} disabled={!invoiceDetails}
+            <Pressable onPress={generatePDF}
               style={{
                 backgroundColor: "white",
                 borderRadius: 6,

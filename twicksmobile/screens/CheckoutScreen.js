@@ -9,7 +9,14 @@ import {
 import React from "react";
 
 const CheckoutScreen = () => {
+  const paymentGateway=()=>{
+
+  }
+
+
+
   return (
+
     <>
       <SafeAreaView>
         <ScrollView>
