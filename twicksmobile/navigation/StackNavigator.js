@@ -89,6 +89,16 @@ const StackNavigator = () => {
           options={{ headerShown: false }}
         />
         <Stack.Screen
+          name="Login"
+          component={LoginScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Register"
+          component={RegisterScreen}
+          options={{ headerShown: true }}
+        />
+        <Stack.Screen
           name="Profile"
           component={ProfileScreen}
           options={{ headerShown: true }}
@@ -98,7 +108,6 @@ const StackNavigator = () => {
           component={ReturnAndRefundScreen}
           options={{ headerShown: true }}
         />
-
         <Stack.Screen
           name="Cart"
           component={CartScreen}
@@ -107,16 +116,6 @@ const StackNavigator = () => {
         <Stack.Screen
           name="Product"
           component={SingleShopScreen}
-          options={{ headerShown: true }}
-        />
-        <Stack.Screen
-          name="Login"
-          component={LoginScreen}
-          options={{ headerShown: true }}
-        />
-        <Stack.Screen
-          name="Register"
-          component={RegisterScreen}
           options={{ headerShown: true }}
         />
         <Stack.Screen
@@ -134,7 +133,6 @@ const StackNavigator = () => {
           component={PrivacyPolicyScreen}
           options={{ headerShown: true }}
         />
-
         <Stack.Screen
           name="SingleService"
           component={SingleServiceScreen}

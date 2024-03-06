@@ -1,4 +1,4 @@
-import { StyleSheet, Pressable, Image, Text, View, Button } from "react-native";
+import { StyleSheet, Pressable, Text, View, Alert } from "react-native";
 import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
@@ -9,10 +9,34 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ProfileScreen = () => {
   const navigate = useNavigation();
+  const [userData, setUserData] = useState({});
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const userString = await AsyncStorage.getItem("user");
+        const user = JSON.parse(userString);
+        setUserData(user);
+        console.log(user)
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUser();
+  }, []);
+
   const onLogOut = async () => {
     try {
+      Alert.alert(
+        "Logout",
+        "Please login again",
+        [{ text: "OK", onPress: () => navigate.navigate("Login") }],
+        { cancelable: false }
+      );
+
       await AsyncStorage.clear();
-      navigate.navigate("Service");
+      navigate.navigate("Login");
     } catch (error) {
       console.error("Error logging out:", error);
     }
@@ -22,8 +46,7 @@ const ProfileScreen = () => {
   useEffect(() => {
     const checkToken = async () => {
       try {
-        const token = await AsyncStorage.getItem("token");
-        // console.log("Token:", token); // Debugging line
+        const token = await AsyncStorage.getItem("auth_token");
         if (token !== null) {
           setIsLoggedIn(true);
         } else {
@@ -36,18 +59,18 @@ const ProfileScreen = () => {
 
     checkToken();
   }, []);
+
   return (
     <>
       <View>
-        {/* s */}
         <View style={{ padding: 10 }}>
           <View style={{ flexDirection: "row", gap: 10 }}>
             <FontAwesome name="user-circle-o" size={24} color="black" />
-            <Text style={{ fontSize: 24 }}>Hello, Rishika Kothari</Text>
+            <Text style={{ fontSize: 24 }}>Hello, {userData.userName} </Text>
           </View>
           <View style={{ paddingVertical: 10, flexDirection: "row", gap: 10 }}>
-            <Text style={{ fontSize: 17 }}>9993720620</Text>
-            <Text style={{ fontSize: 17 }}>rishikak10@gmail.com</Text>
+            <Text style={{ fontSize: 17 }}>{userData.phone}</Text>
+            <Text style={{ fontSize: 17 }}>{userData.email}</Text>
           </View>
         </View>
         <View style={{ padding: 10 }}>
