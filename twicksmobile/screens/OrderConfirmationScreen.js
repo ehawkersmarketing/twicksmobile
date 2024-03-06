@@ -9,8 +9,8 @@ import {
   Button,
 } from "react-native";
 import React, { useState, useEffect } from 'react';
-import RNHTMLtoPDF from 'react-native-html-to-pdf';
-import generateInvoiceHTML from './../component/invoice/InvoiceTemplete';
+// import RNHTMLtoPDF from 'react-native-html-to-pdf';
+// import generateInvoiceHTML from './../component/invoice/InvoiceTemplete';
 
 
 
@@ -33,26 +33,24 @@ const OrderConfirmationScreen = ({route}) => {
   { name: 'Product 1', price: 10.99, quantity: 2 },
   { name: 'Product 2', price: 5.99, quantity: 1 },
  ];
-
-  const generatePDF = async () => {
-    // Wrap the product in an array to match the expected format for generateInvoiceHTML
-    const products = [product];
-    const html = generateInvoiceHTML(products);
-   
-    const options = {
-       html,
-       fileName: 'invoice',
-       directory: 'Documents',
-    };
-   
-    try {
-       const file = await RNHTMLtoPDF.convert(options);
-       console.log(file.filePath);
-       // You can now use the file path to share, save, or open the PDF
-    } catch (error) {
-       console.error(error);
-    }
-   };
+ const generatePDF = async () => {
+  const html = '<h1>Hello World</h1>';
+  const response = await fetch('https://localhost:8080/generate-pdf', {
+     method: 'POST',
+     headers: {
+       'Content-Type': 'application/json',
+     },
+     body: JSON.stringify({ html }),
+  });
+ 
+  if (!response.ok) {
+    console.error('Error generating PDF:', response.status, await response.text());
+ } else {
+    const blob = await response.blob();
+    // Handle the PDF blob
+ }
+ };
+ 
    
 
   return (
