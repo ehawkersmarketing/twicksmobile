@@ -3,7 +3,6 @@ import {
   Text,
   View,
   SafeAreaView,
-  Platform,
   ScrollView,
   Pressable,
   TextInput,
@@ -17,6 +16,7 @@ import HomeImage from "../component/HomeImage";
 import CategoryComponent from "../component/CategoryComponent";
 import { Ionicons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 
@@ -25,102 +25,55 @@ const HomeScreen = ({ navigation }) => {
   const [activeFilter, setActiveFilter] = useState({
     filter: "",
   });
+  const [hasSearched, setHasSearched] = useState(false);
+
   const [openForSort, setOpenForSort] = useState(false);
-  // const user = JSON.parse(AsyncStorage.getItem("user"));
-  // const { data: cart } = useFetch(`/api/getCartByUser/${user?._id}`);
-  const [searchField, setSearchField] = useState("");
-  // const filter = ["Price: High To Low", "Price: Low To High"];
   const { data: products, setData: setProducts } = useFetch("/api/allProducts");
+  const [searchField, setSearchField] = useState("");
   const [searchProducts, setSearchProducts] = useState([]);
 
   const search = async (text) => {
     if (text !== "") {
       try {
         const { data } = await axios.post(
-          `https://backend.twicks.in/api/searchProduct`,
-          {
-            search: text,
-          }
+          "https://backend.twicks.in/api/searchProduct",
+          { search: text }
         );
         setSearchProducts(data.data);
       } catch (error) {
-        toast.error(`${error.message}`, {
-          position: "bottom-right",
-          autoClose: 8000,
-          pauseOnHover: true,
-          draggable: true,
-          theme: "dark",
-        });
+        console.log(error.message);
       }
     } else {
-      setSearchProducts(undefined);
-      setActiveFilter({ ["filter"]: "" });
+      setSearchProducts([]);
     }
   };
 
   useEffect(() => {
-    search(searchField);
+    if (searchField !== "") {
+      search(searchField);
+    }
   }, [searchField]);
 
   const { data: categories } = useFetch("/api/allCategory");
 
-  const applyFilter = (e, index) => {
-    if (index == 2) {
-      if (e.target.value === "select the Category") {
-        setSearchField("");
-        setActiveFilter({ [e.target.name]: "" });
-      } else {
-        setSearchField(e.target.value);
-        setActiveFilter({ [e.target.name]: e.target.value });
-      }
-      setOpen(false);
-    } else {
-      if (index == 1) {
-        if (activeFilter.filter === "") {
-          setProducts(
-            products.sort(function (a, b) {
-              return a.price - b.price;
-            })
-          );
-          setActiveFilter({ ["filter"]: `` });
-          document
-            .getElementById("allproduct")
-            .scrollIntoView({ behavior: "smooth", block: "start" });
-        } else {
-          setProducts(
-            searchProducts.sort(function (a, b) {
-              return a.price - b.price;
-            })
-          );
-          setActiveFilter({ ["filter"]: `` });
-        }
-      } else {
-        if (activeFilter.filter === "") {
-          setProducts(
-            products.sort(function (a, b) {
-              return b.price - a.price;
-            })
-          );
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-          setActiveFilter({ ["filter"]: `` });
-          document
-            .getElementById("allproduct")
-            .scrollIntoView({ behavior: "smooth", block: "start" });
+  useEffect(() => {
+    const checkToken = async () => {
+      try {
+        const token = await AsyncStorage.getItem("auth_token");
+        if (token !== null) {
+          setIsLoggedIn(true);
         } else {
-          setProducts(
-            searchProducts.sort(function (a, b) {
-              return b.price - a.price;
-            })
-          );
-          setActiveFilter({ ["filter"]: `` });
+          setIsLoggedIn(false);
         }
+      } catch (error) {
+        console.error("Error checking token:", error);
       }
-      setOpen(false);
-    }
-    setOpenForSort(false);
-    setOpen(false);
-  };
+    };
 
+    checkToken();
+  }, []);
   return (
     <>
       <SafeAreaView style={styles.homemain}>
@@ -160,29 +113,43 @@ const HomeScreen = ({ navigation }) => {
             </Pressable>
           </View>
           <View style={styles.searchmain}>
-            <Pressable style={styles.searchpress}>
+            <View style={styles.searchpress}>
               <TextInput
                 placeholder="Search"
+                onChangeText={(text) => {
+                  setSearchField(text);
+                  if (text === "") {
+                    setHasSearched(false);
+                  } else {
+                    setHasSearched(true)
+                  }
+                }}
+                value={searchField}
                 style={{
                   marginLeft: 20,
+                  width: "100%",
                 }}
               />
-              <AntDesign
-                style={{ paddingLeft: 10, marginRight: 20 }}
-                name="search1"
-                size={22}
-                color="black"
-              />
-            </Pressable>
+            </View>
+
+            {hasSearched ? (
+              searchProducts.length > 0 ? (
+                <ScrollView>
+                  {searchProducts.map((item, index) => (
+                    <ProductCard item={item} key={index} />
+                  ))}
+                </ScrollView>
+              ) : (
+                <Text>No Results Found</Text>
+              )
+            ) : null}
           </View>
           <View>
             <View style={styles.header}>
               <Text style={{ fontSize: 20, paddingLeft: 15 }}>Categories</Text>
             </View>
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              {activeFilter.filter === "" &&
-                searchField === "" &&
-                categories &&
+              {categories &&
                 categories?.map((item, index) => {
                   return <CategoryComponent item={item} key={index} />;
                 })}
@@ -215,13 +182,12 @@ const HomeScreen = ({ navigation }) => {
               justifyContent: "space-around",
             }}
           >
-            {activeFilter.filter === "" &&
-              searchField === "" &&
-              products &&
+            {products &&
               products?.map((item, index) => {
                 return <ProductCard item={item} key={index} />;
               })}
           </View>
+          
         </ScrollView>
       </SafeAreaView>
     </>
@@ -240,9 +206,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FAFAFA",
     justifyContent: "space-between",
     alignItems: "center",
-    // gap: 10,
     height: 40,
-    // backgroundColor: "yellow",
   },
   headerlogo: {
     flexDirection: "row",
@@ -250,18 +214,15 @@ const styles = StyleSheet.create({
     width: 10,
     height: 130,
     marginLeft: 20,
-    // flex:1
   },
   headericons: {
     flexDirection: "row",
     marginRight: 20,
     gap: 10,
-    // flex:3
   },
   searchmain: {
     backgroundColor: "#FAFAFA",
     padding: 10,
-    flexDirection: "row",
     alignItems: "center",
   },
   searchpress: {

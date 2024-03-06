@@ -9,17 +9,24 @@ import {
 import { useNavigation } from "@react-navigation/core";
 import React from "react";
 import { Entypo } from "@expo/vector-icons";
-const CartCard = () => {
+const CartCard = ({item}) => {
   const navigation = useNavigation();
 
   return (
     <>
       <View style={{ paddingHorizontal: 10 }}>
         <Pressable
-          // onPress={navigation.navigate("SingleShop")}
+        key={item?._id}
+        onPress={() =>
+          navigation.navigate("Product", {
+            orderId: item?._id,
+            orderImage: item?.image,
+            // productDetais: item?.description,
+            orderPrice: item?.price,
+          })
+        }
           style={{
             flexDirection: "row",
-            // paddingVertical: 10,
             borderColor: "#DDDEDF",
             borderWidth: 1,
             marginVertical: 10,
@@ -39,7 +46,7 @@ const CartCard = () => {
                 padding: 10,
               }}
             >
-              <Text style={{ fontSize: 24 }}>Janurary 23,2024</Text>
+              <Text style={{ fontSize: 24 }}>Janurary 23,2024{item?.price}</Text>
               <Entypo name="chevron-small-right" size={24} color="black" />
             </View>
             <View
@@ -54,7 +61,7 @@ const CartCard = () => {
 
               <Text style={{ fontSize: 21 }}>Delivered</Text>
 
-              <Text style={{ fontSize: 20, color: "gray" }}>100/-</Text>
+              <Text style={{ fontSize: 20, color: "gray" }}>{item?.price}</Text>
             </View>
             <View style={styles.line}></View>
 

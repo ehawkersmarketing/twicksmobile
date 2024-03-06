@@ -6,6 +6,7 @@ import {
   Image,
   TextInput,
   View,
+  Text,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { useFetch } from "../hooks/api_hook";
@@ -19,26 +20,13 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 
 const ShopScreen = () => {
-  //  To read data
-  //  const user = async () => {
-  //   try {
-  //      const value = await AsyncStorage.getItem('user')
-  //      if(value !== null) {
-  //      }
-  //   } catch(e) {
-  //   }
-  //  }
-
   const navigate = useNavigation();
   const [open, setOpen] = useState(false);
   const [activeFilter, setActiveFilter] = useState({
     filter: "",
   });
-  const [openForSort, setOpenForSort] = useState(false);
-  // const user = JSON.parse(AsyncStorage.getItem("user"));
-  // const { data: cart } = useFetch(`/api/getCartByUser/${user?._id}`);
+  const [hasSearched, setHasSearched] = useState(false);
   const [searchField, setSearchField] = useState("");
-  // const filter = ["Price: High To Low", "Price: Low To High"];
   const { data: products, setData: setProducts } = useFetch("/api/allProducts");
   const [searchProducts, setSearchProducts] = useState([]);
 
@@ -46,31 +34,23 @@ const ShopScreen = () => {
     if (text !== "") {
       try {
         const { data } = await axios.post(
-          `https:/backend.twicks.in/api/searchProduct`,
-          {
-            search: text,
-          }
+          "https://backend.twicks.in/api/searchProduct",
+          { search: text }
         );
         setSearchProducts(data.data);
       } catch (error) {
-        toast.error(`${error.message}`, {
-          position: "bottom-right",
-          autoClose: 8000,
-          pauseOnHover: true,
-          draggable: true,
-          theme: "dark",
-        });
+        console.log(error.message);
       }
     } else {
-      setSearchProducts(undefined);
-      setActiveFilter({ ["filter"]: "" });
+      setSearchProducts([]);
     }
   };
 
   useEffect(() => {
-    search(searchField);
+    if (searchField !== "") {
+      search(searchField);
+    }
   }, [searchField]);
-
   const { data: categories } = useFetch("/api/allCategory");
 
   const applyFilter = (e, index) => {
@@ -170,21 +150,35 @@ const ShopScreen = () => {
           </Pressable>
         </View>
         <View style={styles.searchmain}>
-          <Pressable style={styles.searchpress}>
+          <View style={styles.searchpress}>
             <TextInput
               placeholder="Search"
+              onChangeText={(text) => {
+                setSearchField(text);
+                if (text === "") {
+                  setHasSearched(false);
+                } else {
+                  setHasSearched(true);
+                }
+              }}
+              value={searchField}
               style={{
                 marginLeft: 20,
+                width: "100%",
               }}
-              s
             />
-            <AntDesign
-              style={{ paddingLeft: 10, marginRight: 20 }}
-              name="search1"
-              size={22}
-              color="black"
-            />
-          </Pressable>
+          </View>
+          {hasSearched ? (
+            searchProducts.length > 0 ? (
+              <ScrollView>
+                {searchProducts.map((item, index) => (
+                  <ProductCard item={item} key={index} />
+                ))}
+              </ScrollView>
+            ) : (
+              <Text>No Results Found</Text>
+            )
+          ) : null}
         </View>
 
         <ScrollView horizontal showsHorizontalScrollIndicator>
@@ -247,7 +241,7 @@ const styles = StyleSheet.create({
   searchmain: {
     backgroundColor: "#FAFAFA",
     padding: 10,
-    flexDirection: "row",
+    // flexDirection: "row",
     alignItems: "center",
   },
   searchpress: {
