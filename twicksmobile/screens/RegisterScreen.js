@@ -6,10 +6,10 @@ import {
   Pressable,
   Button,
   StyleSheet,
-  Alert,
   SafeAreaView,
   ScrollView,
   Image,
+  Alert
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
@@ -21,20 +21,9 @@ const RegisterScreen = () => {
   const [formField, setFormField] = useState({
     phone: "",
     otp: "",
-    name: "",
+    userName: "",
     checkbox: 0,
   });
-let token ;
-  useEffect(() => {
-    checkToken();
-  }, []);
-
-  const checkToken = async () => {
-    const token = await AsyncStorage.getItem("token");
-    if (token) {
-      navigation.navigate("Home"); // Navigate to home screen if token exists
-    }
-  };
 
   const handleChangeFormField = (name, value) => {
     if (name === "phone" || name === "otp" || name === "userName") {
@@ -45,78 +34,52 @@ let token ;
   };
   const onSendOtp = async () => {
     try {
-      console.log("hiii", formField.phone);
-      const response = await axios.post(
-        "https://backend.twicks.in/auth/sendOtp",
-        {
-          phone: formField.phone,
+      if (formField.phone.length == 10) {
+        const { data } = await axios.post(
+          "https://backend.twicks.in/auth/sendOtp",
+          {
+            phone: formField.phone,
+          }
+        );
+        token = data.token;
+        if (data.success) {
+          console.log("otp send successfully");
+          Alert.alert(
+            "Success",
+            "OTP Sent successfully",
+            [
+              {
+                text: "OK",
+                onPress: () => console.log("OK Pressed"),
+                style: "default",
+              },
+            ],
+            { cancelable: false }
+          );
         }
-      );
-      token = response.data.token;
-      console.log(response.data.token);
-      if (response.data.success) {
-        Alert.alert(
-          "Success",
-          "OTP Sent successfully",
-          [
-            {
-              text: "OK",
-              onPress: () => console.log("OK Pressed"),
-              style: "default",
-            },
-          ],
-          { cancelable: false }
-        );
-        
-        await AsyncStorage.setItem("token", response.data.token);
-       
-      } else if (response.data.message === "User already registered") {
-        Alert.alert(
-          "Error",
-          "User already registered",
-          [
-            {
-              text: "OK",
-              onPress: () => console.log("OK Pressed"),
-              style: "default",
-            },
-          ],
-          { cancelable: false }
-        );
       } else {
+        console.log("please enter a valid number");
         Alert.alert(
           "Error",
-          "Failed to send OTP",
-          [
-            {
-              text: "OK",
-              onPress: () => console.log("OK Pressed"),
-              style: "default",
-            },
-          ],
+          "Please enter a valid phone number",
+          [{ text: "OK", onPress: () => console.log("OK Pressed") }],
           { cancelable: false }
         );
       }
     } catch (error) {
+      console.log("error", error);
       Alert.alert(
         "Error",
-        "Error sending OTP",
-        [
-          {
-            text: "OK",
-            onPress: () => console.log("OK Pressed"),
-            style: "default",
-          },
-        ],
+        error.response.data.message,
+        [{ text: "OK", onPress: () => console.log("OK Pressed") }],
         { cancelable: false }
       );
     }
   };
+
   const onSignUp = async () => {
     try {
-      console.log("token" , token )
       if (token) {
-        console.log("token")
         const { data } = await axios.post(
           "https://backend.twicks.in/auth/verifyOtp",
           {
@@ -124,85 +87,59 @@ let token ;
             token: token,
           }
         );
-  console.log("data sucess" , data)
         if (data.success) {
-          const response = await axios.post(
+          const { data } = await axios.post(
             "https://backend.twicks.in/auth/signup",
             {
               phone: formField.phone,
-              userName: formField.name,
-              otp: formField.otp,
+              userName: formField.userName,
+              email: formField.email,
             }
           );
-          console.log(response);
-          console.log(response.data);
-          if (response.data.success) {
+          if (data.success) {
+            AsyncStorage.setItem("auth_token", token);
+            // localStorage.setItem("user_id", data.data._id);
+            // if (formField.checkbox == 0) {
+            //   forgotOnClose();
+            // }
             Alert.alert(
               "Success",
-              "User registered successfully",
-              [
-                {
-                  text: "OK",
-                  onPress: () => console.log("OK Pressed"),
-                  style: "default",
-                },
-              ],
+              "Successfully registered",
+              [{ text: "OK", onPress: () => console.log("OK Pressed") }],
               { cancelable: false }
             );
-
             navigation.navigate("Home");
           } else {
             Alert.alert(
               "Error",
-              response.data.message,
-              [
-                {
-                  text: "OK",
-                  onPress: () => console.log("OK Pressed"),
-                  style: "default",
-                },
-              ],
+              error.response.data.message,
+              [{ text: "OK", onPress: () => console.log("OK Pressed") }],
               { cancelable: false }
             );
           }
         } else {
-          console.log("otp does not verifed");
+          Alert.alert(
+            "Error",
+            data.message,
+            [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+            { cancelable: false }
+          );
         }
-      }else{
-        console.log("token not found")
-      }
-    } catch (error) {
-      console.log(error)
-      if (
-        error.response &&
-        error.response.data.message === "User Already Exist"
-      ) {
-        Alert.alert(
-          "Error",
-          "User already registered",
-          [
-            {
-              text: "OK",
-              onPress: () => console.log("OK Pressed"),
-              style: "default",
-            },
-          ],
-          { cancelable: false }
-        );
       } else {
         Alert.alert(
           "Error",
-          "Error registering user",
-          [
-            {
-              text: "OK",
-              onPress: () => console.log("OK Pressed"),
-              style: "default",
-            },
-          ],
+          "Please enter a valid OTP",
+          [{ text: "OK", onPress: () => console.log("OK Pressed") }],
           { cancelable: false }
         );
       }
+    } catch (error) {
+      Alert.alert(
+        "Error",
+        error.response.data.error,
+        [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+        { cancelable: false }
+      );
     }
   };
 
@@ -219,9 +156,7 @@ let token ;
                 justifyContent: "space-between",
                 alignItems: "center",
                 paddingHorizontal: 15,
-                // gap: 10,
                 height: 60,
-                // backgroundColor: "yellow",
               }}
             >
               <Pressable
@@ -306,7 +241,7 @@ let token ;
                       onChangeText={(value) =>
                         handleChangeFormField("name", value)
                       }
-                      value={formField.name}
+                      value={formField.userName}
                       placeholder="Enter your name"
                     />
                   </View>

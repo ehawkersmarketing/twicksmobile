@@ -16,31 +16,36 @@ import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import ServiceCard from "../component/ServiceCard";
 import { useFetch } from "../hooks/api_hook";
+import axios from "axios";
 
 const ServiceScreen = () => {
-  const navigation = useNavigation();
+  const [hasSearched, setHasSearched] = useState(false);
   const [searchField, setSearchField] = useState("");
+  const navigation = useNavigation();
   const { data: services } = useFetch("/api/getAllService");
-  const [searchService, setSearchService] = useState(undefined);
+  const [searchService, setSearchService] = useState([]);
   const [openIndex, setIndex] = useState(0);
-  // console.log(JSON.stringify(services));
+
   const search = async (text) => {
     if (text !== "") {
-      const { data } = await axios.post(
-        `https://backend.twicks.in/api/searchService`,
-        {
-          search: text,
-        }
-      );
-      setSearchService(data.data);
+      try {
+        const { data } = await axios.post(
+          "https://backend.twicks.in/api/searchService",
+          { search: text }
+        );
+        setSearchService(data.data);
+      } catch (error) {
+        console.log(error.message);
+      }
     } else {
-      setIndex(0);
-      setSearchService(undefined);
+      setSearchService([]);
     }
   };
 
   useEffect(() => {
-    search(searchField);
+    if (searchField !== "") {
+      search(searchField);
+    }
   }, [searchField]);
 
   return (
@@ -83,23 +88,36 @@ const ServiceScreen = () => {
               </Pressable>
             </View>
             <View style={styles.searchmain}>
-              <Pressable style={styles.searchpress}>
+              <View style={styles.searchpress}>
                 <TextInput
                   placeholder="Search"
+                  onChangeText={(text) => {
+                    setSearchField(text);
+                    if (text === "") {
+                      setHasSearched(false);
+                    } else {
+                      setHasSearched(true);
+                    }
+                  }}
+                  value={searchField}
                   style={{
                     marginLeft: 20,
+                    width: "100%",
                   }}
-                  s
                 />
-                <AntDesign
-                  style={{ paddingLeft: 10, marginRight: 20 }}
-                  name="search1"
-                  size={22}
-                  color="black"
-                />
-              </Pressable>
-            </View>
-            <View
+              </View>
+
+              {hasSearched ? (
+                searchService.length > 0 ? (
+                  <ScrollView>
+                    {searchService.map((item, index) => (
+                      <ServiceCard item={item} key={index} />
+                    ))}
+                  </ScrollView>
+                ) : (
+                  <Text>No Results Found</Text>
+                )
+              ) :  <View
               style={{
                 flexDirection: "row",
                 alignItems: "center",
@@ -110,7 +128,9 @@ const ServiceScreen = () => {
                 // console.log(item);
                 return <ServiceCard key={item._id} item={item} />;
               })}
+            </View>}
             </View>
+           
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -130,9 +150,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FAFAFA",
     justifyContent: "space-between",
     alignItems: "center",
-    // gap: 10,
     height: 40,
-    // backgroundColor: "yellow",
   },
   headerlogo: {
     flexDirection: "row",
@@ -140,18 +158,15 @@ const styles = StyleSheet.create({
     width: 10,
     height: 130,
     marginLeft: 20,
-    // flex:1
   },
   headericons: {
     flexDirection: "row",
     marginRight: 20,
     gap: 10,
-    // flex:3
   },
   searchmain: {
     backgroundColor: "#FAFAFA",
     padding: 10,
-    flexDirection: "row",
     alignItems: "center",
   },
   searchpress: {

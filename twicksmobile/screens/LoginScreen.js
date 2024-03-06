@@ -7,15 +7,150 @@ import {
   Text,
   View,
   TextInput,
-  Button,
+  Alert,
 } from "react-native";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import CheckBox from "@react-native-community/checkbox";
 import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/core";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useFetch } from "../hooks/api_hook";
+import axios from "axios";
 
 const LoginScreen = () => {
-  const navigate = useNavigation();
+  const navigation = useNavigation();
+  const [formField, setFormField] = useState({
+    phone: "",
+    otp: "",
+    userName: "",
+    checkbox: 0,
+  });
+  const { data: users } = useFetch("/auth/users");
+
+  const handleChangeFormField = (name, value) => {
+    if (name === "phone" || name === "otp" || name === "userName") {
+      value = value.replace(/[^0-9]/g, "");
+    }
+    console.log(name, value);
+    setFormField({ ...formField, [name]: value });
+  };
+
+  const onSendOtp = async () => {
+    try {
+      if (formField.phone.length == 10) {
+        const userExists = users?.some(
+          (item) => item?.phone === formField.phone
+        );
+        if (!userExists) {
+          Alert.alert(
+            "Error",
+            "User not Registered",
+            [
+              {
+                text: "OK",
+                onPress: () => console.log("OK Pressed"),
+                style: "default",
+              },
+            ],
+            { cancelable: false }
+          );
+        } else {
+          const { data } = await axios.post(
+            "https://backend.twicks.in/auth/sendOtp",
+            {
+              phone: formField.phone,
+            }
+          );
+          console.log(data);
+          token = data.token;
+          if (data.success) {
+            Alert.alert(
+              "Success",
+              "OTP Sent successfully",
+              [
+                {
+                  text: "OK",
+                  onPress: () => console.log("OK Pressed"),
+                  style: "default",
+                },
+              ],
+              { cancelable: false }
+            );
+          }
+        }
+      } else {
+        Alert.alert(
+          "Error",
+          "Please enter a valid phone number",
+          [
+            {
+              text: "OK",
+              onPress: () => console.log("OK Pressed"),
+              style: "default",
+            },
+          ],
+          { cancelable: false }
+        );
+      }
+    } catch (error) {
+      console.log("catch", error);
+      Alert.alert(
+        "Error",
+        error.response.data.message,
+        [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+        { cancelable: false }
+      );
+    }
+  };
+
+  const onLogin = async () => {
+    try {
+      if (token) {
+        const { data } = await axios.post(
+          "https://backend.twicks.in/auth/login",
+          {
+            phone: formField.phone,
+            otp: formField.otp,
+            token: token,
+          }
+        );
+        if (data.success) {
+          AsyncStorage.setItem("auth_token", token);
+          AsyncStorage.setItem("user", JSON.stringify(data.data));
+          AsyncStorage.setItem("user_id", data.data._id);
+
+          Alert.alert(
+            "Success",
+            "Login Successfully",
+            [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+            { cancelable: false }
+          );
+          navigation.navigate("Back");
+        } else {
+          Alert.alert(
+            "Error",
+            "Please enter a valid OTP",
+            [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+            { cancelable: false }
+          );
+        }
+      } else {
+        Alert.alert(
+          "Error",
+          "Please enter a valid phone number",
+          [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+          { cancelable: false }
+        );
+      }
+    } catch (error) {
+      Alert.alert(
+        "Error",
+        error.response.data.message,
+        [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+        { cancelable: false }
+      );
+    }
+  };
   return (
     <>
       <SafeAreaView style={styles.homemain}>
@@ -29,13 +164,11 @@ const LoginScreen = () => {
                 justifyContent: "space-between",
                 alignItems: "center",
                 paddingHorizontal: 15,
-                // gap: 10,
                 height: 60,
-                // backgroundColor: "yellow",
               }}
             >
               <Pressable
-                onPress={() => navigation.navigate("Home")}
+                onPress={() => navigation.navigate("Back")}
                 style={styles.headerlogo}
               >
                 <Image
@@ -57,26 +190,57 @@ const LoginScreen = () => {
                   <Text style={{ fontSize: 30 }}>Login Account</Text>
                 </View>
                 <View>
-                  <View style={styles.container}>
-                    <TextInput
-                      style={styles.input}
-                      placeholder="User Name"
-                      placeholderTextColor="#888"
-                    ></TextInput>
+                  <View>
+                    <View
+                      style={{
+                        flex: 1,
+                        justifyContent: "center",
+                        paddingVertical: 10,
+                        flexDirection: "row",
+                      }}
+                    >
+                      <TextInput
+                        style={{
+                          flex: 4,
+                          height: 40,
+                          padding: 10,
+                          backgroundColor: "#EBF6F5",
+                          borderLeftColor: "#44A98B",
+                          borderLeftWidth: 8,
+                        }}
+                        onChangeText={(value) =>
+                          handleChangeFormField("phone", value)
+                        }
+                        value={formField.phone}
+                        placeholder="Enter your phone number"
+                        keyboardType="phone-pad"
+                        maxLength={10}
+                      />
+                      <Pressable
+                        style={{
+                          flex: 1,
+                          height: 40,
+                          // padding: 10,
+                          backgroundColor: "#4EB666",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                        onPress={onSendOtp}
+                      >
+                        <Text style={{ fontSize: 16, color: "gray" }}>otp</Text>
+                      </Pressable>
+                    </View>
                   </View>
                   <View style={styles.container}>
                     <TextInput
                       style={styles.input}
-                      placeholder="Mobile No"
-                      placeholderTextColor="#888"
-                    ></TextInput>
-                  </View>
-                  <View style={styles.container}>
-                    <TextInput
-                      style={styles.input}
-                      placeholder="OTP"
-                      placeholderTextColor="#888"
-                    ></TextInput>
+                      onChangeText={(value) =>
+                        handleChangeFormField("otp", value)
+                      }
+                      value={formField.otp}
+                      placeholder="Enter OTP"
+                      keyboardType="numeric"
+                    />
                   </View>
                   <View>
                     <View
@@ -92,18 +256,26 @@ const LoginScreen = () => {
                       </Pressable>
                     </View>
                   </View>
-                  <View style={{ paddingVertical: 30 }}>
-                    <Pressable
+                  <Pressable onPress={onLogin}>
+                    <LinearGradient
+                      start={{ x: 0.0, y: 0.25 }}
+                      end={{ x: 1.3, y: 1.0 }}
+                      locations={[0, 0.5, 1]}
+                      colors={["#4EB666", "#42A559", "#ffffff"]}
                       style={{
-                        backgroundColor: "pink",
-                        borderRadius: 20,
-                        justifyContent: "center",
                         alignItems: "center",
+                        justifyContent: "center",
+                        marginVertical: 30,
+                        padding: 10,
+                        backgroundColor: "green",
+                        borderRadius: 25,
                       }}
                     >
-                      <Text style={{ padding: 10, fontSize: 27 }}>Login</Text>
-                    </Pressable>
-                  </View>
+                      <Text style={{ fontSize: 30, color: "white" }}>
+                        Login
+                      </Text>
+                    </LinearGradient>
+                  </Pressable>
                 </View>
               </View>
             </View>
@@ -142,212 +314,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    paddingVertical: 20,
+    paddingVertical: 10,
   },
   input: {
     height: 40,
-    borderColor: "gray",
-    borderWidth: 1,
+    // borderColor: "gray",
+    // borderWidth: 1,
     padding: 10,
     backgroundColor: "#EBF6F5",
     borderLeftColor: "#44A98B",
     borderLeftWidth: 8,
   },
+  text: {
+    fontSize: 35,
+    fontFamily: "Gill Sans",
+    fontWeight: "bold",
+  },
 });
-
-// import React, { useState, useEffect } from "react";
-// import {
-//   View,
-//   Text,
-//   TextInput,
-//   Pressable,
-//   Button,
-//   StyleSheet,
-//   Alert,
-// } from "react-native";
-// import { useNavigation } from "@react-navigation/native";
-// import axios from "axios";
-// import { useToast } from "react-native-toast-notifications";
-// import AsyncStorage from "@react-native-async-storage/async-storage";
-
-// const LoginScreen = () => {
-//   const navigation = useNavigation();
-//   const [formField, setFormField] = useState({
-//     phone: "",
-//     otp: "",
-//     checkbox: 0,
-//   });
-//   const toast = useToast();
-
-//   useEffect(() => {
-//     checkToken();
-//   }, []);
-
-//   const checkToken = async () => {
-//     const token = await AsyncStorage.getItem("token");
-//     if (token) {
-//       navigation.navigate("Home"); // Navigate to home screen if token exists
-//     }
-//   };
-
-//   const handleChangeFormField = (name, value) => {
-//     if (name === "phone" || name === "otp") {
-//       value = value.replace(/[^0-9]/g, "");
-//     }
-//     console.log(name, value);
-//     setFormField({ ...formField, [name]: value });
-//   };
-
-//   const onSendOtp = async () => {
-//     try {
-//       console.log("hiii", formField.phone);
-//       const response = await axios.post(
-//         "https://backend.twicks.in/auth/sendOtp",
-//         {
-//           phone: formField.phone,
-//         }
-//       );
-//       console.log(response);
-//       console.log("hiii");
-//       if (response.data.success) {
-//         Alert.alert(
-//           "Success",
-//           "OTP Sent successfully",
-//           [
-//             {
-//               text: "OK",
-//               onPress: () => console.log("OK Pressed"),
-//               style: "default",
-//             },
-//           ],
-//           { cancelable: false }
-//         );
-//         // Save the token for later use
-//         await AsyncStorage.setItem("token", response.data.token);
-//       } else {
-//         Alert.alert(
-//           "Error",
-//           "Failed to send OTP",
-//           [
-//             {
-//               text: "OK",
-//               onPress: () => console.log("OK Pressed"),
-//               style: "default",
-//             },
-//           ],
-//           { cancelable: false }
-//         );
-//       }
-//     } catch (error) {
-//       Alert.alert(
-//         "Error",
-//         "Error sending OTP",
-//         [
-//           {
-//             text: "OK",
-//             onPress: () => console.log("OK Pressed"),
-//             style: "default",
-//           },
-//         ],
-//         { cancelable: false }
-//       );
-//     }
-//   };
-
-//   const onLogin = async () => {
-//     try {
-//       const response = await axios.post(
-//         "https://backend.twicks.in/auth/login",
-//         {
-//           phone: formField.phone,
-//           otp: formField.otp,
-//         }
-//       );
-//       console.log(response);
-//       if (response.data.success) {
-//         Alert.alert(
-//           "Success",
-//           "Logged in successfully",
-//           [
-//             {
-//               text: "OK",
-//               onPress: () => console.log("OK Pressed"),
-//               style: "default",
-//             },
-//           ],
-//           { cancelable: false }
-//         );
-//         await AsyncStorage.setItem("token", response.data.token);
-//         navigation.navigate("Home");
-//       } else {
-//         Alert.alert(
-//           "Error",
-//           "Login failed",
-//           [
-//             {
-//               text: "OK",
-//               onPress: () => console.log("OK Pressed"),
-//               style: "default",
-//             },
-//           ],
-//           { cancelable: false }
-//         );
-//       }
-//     } catch (error) {
-//       Alert.alert(
-//         "Error",
-//         "Error logging in",
-//         [
-//           {
-//             text: "OK",
-//             onPress: () => console.log("OK Pressed"),
-//             style: "default",
-//           },
-//         ],
-//         { cancelable: false }
-//       );
-//     }
-//   };
-
-//   return (
-//     <View style={styles.container}>
-//       <TextInput
-//         style={styles.input}
-//         onChangeText={(value) => handleChangeFormField("phone", value)}
-//         value={formField.phone}
-//         placeholder="Enter your phone number"
-//         keyboardType="phone-pad"
-//         maxLength={10}
-//       />
-//       <Pressable onPress={onSendOtp}>
-//         <Text>otp</Text>
-//       </Pressable>
-
-//       <TextInput
-//         style={styles.input}
-//         onChangeText={(value) => handleChangeFormField("otp", value)}
-//         value={formField.otp}
-//         placeholder="Enter OTP"
-//         keyboardType="numeric"
-//       />
-//       <Button title="Login" onPress={onLogin} />
-//     </View>
-//   );
-// };
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     justifyContent: "center",
-//     paddingHorizontal: 20,
-//   },
-//   input: {
-//     height: 40,
-//     borderColor: "gray",
-//     borderWidth: 1,
-//     marginBottom: 10,
-//     paddingLeft: 10,
-//   },
-// });
-
-// export default LoginScreen;
