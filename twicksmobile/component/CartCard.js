@@ -1,16 +1,15 @@
-import { StyleSheet, Alert, Pressable, Text, View } from "react-native";
+import { StyleSheet, Alert, Image, Pressable, Text, View } from "react-native";
 import React, { useState, useEffect } from "react";
-import { Feather } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/core";
 import { useFetch } from "../hooks/api_hook";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios"
+import axios from "axios";
 const CartCard = ({ item, index }) => {
-  console.log("hiiiiiiiiiii");
-  console.log("bdbcjdsbcjdb",index)
   const navigation = useNavigation();
   const [total, setTotal] = useState(0);
   const [user, setUser] = useState(null);
+
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -24,6 +23,7 @@ const CartCard = ({ item, index }) => {
 
     fetchUser();
   }, []);
+
   useEffect(() => {
     if (cart) {
       let totalPrice = 0;
@@ -37,19 +37,11 @@ const CartCard = ({ item, index }) => {
   let { data: cart } = useFetch(`/api/getCartByUser/${user?._id}`);
   const increaseValueHandler = async (index) => {
     try {
-      console.log(index)
       if (
         cart.products[index].units ==
         cart.products[index].productId.units.maxQuantity
       ) {
         Alert.alert("You have reached product max limit");
-        // toast.error(`You have reached product max limit`, {
-        //   position: "bottom-right",
-        //   autoClose: 8000,
-        //   pauseOnHover: true,
-        //   draggable: true,
-        //   theme: "dark",
-        // });
       } else {
         const { data } = await axios.put(
           `https://backend.twicks.in/api/addToCart`,
@@ -59,40 +51,25 @@ const CartCard = ({ item, index }) => {
             units: 1,
           }
         );
-        // console.log(data)
         if (data.success) {
-          window.location.reload();
+          navigation.navigate("Cart");
+          // window.location.reload();
         } else {
           console.log(data.message);
-          // toast.error(`${data.message}`, {
-          //   position: "bottom-right",
-          //   autoClose: 8000,
-          //   pauseOnHover: true,
-          //   draggable: true,
-          //   theme: "dark",
-          // });
         }
       }
     } catch (error) {
       console.log("catch", error.message);
-      // toast.error(`${error.message}`, {
-      //   position: "bottom-right",
-      //   autoClose: 8000,
-      //   pauseOnHover: true,
-      //   draggable: true,
-      //   theme: "dark",
-      // });
     }
   };
 
-  // console.log("aa agyaaaA", item);
   const decreaseValueHandler = async (index) => {
     try {
       const { data } = await axios.delete(
         `https://backend.twicks.in/api/dropFromCart/${user._id}/${cart.products[index].productId._id}`
       );
       if (data.success) {
-        console.log("sucess");
+        console.log("success");
         // window.location.reload();
       } else {
         console.log(data.message);
@@ -105,7 +82,7 @@ const CartCard = ({ item, index }) => {
         // });
       }
     } catch (error) {
-      console.log(error.message);
+      console.log("catch" + error.message);
       // toast.error(`${error.message}`, {
       //   position: "bottom-right",
       //   autoClose: 8000,
@@ -118,6 +95,7 @@ const CartCard = ({ item, index }) => {
   return (
     <>
       <View
+        key={item?._id}
         style={{
           width: "100%",
           paddingVertical: 10,
@@ -126,12 +104,10 @@ const CartCard = ({ item, index }) => {
         }}
       >
         <Pressable
-          key={item?._id}
           onPress={() =>
             navigation.navigate("Product", {
               cartId: item?._id,
               cartName: item?.title,
-
               cartPrice: item?.price,
             })
           }
@@ -140,48 +116,66 @@ const CartCard = ({ item, index }) => {
             borderWidth: 1,
             width: "100%",
             padding: 20,
-            borderRadius: 4,
+            borderRadius: 10,
             backgroundColor: "#FFFFFF",
+            flexDirection: "row",
+            justifyContent: "space-between",
           }}
         >
-          <Text style={{ fontWeight: "500", fontSize: 21 }}>
-            {item?.productId.title}
-          </Text>
+          <View style={{ width: "30%" }}>
+            <Image
+              style={{
+                width: "100%",
+                height: "100%",
+                resizeMode: "contain",
+              }}
+              source={{ uri: item?.productId?.image }}
+            />
+          </View>
+          <View style={{ width: "65%" }}>
+            <Text style={{ fontWeight: "500", fontSize: 24 }}>
+              {item?.productId.title}
+            </Text>
 
-          <Text style={{ fontWeight: "500", fontSize: 19 }}>
-            Rs. {item?.productId.price}/-
-          </Text>
-
-          <Pressable
-            onPress={() => decreaseValueHandler(index)}
-            style={({ pressed }) => [
-              {
+            <Text style={{ fontWeight: "500", fontSize: 19,color:"#4F6E80" }}>
+              Rs. {item?.productId.price}/-
+            </Text>
+            <View
+              style={{
                 flexDirection: "row",
                 alignItems: "center",
                 gap: 10,
                 paddingTop: 10,
-                backgroundColor: pressed ? "#D8E8E7" : "#FFFFFF", // Example of changing background color on press
-              },
-            ]}
-          >
-            <Feather name="minus-square" size={24} color="#237169" />
-          </Pressable>
+              }}
+            >
+              <Pressable
+                onPress={() => decreaseValueHandler(index)}
+                style={({ pressed }) => [
+                  {
+                    alignItems: "center",
+                    gap: 10,
+                    backgroundColor: pressed ? "#D8E8E7" : "#FFFFFF",
+                  },
+                ]}
+              >
+                <AntDesign name="minuscircleo" size={24} color="black" />
+              </Pressable>
 
-          <Text style={{ fontSize: 21 }}>{item?.units}</Text>
-          <Pressable
-            onPress={() => increaseValueHandler(index)}
-            style={({ pressed }) => [
-              {
-                flexDirection: "row",
-                alignItems: "center",
-                gap: 10,
-                paddingTop: 10,
-                backgroundColor: pressed ? "#D8E8E7" : "#FFFFFF", // Example of changing background color on press
-              },
-            ]}
-          >
-            <Feather name="plus-square" size={24} color="#237169" />
-          </Pressable>
+              <Text style={{ fontSize: 21 }}>{item?.units}</Text>
+              <Pressable
+                onPress={() => increaseValueHandler(index)}
+                style={({ pressed }) => [
+                  {
+                    flexDirection: "row",
+                    gap: 10,
+                    backgroundColor: pressed ? "#D8E8E7" : "#FFFFFF", 
+                  },
+                ]}
+              >
+                <AntDesign name="pluscircleo" size={24} color="black" />
+              </Pressable>
+            </View>
+          </View>
         </Pressable>
       </View>
     </>

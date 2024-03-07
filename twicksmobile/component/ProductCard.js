@@ -27,13 +27,13 @@ const ProductCard = ({ item }) => {
         })
       }
       style={{
-        // marginHorizontal: 10,
         marginVertical: 15,
         backgroundColor: "white",
         borderRadius: 20,
-        height: 190,
-        width: 175,
+        height: 220,
+        width: "46%",
         overflow: "hidden",
+        marginHorizontal: "2%",
       }}
     >
       <View
@@ -44,8 +44,12 @@ const ProductCard = ({ item }) => {
           justifyContent: "space-between",
         }}
       >
-        <Text style={{ fontSize: 15 }}>{item?.category.category}</Text>
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <View style={{width:"80%"}}>
+          <Text numberOfLines={1} style={{ fontSize: 15 }}>
+            {item?.category.category}
+          </Text>
+        </View>
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 5 }}>
           <FontAwesome name="star" size={15} color="#FFBB56" />
           <Text>{item?.rating}</Text>
         </View>
@@ -55,15 +59,15 @@ const ProductCard = ({ item }) => {
           width: "100%",
           height: 140,
           resizeMode: "contain",
-          marginTop: -20,
+          marginTop: -10,
         }}
         source={{ uri: item?.image }}
       />
       <ImageBackground
         style={{
-          width: 175,
-          height: 90,
-          marginTop: -30,
+          width: "100%",
+          height: 130,
+          marginTop: -40,
           resizeMode: "contain",
         }}
         source={require("../assets/homepage-below-main.png")}
@@ -77,8 +81,10 @@ const ProductCard = ({ item }) => {
           }}
         >
           <View style={{ marginLeft: 10 }}>
-            <Text style={{ color: "#1E786F" }}>{item?.title}</Text>
-            <Text>Rs. {item?.price}/-</Text>
+            <Text style={{ color: "#1E786F", fontSize: 17, marginVertical: 3 }}>
+              {item?.title}
+            </Text>
+            <Text style={{ fontSize: 15 }}>Rs. {item?.price}/-</Text>
           </View>
         </View>
       </ImageBackground>

@@ -102,7 +102,7 @@ const HomeScreen = ({ navigation }) => {
                 name="person-outline"
                 size={24}
                 color="black"
-                onPress={() => navigation.navigate("Profile")}
+                onPress={() => navigation.navigate("Pro")}
               />
               <AntDesign
                 name="shoppingcart"
@@ -121,7 +121,7 @@ const HomeScreen = ({ navigation }) => {
                   if (text === "") {
                     setHasSearched(false);
                   } else {
-                    setHasSearched(true)
+                    setHasSearched(true);
                   }
                 }}
                 value={searchField}
@@ -175,7 +175,7 @@ const HomeScreen = ({ navigation }) => {
           </View>
           <View
             style={{
-              width: "90%",
+              width: "100%",
               flexDirection: "row",
               alignItems: "center",
               flexWrap: "wrap",
@@ -187,7 +187,6 @@ const HomeScreen = ({ navigation }) => {
                 return <ProductCard item={item} key={index} />;
               })}
           </View>
-          
         </ScrollView>
       </SafeAreaView>
     </>

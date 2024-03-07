@@ -1,9 +1,13 @@
 import { StyleSheet, Pressable, Text, View } from "react-native";
 import React from "react";
 
-const ShopCategory = ({ item }) => {
+const ShopCategory = ({ item, selected,onPress }) => {
+  const backgroundColor = selected ? "blue" : "white"; 
   return (
-    <Pressable style={styles.container}>
+    <Pressable
+      style={[styles.container, { backgroundColor }]}
+      onPress={onPress}
+    >
       <View style={styles.category}>
         <Text style={styles.text}>{item.category}</Text>
       </View>
@@ -12,15 +16,14 @@ const ShopCategory = ({ item }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {},
-  category: {
-    backgroundColor: "white",
+  container: {
     borderColor: "black",
     borderWidth: 2,
     borderRadius: 15,
     padding: 10,
     margin: 10,
   },
+  category: {},
   text: {},
 });
 

@@ -10,7 +10,16 @@ import { useNavigation } from "@react-navigation/core";
 import React from "react";
 import { Entypo } from "@expo/vector-icons";
 
-const CartCard = ({item}) => {
+const CartCard = ({ item, index }) => {
+  // console.log("bmnvnbcnbc nb nm b,mbnm", index, item);
+
+  // console.log("ertyuio", item?.orderStatus);
+
+  console.log("gchgcvhgv", item?.user?.userName);
+
+  // item.products.forEach((product) => {
+  //   console.log("Price:", product.productId.price);
+  // });
 
   const navigation = useNavigation();
 
@@ -18,17 +27,7 @@ const CartCard = ({item}) => {
     <>
       <View style={{ paddingHorizontal: 10 }}>
         <Pressable
-
-        key={item?._id}
-        onPress={() =>
-          navigation.navigate("Product", {
-            orderId: item?._id,
-            orderImage: item?.image,
-            // productDetais: item?.description,
-            orderPrice: item?.price,
-          })
-        }
-
+          key={item?._id}
           style={{
             flexDirection: "row",
             borderColor: "#DDDEDF",
@@ -50,22 +49,49 @@ const CartCard = ({item}) => {
                 padding: 10,
               }}
             >
-              <Text style={{ fontSize: 24 }}>Janurary 23,2024{item?.price}</Text>
+              {item.products.map((product, index) => (
+                <Text key={index} style={{ fontSize: 24 }}>
+                  {product.productId.createdAt}
+                </Text>
+              ))}
               <Entypo name="chevron-small-right" size={24} color="black" />
             </View>
+
             <View
               style={{
                 justifyContent: "space-between",
                 width: "100%",
+
                 padding: 10,
               }}
             >
-              <Text style={{ fontSize: 24 }}>Rishika Kothari</Text>
-              <Text style={{ fontSize: 21 }}>65d9978d7644354ab1bc4161</Text>
+              <Text style={{ fontSize: 24, color: "white" }}>
+                {item?.user?.userName}
+              </Text>
+              <Text style={{ fontSize: 21, color: "white" }}>
+                65d9978d7644354ab1bc4161
+              </Text>
 
-              <Text style={{ fontSize: 21 }}>Delivered</Text>
+              <Text style={{ fontSize: 21, color: "white" }}>
+                {item?.orderStatus}
+              </Text>
 
-              <Text style={{ fontSize: 20, color: "gray" }}>{item?.price}</Text>
+              <Text style={{ fontSize: 20, color: "gray" }}>
+                {item.products[0].productId?.price}
+              </Text>
+            </View>
+            <View>
+              {item.products.map((product, index) => (
+                <Image
+                  key={index}
+                  style={{
+                    width: 100,
+                    height: 100,
+                    resizeMode: "contain",
+                  }}
+                  source={{ uri: product.productId.image }}
+                />
+              ))}
             </View>
             <View style={styles.line}></View>
 
@@ -99,8 +125,7 @@ const styles = StyleSheet.create({
   line: {
     width: "95%",
     height: 1,
-    backgroundColor: "gray",
-    // marginVertical: 10,
+    backgroundColor: "white",
     marginHorizontal: 10,
   },
 });

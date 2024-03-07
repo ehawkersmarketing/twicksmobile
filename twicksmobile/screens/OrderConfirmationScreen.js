@@ -72,7 +72,7 @@ const OrderConfirmationScreen = ({route}) => {
             Thank you, your order has been placed!
           </Text>
           <Text style={{ color: "#64B79E", fontSize: 17 }}>
-            The order confirmation is sent to your email address{" "}
+            The order confirmation is sent to your email address
           </Text>
           <View
             style={{

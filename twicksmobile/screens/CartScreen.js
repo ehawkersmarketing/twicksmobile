@@ -6,6 +6,7 @@ import {
   Text,
   Alert,
   View,
+  SafeAreaView,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/core";
@@ -19,6 +20,12 @@ const CartScreen = () => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
+    if (user) {
+      console.log("yaha hu me ", user);
+    } else {
+    }
+  }, []);
+  useEffect(() => {
     const fetchUser = async () => {
       try {
         const userString = await AsyncStorage.getItem("user");
@@ -31,8 +38,8 @@ const CartScreen = () => {
 
     fetchUser();
   }, []);
+
   let { data: cart } = useFetch(`/api/getCartByUser/${user?._id}`);
-  // console.log(cart?.products)
   useEffect(() => {
     if (cart) {
       let totalPrice = 0;
@@ -43,121 +50,62 @@ const CartScreen = () => {
       setTotal(totalPrice);
     }
   }, [cart]);
-
-  const increaseValueHandler = async (index) => {
-    try {
-      if (
-        cart.products[index].units ==
-        cart.products[index].productId.units.maxQuantity
-      ) {
-        Alert.alert("You have reached product max limit");
-        // toast.error(`You have reached product max limit`, {
-        //   position: "bottom-right",
-        //   autoClose: 8000,
-        //   pauseOnHover: true,
-        //   draggable: true,
-        //   theme: "dark",
-        // });
-      } else {
-        const { data } = await axios.put(
-          `https://backend.twicks.in/api/addToCart`,
-          {
-            userId: user._id,
-            productId: cart.products[index].productId._id,
-            units: 1,
-          }
-        );
-        if (data.success) {
-          window.location.reload();
-        } else {
-          console.log(data.message);
-          // toast.error(`${data.message}`, {
-          //   position: "bottom-right",
-          //   autoClose: 8000,
-          //   pauseOnHover: true,
-          //   draggable: true,
-          //   theme: "dark",
-          // });
-        }
-      }
-    } catch (error) {
-      console.log("catch", error.message);
-      // toast.error(`${error.message}`, {
-      //   position: "bottom-right",
-      //   autoClose: 8000,
-      //   pauseOnHover: true,
-      //   draggable: true,
-      //   theme: "dark",
-      // });
-    }
-  };
-
-  const decreaseValueHandler = async (index) => {
-    try {
-      const { data } = await axios.delete(
-        `https://backend.twicks.in/api/dropFromCart/${user._id}/${cart.products[index].productId._id}`
-      );
-      if (data.success) {
-        console.log("sucess");
-        // window.location.reload();
-      } else {
-        console.log(data.message);
-        // toast.error(`${data.message}`, {
-        //   position: "bottom-right",
-        //   autoClose: 8000,
-        //   pauseOnHover: true,
-        //   draggable: true,
-        //   theme: "dark",
-        // });
-      }
-    } catch (error) {
-      console.log(error.message);
-      // toast.error(`${error.message}`, {
-      //   position: "bottom-right",
-      //   autoClose: 8000,
-      //   pauseOnHover: true,
-      //   draggable: true,
-      //   theme: "dark",
-      // });
-    }
-  };
   return (
     <>
-      <ScrollView>
-        <View style={{ flex: 1, padding: 10, alignItems: "flex-start" }}>
-          <View style={{ width: "100%" }}>
-            {cart &&
-              cart.products.map((item, index) => (
-                <CartCard item={item} key={index} />
-              ))}
-          </View>
+      <SafeAreaView
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "#F5FCFF",
+        }}
+      >
+        <ScrollView contentContainerStyle={styles.scrollViewContent}>
+          <View style={{ flex: 1, padding: 10, alignItems: "flex-start" }}>
+            <View style={{ width: "100%" }}>
+              {cart &&
+                cart?.products.map((item, index) => (
+                  <CartCard key={item._id} item={item} index={index} />
+                ))}
+            </View>
 
-          <View style={{ flex: 1 }}>
-            <Button
-              title="Order Confirmation"
-              onPress={() => navigation.navigate("OrderConfirmation")}
-            ></Button>
-            <Button
-              title="Login"
-              onPress={() => navigation.navigate("Login")}
-            ></Button>
-            <Button
-              title="Register"
-              onPress={() => navigation.navigate("Register")}
-            ></Button>
-            <Button
-              title="Return And Refund"
-              onPress={() => navigation.navigate("ReturnAndRefund")}
-            ></Button>
-            <Button
-              title="Term And Condition"
-              onPress={() => navigation.navigate("TermAndCondition")}
-            ></Button>
-            <Button
-              title="Privacy Policy"
-              onPress={() => navigation.navigate("PrivacyPolicy")}
-            ></Button>
+            <View style={{ flex: 1 }}>
+              <Button
+                title="Order Confirmation"
+                onPress={() => navigation.navigate("OrderConfirmation")}
+              ></Button>
+              <Button
+                title="Login"
+                onPress={() => navigation.navigate("Login")}
+              ></Button>
+              <Button
+                title="Register"
+                onPress={() => navigation.navigate("Register")}
+              ></Button>
+              <Button
+                title="Return And Refund"
+                onPress={() => navigation.navigate("ReturnAndRefund")}
+              ></Button>
+              <Button
+                title="Term And Condition"
+                onPress={() => navigation.navigate("TermAndCondition")}
+              ></Button>
+              <Button
+                title="Privacy Policy"
+                onPress={() => navigation.navigate("PrivacyPolicy")}
+              ></Button>
+            </View>
           </View>
+        </ScrollView>
+        <View
+          style={{
+            position: "absolute",
+            bottom: 0,
+            width: "100%",
+            padding: 10,
+            backgroundColor: "#F5FCFF",
+          }}
+        >
           <View style={styles.line}></View>
 
           <View style={{ flexDirection: "row" }}>
@@ -179,6 +127,7 @@ const CartScreen = () => {
               </Text>
             </Pressable>
             <Pressable
+              onPress={() => navigation.navigate("Back")}
               style={{
                 backgroundColor: "#28635D",
                 padding: 14,
@@ -196,7 +145,7 @@ const CartScreen = () => {
             </Pressable>
           </View>
         </View>
-      </ScrollView>
+      </SafeAreaView>
     </>
   );
 };
@@ -232,5 +181,8 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: "gray",
     marginVertical: 10,
+  },
+  scrollViewContent: {
+    paddingBottom: 100,
   },
 });

@@ -9,7 +9,7 @@ const LegalScreen = () => {
   const navigate = useNavigation();
 
   return (
-    <View style={{ padding: 10 }}>
+    <View style={{ padding: 10, backgroundColor: "#237169",height:"100%" }}>
       <Pressable
         onPress={() => navigate.navigate("ReturnAndRefund")}
         style={{
@@ -27,10 +27,10 @@ const LegalScreen = () => {
             gap: 10,
           }}
         >
-          <Ionicons name="return-up-back" size={24} color="black" />
+          <Ionicons name="return-up-back" size={24} color="white" />
           <Text style={styles.names}>Return And Refund</Text>
         </View>
-        <MaterialIcons name="navigate-next" size={24} color="black" />
+        <MaterialIcons name="navigate-next" size={24} color="white" />
       </Pressable>
       <View style={styles.line}></View>
       <Pressable
@@ -50,10 +50,10 @@ const LegalScreen = () => {
             gap: 10,
           }}
         >
-          <AntDesign name="lock" size={24} color="black" />
+          <AntDesign name="lock" size={24} color="white" />
           <Text style={styles.names}>Privacy Policy</Text>
         </View>
-        <MaterialIcons name="navigate-next" size={24} color="black" />
+        <MaterialIcons name="navigate-next" size={24} color="white" />
       </Pressable>
       <View style={styles.line}></View>
       <Pressable
@@ -73,10 +73,10 @@ const LegalScreen = () => {
             gap: 10,
           }}
         >
-          <AntDesign name="filetext1" size={24} color="black" />
+          <AntDesign name="filetext1" size={24} color="white" />
           <Text style={styles.names}>Terms & Conditions</Text>
         </View>
-        <MaterialIcons name="navigate-next" size={24} color="black" />
+        <MaterialIcons name="navigate-next" size={24} color="white" />
       </Pressable>
     </View>
   );
@@ -87,12 +87,12 @@ export default LegalScreen;
 const styles = StyleSheet.create({
   names: {
     fontSize: 20,
-    color: "black",
+    color: "white",
   },
   line: {
     height: 1,
     width: "100%",
-    backgroundColor: "black",
+    backgroundColor: "white",
     marginVertical: 10,
   },
 });

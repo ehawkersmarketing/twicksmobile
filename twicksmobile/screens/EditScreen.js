@@ -98,23 +98,26 @@ const EditScreen = () => {
   }, []);
   return (
     <>
-      <View style={{ padding: 10 }}>
+      <View style={{ padding: 10, backgroundColor: "#237169", height: "100%" }}>
         <View style={{ paddingVertical: 10 }}>
-          <Text style={{ paddingVertical: 5, fontSize: 20 }}>Name</Text>
+          <Text style={{ paddingVertical: 5, fontSize: 20,color:"white" }}>Name</Text>
           <TextInput
             onChangeText={(value) => onChangeInputHandler(value, "userName")}
             placeholder={userData.userName}
             style={{ fontSize: 30 }}
+            placeholderTextColor={"rgb(187, 182, 182);"}
           />
           <View style={styles.line}></View>
         </View>
 
         <View style={{ paddingVertical: 10 }}>
-          <Text style={{ paddingVertical: 5, fontSize: 20 }}>Email ID</Text>
+          <Text style={{ paddingVertical: 5, fontSize: 20,color:"white" }}>Email ID</Text>
           <TextInput
             onChangeText={(value) => onChangeInputHandler(value, "email")}
             placeholder={userData.email}
             style={{ fontSize: 30 }}
+            placeholderTextColor={"rgb(187, 182, 182);"}
+
           />
           <View style={styles.line}></View>
         </View>
@@ -146,7 +149,7 @@ const styles = StyleSheet.create({
   line: {
     height: 1,
     width: "100%",
-    backgroundColor: "black",
+    backgroundColor: "white",
     // marginVertical: 10,
   },
 });

@@ -21,6 +21,8 @@ import axios from "axios";
 
 const ShopScreen = () => {
   const navigate = useNavigation();
+  const [selectedCategory, setSelectedCategory] = useState(null);
+
   const [open, setOpen] = useState(false);
   const [activeFilter, setActiveFilter] = useState({
     filter: "",
@@ -52,62 +54,8 @@ const ShopScreen = () => {
     }
   }, [searchField]);
   const { data: categories } = useFetch("/api/allCategory");
-
-  const applyFilter = (e, index) => {
-    if (index == 2) {
-      if (e.target.value === "select the Category") {
-        setSearchField("");
-        setActiveFilter({ [e.target.name]: "" });
-      } else {
-        setSearchField(e.target.value);
-        setActiveFilter({ [e.target.name]: e.target.value });
-      }
-      setOpen(false);
-    } else {
-      if (index == 1) {
-        if (activeFilter.filter === "") {
-          setProducts(
-            products.sort(function (a, b) {
-              return a.price - b.price;
-            })
-          );
-          setActiveFilter({ ["filter"]: `` });
-          document
-            .getElementById("allproduct")
-            .scrollIntoView({ behavior: "smooth", block: "start" });
-        } else {
-          setProducts(
-            searchProducts.sort(function (a, b) {
-              return a.price - b.price;
-            })
-          );
-          setActiveFilter({ ["filter"]: `` });
-        }
-      } else {
-        if (activeFilter.filter === "") {
-          setProducts(
-            products.sort(function (a, b) {
-              return b.price - a.price;
-            })
-          );
-
-          setActiveFilter({ ["filter"]: `` });
-          document
-            .getElementById("allproduct")
-            .scrollIntoView({ behavior: "smooth", block: "start" });
-        } else {
-          setProducts(
-            searchProducts.sort(function (a, b) {
-              return b.price - a.price;
-            })
-          );
-          setActiveFilter({ ["filter"]: `` });
-        }
-      }
-      setOpen(false);
-    }
-    setOpenForSort(false);
-    setOpen(false);
+  const handleCategoryClick = (category) => {
+    setSelectedCategory(category);
   };
 
   return (
@@ -120,9 +68,7 @@ const ShopScreen = () => {
             backgroundColor: "#FAFAFA",
             justifyContent: "space-between",
             alignItems: "center",
-            // gap: 10,
             height: 60,
-            // backgroundColor: "yellow",
           }}
         >
           <Pressable
@@ -182,11 +128,13 @@ const ShopScreen = () => {
         </View>
 
         <ScrollView horizontal showsHorizontalScrollIndicator>
-          {activeFilter.filter === "" &&
-            searchField === "" &&
+          {searchField === "" &&
             categories &&
             categories?.map((item, index) => {
-              return <ShopCategory item={item} key={index} />;
+              const isSelected = selectedCategory === item;
+              return (
+                <ShopCategory item={item} key={index} selected={isSelected} onPress={()=>handleCategoryClick(item)}/>
+              );
             })}
         </ScrollView>
         <View
@@ -196,8 +144,7 @@ const ShopScreen = () => {
             flexWrap: "wrap",
           }}
         >
-          {activeFilter.filter === "" &&
-            searchField === "" &&
+          {searchField === "" &&
             products &&
             products?.map((item, index) => {
               return <ProductCard item={item} key={index} />;

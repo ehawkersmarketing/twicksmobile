@@ -9,6 +9,9 @@ const OrderScreen = () => {
   const navigate = useNavigation();
   const [userData, setUserData] = useState({});
   const [orders, setOrders] = useState([]);
+  const { data: fetchedOrders } = useFetch(
+    `/api/getAllOrderByUser/${userData._id}`
+  );
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -16,6 +19,8 @@ const OrderScreen = () => {
         const userString = await AsyncStorage.getItem("user");
         const user = JSON.parse(userString);
         setUserData(user);
+        // console.log(userData);
+        // console.log(userData._id);
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
@@ -24,29 +29,18 @@ const OrderScreen = () => {
     fetchUser();
   }, []);
 
-  useEffect(() => {
-    if (userData._id) {
-      const fetchOrders = async () => {
-        const { data: fetchedOrders } = await useFetch(
-          `/api/getAllOrderByUser/${userData._id}`
-        );
-        setOrders(fetchedOrders);
-        console.log(fetchedOrders)
-      };
-
-      fetchOrders();
-    }
-  }, [userData]);
-
   return (
     <>
       <SafeAreaView>
-        <ScrollView>
-          {orders &&
-            orders.map((order, index) => {
-              <OrderCard key={index} order={order} />;
+        <ScrollView
+          style={{ padding: 10, backgroundColor: "#237169", height: "100%" }}
+        >
+          {fetchedOrders &&
+            fetchedOrders.map((item, index) => {
+              // console.log("vfjdhcjfdbcfmnrbjhervfehj",fetchedOrders);
+
+              return <OrderCard item={item} index={index} />;
             })}
-            <OrderCard/>
         </ScrollView>
       </SafeAreaView>
     </>

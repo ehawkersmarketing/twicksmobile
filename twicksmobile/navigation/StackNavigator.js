@@ -2,6 +2,7 @@ import { StyleSheet } from "react-native";
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 
 import { NavigationContainer } from "@react-navigation/native";
 
@@ -25,10 +26,81 @@ import OrderScreen from "../screens/OrderScreen";
 
 import { Entypo } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
+import { FontAwesome5 } from "@expo/vector-icons";
+import { FontAwesome } from "@expo/vector-icons";
+import { FontAwesome6 } from "@expo/vector-icons";
 
 const StackNavigator = () => {
   const Stack = createNativeStackNavigator();
   const Tab = createBottomTabNavigator();
+  const Top = createMaterialTopTabNavigator();
+
+  function TopTabs() {
+    return (
+      <Top.Navigator>
+        <Top.Screen
+          name="Profile"
+          component={ProfileScreen}
+          options={{
+            tabBarLabel: "Profile",
+            tabBarLabelStyle: { color: "#008E97" },
+            headerShown: false,
+            tabBarIcon: ({ focused }) =>
+              focused ? (
+                <FontAwesome5 name="user-alt" size={24} color="#237169" />
+              ) : (
+                <FontAwesome5 name="user" size={24} color="black" />
+              ),
+          }}
+        />
+        <Top.Screen
+          name="Edit"
+          component={EditScreen}
+          options={{
+            tabBarLabel: "Edit",
+            tabBarLabelStyle: { color: "#008E97" },
+            headerShown: false,
+            tabBarIcon: ({ focused }) =>
+              focused ? (
+                <Entypo name="edit" size={24} color="#237169" />
+              ) : (
+                <Entypo name="edit" size={24} color="black" />
+              ),
+          }}
+        />
+        <Top.Screen
+          name="Order"
+          component={OrderScreen}
+          options={{
+            tabBarLabel: "Order",
+            tabBarLabelStyle: { color: "#008E97" },
+            headerShown: false,
+            tabBarIcon: ({ focused }) =>
+              focused ? (
+                <FontAwesome name="shopping-cart" size={24} color="#237169" />
+              ) : (
+                <AntDesign name="shoppingcart" size={24} color="black" />
+              ),
+          }}
+        />
+        <Top.Screen
+          name="Legal"
+          component={LegalScreen}
+          options={{
+            tabBarLabel: "Legal",
+            tabBarLabelStyle: { color: "#008E97" },
+            headerShown: false,
+            tabBarIcon: ({ focused }) =>
+              focused ? (
+                <FontAwesome6 name="legal" size={24} color="#237169" />
+              ) : (
+                <FontAwesome6 name="legal" size={24} color="black" />
+              ),
+          }}
+        />
+      </Top.Navigator>
+    );
+  }
   function BottomTabs() {
     return (
       <Tab.Navigator>
@@ -89,9 +161,14 @@ const StackNavigator = () => {
           options={{ headerShown: false }}
         />
         <Stack.Screen
+          name="Pro"
+          component={TopTabs}
+          options={{ headerShown: true }}
+        />
+        <Stack.Screen
           name="Login"
           component={LoginScreen}
-          options={{ headerShown: false }}
+          options={{ headerShown: true }}
         />
         <Stack.Screen
           name="Register"

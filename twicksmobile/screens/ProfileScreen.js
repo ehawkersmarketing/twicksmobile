@@ -62,86 +62,18 @@ const ProfileScreen = () => {
 
   return (
     <>
-      <View>
+      <View style={{backgroundColor:"#237169",height:"100%"}}>
         <View style={{ padding: 10 }}>
           <View style={{ flexDirection: "row", gap: 10 }}>
-            <FontAwesome name="user-circle-o" size={24} color="black" />
-            <Text style={{ fontSize: 24 }}>Hello, {userData.userName} </Text>
+            <FontAwesome name="user-circle-o" size={24} color="white" />
+            <Text style={{ fontSize: 24 ,color:"white"}}>Hello, {userData.userName} </Text>
           </View>
           <View style={{ paddingVertical: 10, flexDirection: "row", gap: 10 }}>
-            <Text style={{ fontSize: 17 }}>{userData.phone}</Text>
-            <Text style={{ fontSize: 17 }}>{userData.email}</Text>
+            <Text style={{ fontSize: 17 ,color:"white"}}>{userData.phone}</Text>
+            <Text style={{ fontSize: 17 ,color:"white"}}>{userData.email}</Text>
           </View>
         </View>
         <View style={{ padding: 10 }}>
-          <Pressable
-            onPress={() => navigate.navigate("Edit")}
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              gap: 10,
-              marginVertical: 5,
-              justifyContent: "space-between",
-            }}
-          >
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                gap: 10,
-              }}
-            >
-              <Feather name="edit" size={24} color="black" />
-              <Text style={styles.names}>Edit</Text>
-            </View>
-            <MaterialIcons name="navigate-next" size={24} color="black" />
-          </Pressable>
-          <View style={styles.line}></View>
-          <Pressable
-            onPress={() => navigate.navigate("Order")}
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              gap: 10,
-              marginVertical: 5,
-              justifyContent: "space-between",
-            }}
-          >
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                gap: 10,
-              }}
-            >
-              <Entypo name="shopping-basket" size={24} color="black" />
-              <Text style={styles.names}>Orders</Text>
-            </View>
-            <MaterialIcons name="navigate-next" size={24} color="black" />
-          </Pressable>
-          <View style={styles.line}></View>
-          <Pressable
-            onPress={() => navigate.navigate("Legal")}
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              gap: 10,
-              marginVertical: 5,
-              justifyContent: "space-between",
-            }}
-          >
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                gap: 10,
-              }}
-            >
-              <FontAwesome name="legal" size={24} color="black" />
-              <Text style={styles.names}>Legal</Text>
-            </View>
-            <MaterialIcons name="navigate-next" size={24} color="black" />
-          </Pressable>
           <View style={styles.line}></View>
           {isLoggedIn && (
             <Pressable
@@ -161,11 +93,11 @@ const ProfileScreen = () => {
                   gap: 10,
                 }}
               >
-                <MaterialIcons name="logout" size={24} color="black" />
+                <MaterialIcons name="logout" size={24} color="white" />
                 <Text style={styles.names}>Logout</Text>
               </View>
 
-              <MaterialIcons name="navigate-next" size={24} color="black" />
+              <MaterialIcons name="navigate-next" size={24} color="white" />
             </Pressable>
           )}
         </View>
@@ -223,12 +155,12 @@ const styles = StyleSheet.create({
   },
   names: {
     fontSize: 22,
-    color: "black",
+    color: "white",
   },
   line: {
     height: 1,
     width: "100%",
-    backgroundColor: "black",
+    backgroundColor: "white",
     marginVertical: 10,
   },
 });
