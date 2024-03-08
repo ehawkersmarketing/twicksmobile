@@ -72,24 +72,10 @@ const CartCard = ({ item, index }) => {
         console.log("success");
         // window.location.reload();
       } else {
-        console.log(data.message);
-        // toast.error(`${data.message}`, {
-        //   position: "bottom-right",
-        //   autoClose: 8000,
-        //   pauseOnHover: true,
-        //   draggable: true,
-        //   theme: "dark",
-        // });
+        Alert.alert(data.message);
       }
     } catch (error) {
-      console.log("catch" + error.message);
-      // toast.error(`${error.message}`, {
-      //   position: "bottom-right",
-      //   autoClose: 8000,
-      //   pauseOnHover: true,
-      //   draggable: true,
-      //   theme: "dark",
-      // });
+      Alert.alert(error.message);
     }
   };
   return (
@@ -137,7 +123,7 @@ const CartCard = ({ item, index }) => {
               {item?.productId.title}
             </Text>
 
-            <Text style={{ fontWeight: "500", fontSize: 19,color:"#4F6E80" }}>
+            <Text style={{ fontWeight: "500", fontSize: 19, color: "#4F6E80" }}>
               Rs. {item?.productId.price}/-
             </Text>
             <View
@@ -168,7 +154,7 @@ const CartCard = ({ item, index }) => {
                   {
                     flexDirection: "row",
                     gap: 10,
-                    backgroundColor: pressed ? "#D8E8E7" : "#FFFFFF", 
+                    backgroundColor: pressed ? "#D8E8E7" : "#FFFFFF",
                   },
                 ]}
               >

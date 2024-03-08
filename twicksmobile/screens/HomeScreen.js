@@ -57,7 +57,6 @@ const HomeScreen = ({ navigation }) => {
   const { data: categories } = useFetch("/api/allCategory");
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
   useEffect(() => {
     const checkToken = async () => {
       try {
@@ -66,6 +65,7 @@ const HomeScreen = ({ navigation }) => {
           setIsLoggedIn(true);
         } else {
           setIsLoggedIn(false);
+          navigate.navigate("Login");
         }
       } catch (error) {
         console.error("Error checking token:", error);
@@ -73,122 +73,127 @@ const HomeScreen = ({ navigation }) => {
     };
 
     checkToken();
-  }, []);
+  }, [navigate]);
+
   return (
     <>
-      <SafeAreaView style={styles.homemain}>
-        <ScrollView>
-          <View
-            style={{
-              flex: 1,
-              flexDirection: "row",
-              backgroundColor: "#FAFAFA",
-              justifyContent: "space-between",
-              alignItems: "center",
-              height: 60,
-            }}
-          >
-            <Pressable
-              onPress={() => navigation.navigate("Home")}
-              style={styles.headerlogo}
+      {isLoggedIn && (
+        <SafeAreaView style={styles.homemain}>
+          <ScrollView>
+            <View
+              style={{
+                flex: 1,
+                flexDirection: "row",
+                backgroundColor: "#FAFAFA",
+                justifyContent: "space-between",
+                alignItems: "center",
+                height: 60,
+              }}
             >
-              <Image
-                style={{ width: 130, height: 48 }}
-                source={require("../assets/logo.png")}
-              />
-            </Pressable>
-            <Pressable style={styles.headericons}>
-              <Ionicons
-                name="person-outline"
-                size={24}
-                color="black"
-                onPress={() => navigation.navigate("Pro")}
-              />
-              <AntDesign
-                name="shoppingcart"
-                size={24}
-                color="black"
-                onPress={() => navigation.navigate("Cart")}
-              />
-            </Pressable>
-          </View>
-          <View style={styles.searchmain}>
-            <View style={styles.searchpress}>
-              <TextInput
-                placeholder="Search"
-                onChangeText={(text) => {
-                  setSearchField(text);
-                  if (text === "") {
-                    setHasSearched(false);
-                  } else {
-                    setHasSearched(true);
-                  }
-                }}
-                value={searchField}
-                style={{
-                  marginLeft: 20,
-                  width: "100%",
-                }}
-              />
+              <Pressable
+                onPress={() => navigation.navigate("Home")}
+                style={styles.headerlogo}
+              >
+                <Image
+                  style={{ width: 130, height: 48 }}
+                  source={require("../assets/logo.png")}
+                />
+              </Pressable>
+              <Pressable style={styles.headericons}>
+                <Ionicons
+                  name="person-outline"
+                  size={24}
+                  color="black"
+                  onPress={() => navigation.navigate("Pro")}
+                />
+                <AntDesign
+                  name="shoppingcart"
+                  size={24}
+                  color="black"
+                  onPress={() => navigation.navigate("Cart")}
+                />
+              </Pressable>
             </View>
+            <View style={styles.searchmain}>
+              <View style={styles.searchpress}>
+                <TextInput
+                  placeholder="Search"
+                  onChangeText={(text) => {
+                    setSearchField(text);
+                    if (text === "") {
+                      setHasSearched(false);
+                    } else {
+                      setHasSearched(true);
+                    }
+                  }}
+                  value={searchField}
+                  style={{
+                    marginLeft: 20,
+                    width: "100%",
+                  }}
+                />
+              </View>
 
-            {hasSearched ? (
-              searchProducts.length > 0 ? (
-                <ScrollView>
-                  {searchProducts.map((item, index) => (
-                    <ProductCard item={item} key={index} />
-                  ))}
-                </ScrollView>
-              ) : (
-                <Text>No Results Found</Text>
-              )
-            ) : null}
-          </View>
-          <View>
-            <View style={styles.header}>
-              <Text style={{ fontSize: 20, paddingLeft: 15 }}>Categories</Text>
+              {hasSearched ? (
+                searchProducts.length > 0 ? (
+                  <ScrollView>
+                    {searchProducts.map((item, index) => (
+                      <ProductCard item={item} key={index} />
+                    ))}
+                  </ScrollView>
+                ) : (
+                  <Text>No Results Found</Text>
+                )
+              ) : null}
             </View>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              {categories &&
-                categories?.map((item, index) => {
-                  return <CategoryComponent item={item} key={index} />;
+            <View>
+              <View style={styles.header}>
+                <Text style={{ fontSize: 20, paddingLeft: 15 }}>
+                  Categories
+                </Text>
+              </View>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                {categories &&
+                  categories?.map((item, index) => {
+                    return <CategoryComponent item={item} key={index} />;
+                  })}
+              </ScrollView>
+            </View>
+            <View>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                <HomeImage />
+              </ScrollView>
+            </View>
+            <View>
+              <View style={styles.header}>
+                <Text style={{ fontSize: 20, paddingLeft: 15 }}>
+                  Featured Products
+                </Text>
+                <Button
+                  title="See All"
+                  color="#1E786F"
+                  onPress={() => navigation.navigate("Shop")}
+                  accessibilityLabel="Learn more about this purple button"
+                />
+              </View>
+            </View>
+            <View
+              style={{
+                width: "100%",
+                flexDirection: "row",
+                alignItems: "center",
+                flexWrap: "wrap",
+                justifyContent: "space-around",
+              }}
+            >
+              {products &&
+                products?.map((item, index) => {
+                  return <ProductCard item={item} key={index} />;
                 })}
-            </ScrollView>
-          </View>
-          <View>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              <HomeImage />
-            </ScrollView>
-          </View>
-          <View>
-            <View style={styles.header}>
-              <Text style={{ fontSize: 20, paddingLeft: 15 }}>
-                Featured Products
-              </Text>
-              <Button
-                title="See All"
-                color="#1E786F"
-                onPress={() => navigation.navigate("Shop")}
-                accessibilityLabel="Learn more about this purple button"
-              />
             </View>
-          </View>
-          <View
-            style={{
-              width: "100%",
-              flexDirection: "row",
-              alignItems: "center",
-              flexWrap: "wrap",
-              justifyContent: "space-around",
-            }}
-          >
-            {products &&
-              products?.map((item, index) => {
-                return <ProductCard item={item} key={index} />;
-              })}
-          </View>
-        </ScrollView>
-      </SafeAreaView>
+          </ScrollView>
+        </SafeAreaView>
+      )}
     </>
   );
 };

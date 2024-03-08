@@ -19,8 +19,6 @@ const OrderScreen = () => {
         const userString = await AsyncStorage.getItem("user");
         const user = JSON.parse(userString);
         setUserData(user);
-        // console.log(userData);
-        // console.log(userData._id);
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
@@ -29,20 +27,39 @@ const OrderScreen = () => {
     fetchUser();
   }, []);
 
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  useEffect(() => {
+    const checkToken = async () => {
+      try {
+        const token = await AsyncStorage.getItem("auth_token");
+        if (token !== null) {
+          setIsLoggedIn(true);
+        } else {
+          setIsLoggedIn(false);
+          navigate.navigate("Login");
+        }
+      } catch (error) {
+        console.error("Error checking token:", error);
+      }
+    };
+
+    checkToken();
+  }, [navigate]);
+
   return (
     <>
-      <SafeAreaView>
-        <ScrollView
-          style={{ padding: 10, backgroundColor: "#237169", height: "100%" }}
-        >
-          {fetchedOrders &&
-            fetchedOrders.map((item, index) => {
-              // console.log("vfjdhcjfdbcfmnrbjhervfehj",fetchedOrders);
-
-              return <OrderCard item={item} index={index} />;
-            })}
-        </ScrollView>
-      </SafeAreaView>
+      {isLoggedIn && (
+        <SafeAreaView>
+          <ScrollView
+            style={{ padding: 10, backgroundColor: "#237169", height: "100%" }}
+          >
+            {fetchedOrders &&
+              fetchedOrders.map((item, index) => {
+                return <OrderCard item={item} index={index} />;
+              })}
+          </ScrollView>
+        </SafeAreaView>
+      )}
     </>
   );
 };

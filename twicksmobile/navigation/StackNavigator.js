@@ -156,6 +156,16 @@ const StackNavigator = () => {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
+          name="Login"
+          component={LoginScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Register"
+          component={RegisterScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
           name="Back"
           component={BottomTabs}
           options={{ headerShown: false }}
@@ -165,16 +175,7 @@ const StackNavigator = () => {
           component={TopTabs}
           options={{ headerShown: true }}
         />
-        <Stack.Screen
-          name="Login"
-          component={LoginScreen}
-          options={{ headerShown: true }}
-        />
-        <Stack.Screen
-          name="Register"
-          component={RegisterScreen}
-          options={{ headerShown: true }}
-        />
+
         <Stack.Screen
           name="Profile"
           component={ProfileScreen}
