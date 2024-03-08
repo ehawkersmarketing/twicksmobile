@@ -6,8 +6,9 @@ import {
   Text,
   View,
 } from "react-native";
-import React from "react";
+import React,{useState,useEffect} from "react";
 import { useNavigation } from "@react-navigation/core";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const CheckoutScreen = () => {
   const navigation = useNavigation();

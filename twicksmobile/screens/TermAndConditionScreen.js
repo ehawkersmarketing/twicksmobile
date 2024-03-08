@@ -1,6 +1,6 @@
 import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
-import React from "react";
-// import { ScrollView } from "react-native-gesture-handler";
+import React, { useState, useEffect, useCallback, useContext } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const TermAndCondition = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);

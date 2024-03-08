@@ -17,6 +17,7 @@ import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LinearGradient } from "expo-linear-gradient";
+import { useFetch } from "../hooks/api_hook";
 
 const RegisterScreen = () => {
   const navigation = useNavigation();
@@ -26,7 +27,8 @@ const RegisterScreen = () => {
     userName: "",
     checkbox: 0,
   });
-  const [token, setToken] = useState(null); 
+  const { data: users } = useFetch("/auth/users");
+  const [token, setToken] = useState(null);
 
   const handleChangeFormField = (name, value) => {
     if (name === "phone" || name === "otp") {
@@ -38,18 +40,13 @@ const RegisterScreen = () => {
   const onSendOtp = async () => {
     try {
       if (formField.phone.length == 10) {
-        const { data } = await axios.post(
-          "https://backend.twicks.in/auth/sendOtp",
-          {
-            phone: formField.phone,
-          }
+        const userExists = users?.some(
+          (item) => item?.phone === formField.phone
         );
-        setToken(data.token);
-        if (data.success) {
-          console.log("otp send successfully");
+        if (userExists) {
           Alert.alert(
-            "Success",
-            "OTP Sent successfully",
+            "Error",
+            "User already Registered",
             [
               {
                 text: "OK",
@@ -59,6 +56,29 @@ const RegisterScreen = () => {
             ],
             { cancelable: false }
           );
+        } else {
+          const { data } = await axios.post(
+            "https://backend.twicks.in/auth/sendOtp",
+            {
+              phone: formField.phone,
+            }
+          );
+          setToken(data.token);
+          if (data.success) {
+            console.log("otp send successfully");
+            Alert.alert(
+              "Success",
+              "OTP Sent successfully",
+              [
+                {
+                  text: "OK",
+                  onPress: () => console.log("OK Pressed"),
+                  style: "default",
+                },
+              ],
+              { cancelable: false }
+            );
+          }
         }
       } else {
         console.log("please enter a valid number");
@@ -135,13 +155,12 @@ const RegisterScreen = () => {
         );
       }
     } catch (error) {
-      console.log(error.response.data.message);
-      // Alert.alert(
-      //   "Error",
-      //   error.response.data.message
-      //   [{ text: "OK", onPress: () => console.log("OK Pressed") }],
-      //   { cancelable: false }
-      // );
+      Alert.alert(
+        "Error",
+        error.response.data.error,
+        [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+        { cancelable: false }
+      );
     }
   };
 

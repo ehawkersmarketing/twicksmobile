@@ -65,7 +65,7 @@ const HomeScreen = ({ navigation }) => {
           setIsLoggedIn(true);
         } else {
           setIsLoggedIn(false);
-          navigate.navigate("Login");
+          navigation.navigate("Login");
         }
       } catch (error) {
         console.error("Error checking token:", error);
@@ -73,7 +73,7 @@ const HomeScreen = ({ navigation }) => {
     };
 
     checkToken();
-  }, [navigate]);
+  }, [navigation]);
 
   return (
     <>

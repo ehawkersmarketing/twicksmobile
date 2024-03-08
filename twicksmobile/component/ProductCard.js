@@ -6,9 +6,11 @@ import {
   ImageBackground,
   Pressable,
 } from "react-native";
-import React from "react";
+import React,{useState,useEffect} from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 
 const ProductCard = ({ item }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);

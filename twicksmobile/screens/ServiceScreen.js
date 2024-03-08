@@ -14,6 +14,8 @@ import React, { useState, useEffect, useCallback, useContext } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import ServiceCard from "../component/ServiceCard";
 import { useFetch } from "../hooks/api_hook";
 import axios from "axios";
@@ -57,7 +59,7 @@ const ServiceScreen = () => {
           setIsLoggedIn(true);
         } else {
           setIsLoggedIn(false);
-          navigate.navigate("Login");
+          navigation.navigate("Login");
         }
       } catch (error) {
         console.error("Error checking token:", error);
@@ -65,7 +67,7 @@ const ServiceScreen = () => {
     };
 
     checkToken();
-  }, [navigate]);
+  }, [navigation]);
   return (
     <>
       {isLoggedIn && (

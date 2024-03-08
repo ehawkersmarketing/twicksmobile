@@ -91,28 +91,12 @@ const CartScreen = () => {
 
               <View style={{ flex: 1 }}>
                 <Button
-                  title="Order Confirmation"
-                  onPress={() => navigation.navigate("OrderConfirmation")}
-                ></Button>
-                <Button
                   title="Login"
                   onPress={() => navigation.navigate("Login")}
                 ></Button>
                 <Button
                   title="Register"
                   onPress={() => navigation.navigate("Register")}
-                ></Button>
-                <Button
-                  title="Return And Refund"
-                  onPress={() => navigation.navigate("ReturnAndRefund")}
-                ></Button>
-                <Button
-                  title="Term And Condition"
-                  onPress={() => navigation.navigate("TermAndCondition")}
-                ></Button>
-                <Button
-                  title="Privacy Policy"
-                  onPress={() => navigation.navigate("PrivacyPolicy")}
                 ></Button>
               </View>
             </View>

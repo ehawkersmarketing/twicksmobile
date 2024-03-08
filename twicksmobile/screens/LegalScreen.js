@@ -1,9 +1,10 @@
 import { StyleSheet, Pressable, Text, View } from "react-native";
-import React from "react";
+import React, { useState, useEffect, useCallback, useContext } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const LegalScreen = () => {
   const navigate = useNavigation();
