@@ -96,6 +96,8 @@ const SingleShopScreen = ({ item, route, index }) => {
     productImage,
     productCategory,
     productPrice,
+    productReview,
+    productRating
   } = route.params;
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   useEffect(() => {
@@ -118,30 +120,32 @@ const SingleShopScreen = ({ item, route, index }) => {
   return (
     <>
       {isLoggedIn && (
-        <SafeAreaView>
-          <ScrollView style={{ backgroundColor: "#1E786F", height: "100%" }}>
+        <SafeAreaView
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "#F5FCFF",
+          }}
+        >
+          <ScrollView style={{ backgroundColor: "#1E786F" ,width:"100%"}}>
             <View style={{}}>
               <Image
                 style={{
-                  flex: 1,
                   justifyContent: "center",
                   alignItems: "center",
                   height: 250,
-                  width: "100%",
                   backgroundColor: "transparent",
                 }}
                 source={{ uri: productImage }}
               />
             </View>
             <ImageBackground
+            style={{padding:10}}
               source={require("../assets/categoryBack.png")}
-              style={{
-                padding: 10,
-                height: "90%",
-                // width:"90%"
-              }}
+              
             >
-              <View style={{ alignItems: "flex-start", paddingTop: 40 }}>
+              <View style={{ alignItems: "flex-start" }}>
                 <Text style={{ color: "#28635D", fontSize: 25 }}>
                   {productCategory}
                 </Text>
@@ -160,7 +164,7 @@ const SingleShopScreen = ({ item, route, index }) => {
                     color="#FFBB56"
                     style={{ paddingRight: 10 }}
                   />
-                  <Text>5.0 (1 review)</Text>
+                  <Text>{productReview} ({productRating})</Text>
                 </View>
               </View>
               <View style={{ justifyContent: "center", alignItems: "center" }}>
@@ -218,51 +222,49 @@ const SingleShopScreen = ({ item, route, index }) => {
                   </Text>
                 </View>
               </View>
-              <View
-                style={{
-                  alignItems: "center",
-                  justifyContent: "center",
-                  flexDirection: "row",
-                }}
-              >
-                <Pressable
-                  style={{
-                    backgroundColor: "white",
-                    padding: 10,
-                    borderWidth: 1,
-                    borderRadius: 10,
-                    justifyContent: "center",
-                    alignItems: "center",
-                    // marginHorizontal: 10,
-                    marginTop: 10,
-                  }}
-                >
-                  <Ionicons name="bag-outline" size={24} color="black" />
-                </Pressable>
-                <Pressable
-                  // onPress={() => addItemToCart(item)}
-                  style={{
-                    backgroundColor: "#28635D",
-                    padding: 14,
-                    borderRadius: 10,
-                    justifyContent: "center",
-                    alignItems: "center",
-                    marginHorizontal: 10,
-                    marginTop: 10,
-                    flex: 1,
-                  }}
-                >
-                  {/* {addedToCart ? ( */}
-                  <View>{/* <Text>Added to Cart</Text> */}</View>
-                  {/* ) : ( */}
-                  <Text style={{ color: "white", fontSize: 20 }}>
-                    Add to Cart
-                  </Text>
-                  {/* )} */}
-                </Pressable>
-              </View>
             </ImageBackground>
           </ScrollView>
+          <View
+            style={{
+              alignItems: "center",
+              justifyContent: "center",
+              flexDirection: "row",
+            }}
+          >
+            <Pressable
+              style={{
+                backgroundColor: "white",
+                padding: 10,
+                borderWidth: 1,
+                borderRadius: 10,
+                justifyContent: "center",
+                alignItems: "center",
+                // marginHorizontal: 10,
+                marginTop: 10,
+              }}
+            >
+              <Ionicons name="bag-outline" size={24} color="black" />
+            </Pressable>
+            <Pressable
+              // onPress={() => addItemToCart(item)}
+              style={{
+                backgroundColor: "#28635D",
+                padding: 14,
+                borderRadius: 10,
+                justifyContent: "center",
+                alignItems: "center",
+                marginHorizontal: 10,
+                marginTop: 10,
+                flex: 1,
+              }}
+            >
+              {/* {addedToCart ? ( */}
+              <View>{/* <Text>Added to Cart</Text> */}</View>
+              {/* ) : ( */}
+              <Text style={{ color: "white", fontSize: 20 }}>Add to Cart</Text>
+              {/* )} */}
+            </Pressable>
+          </View>
         </SafeAreaView>
       )}
     </>
