@@ -9,6 +9,9 @@ const OrderScreen = () => {
   const navigate = useNavigation();
   const [userData, setUserData] = useState({});
   const [orders, setOrders] = useState([]);
+  const { data: fetchedOrders } = useFetch(
+    `/api/getAllOrderByUser/${userData._id}`
+  );
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -24,31 +27,39 @@ const OrderScreen = () => {
     fetchUser();
   }, []);
 
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   useEffect(() => {
-    if (userData._id) {
-      const fetchOrders = async () => {
-        const { data: fetchedOrders } = await useFetch(
-          `/api/getAllOrderByUser/${userData._id}`
-        );
-        setOrders(fetchedOrders);
-        console.log(fetchedOrders)
-      };
+    const checkToken = async () => {
+      try {
+        const token = await AsyncStorage.getItem("auth_token");
+        if (token !== null) {
+          setIsLoggedIn(true);
+        } else {
+          setIsLoggedIn(false);
+          navigate.navigate("Login");
+        }
+      } catch (error) {
+        console.error("Error checking token:", error);
+      }
+    };
 
-      fetchOrders();
-    }
-  }, [userData]);
+    checkToken();
+  }, [navigate]);
 
   return (
     <>
-      <SafeAreaView>
-        <ScrollView>
-          {orders &&
-            orders.map((order, index) => {
-              <OrderCard key={index} order={order} />;
-            })}
-            <OrderCard/>
-        </ScrollView>
-      </SafeAreaView>
+      {isLoggedIn && (
+        <SafeAreaView>
+          <ScrollView
+            style={{ padding: 10, backgroundColor: "#237169", height: "100%" }}
+          >
+            {fetchedOrders &&
+              fetchedOrders.map((item, index) => {
+                return <OrderCard item={item} index={index} />;
+              })}
+          </ScrollView>
+        </SafeAreaView>
+      )}
     </>
   );
 };

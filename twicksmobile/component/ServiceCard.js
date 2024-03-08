@@ -19,12 +19,12 @@ const ServiceCard = (props) => {
         })
       }
       style={{
-        marginHorizontal: 10,
+        marginHorizontal: "2%",
         marginVertical: 15,
         backgroundColor: "white",
         borderRadius: 20,
         height: 190,
-        width: 175,
+        width: "46%",
         overflow: "hidden",
       }}
     >
@@ -32,7 +32,7 @@ const ServiceCard = (props) => {
         <Image
           style={{
             resizeMode: "contain",
-            width: 175,
+            width: "100%",
             height: "100%",
           }}
           source={{uri: item?.image}}
@@ -50,12 +50,8 @@ const ServiceCard = (props) => {
         <View style={{ marginLeft: 10 }}>
           <Text style={{ color: "#1E786F", fontSize: 23, marginVertical: 3 }}>
             {item?.title}
-            {/* Assuming you want to display the item's title here */}
           </Text>
-          <Text>
-            {item?.description}{" "}
-            {/* Assuming you want to display the item's description here */}
-          </Text>
+       
         </View>
       </View>
     </Pressable>

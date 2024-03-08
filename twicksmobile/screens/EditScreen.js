@@ -41,7 +41,6 @@ const EditScreen = () => {
     } else if (inputHandler.userName === "") {
       Alert.alert("Enter the UserName");
     } else {
-      // console.log("mil gyi id" + userData._id);
       const { data } = await axios.post(
         `https://backend.twicks.in/api/putUserAddress`,
         {
@@ -79,7 +78,6 @@ const EditScreen = () => {
   };
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
   useEffect(() => {
     const checkToken = async () => {
       try {
@@ -88,6 +86,7 @@ const EditScreen = () => {
           setIsLoggedIn(true);
         } else {
           setIsLoggedIn(false);
+          navigate.navigate("Login");
         }
       } catch (error) {
         console.error("Error checking token:", error);
@@ -95,47 +94,57 @@ const EditScreen = () => {
     };
 
     checkToken();
-  }, []);
+  }, [navigate]);
   return (
     <>
-      <View style={{ padding: 10 }}>
-        <View style={{ paddingVertical: 10 }}>
-          <Text style={{ paddingVertical: 5, fontSize: 20 }}>Name</Text>
-          <TextInput
-            onChangeText={(value) => onChangeInputHandler(value, "userName")}
-            placeholder={userData.userName}
-            style={{ fontSize: 30 }}
-          />
-          <View style={styles.line}></View>
-        </View>
-
-        <View style={{ paddingVertical: 10 }}>
-          <Text style={{ paddingVertical: 5, fontSize: 20 }}>Email ID</Text>
-          <TextInput
-            onChangeText={(value) => onChangeInputHandler(value, "email")}
-            placeholder={userData.email}
-            style={{ fontSize: 30 }}
-          />
-          <View style={styles.line}></View>
-        </View>
-
-        <View>
-          <Pressable
-            onPress={handleSubmit}
-            style={{
-              backgroundColor: "#28635D",
-              borderRadius: 10,
-              justifyContent: "center",
-              alignItems: "center",
-              marginTop: 10,
-            }}
-          >
-            <Text style={{ color: "white", padding: 14, fontSize: 20 }}>
-              Edit
+      {isLoggedIn && (
+        <View
+          style={{ padding: 10, backgroundColor: "#237169", height: "100%" }}
+        >
+          <View style={{ paddingVertical: 10 }}>
+            <Text style={{ paddingVertical: 5, fontSize: 20, color: "white" }}>
+              Name
             </Text>
-          </Pressable>
+            <TextInput
+              onChangeText={(value) => onChangeInputHandler(value, "userName")}
+              placeholder={userData.userName}
+              style={{ fontSize: 30 }}
+              placeholderTextColor={"rgb(187, 182, 182);"}
+            />
+            <View style={styles.line}></View>
+          </View>
+
+          <View style={{ paddingVertical: 10 }}>
+            <Text style={{ paddingVertical: 5, fontSize: 20, color: "white" }}>
+              Email ID
+            </Text>
+            <TextInput
+              onChangeText={(value) => onChangeInputHandler(value, "email")}
+              placeholder={userData.email}
+              style={{ fontSize: 30 }}
+              placeholderTextColor={"rgb(187, 182, 182);"}
+            />
+            <View style={styles.line}></View>
+          </View>
+
+          <View>
+            <Pressable
+              onPress={handleSubmit}
+              style={{
+                backgroundColor: "#28635D",
+                borderRadius: 10,
+                justifyContent: "center",
+                alignItems: "center",
+                marginTop: 10,
+              }}
+            >
+              <Text style={{ color: "white", padding: 14, fontSize: 20 }}>
+                Edit
+              </Text>
+            </Pressable>
+          </View>
         </View>
-      </View>
+      )}
     </>
   );
 };
@@ -146,7 +155,7 @@ const styles = StyleSheet.create({
   line: {
     height: 1,
     width: "100%",
-    backgroundColor: "black",
+    backgroundColor: "white",
     // marginVertical: 10,
   },
 });

@@ -9,26 +9,17 @@ import {
 import { useNavigation } from "@react-navigation/core";
 import React from "react";
 import { Entypo } from "@expo/vector-icons";
+import dayjs from "dayjs";
 
-const CartCard = ({item}) => {
-
+const CartCard = ({ item, index }) => {
+  const formattedDate = dayjs(item?.timestamps).format("MMMM D, YYYY");
   const navigation = useNavigation();
 
   return (
     <>
       <View style={{ paddingHorizontal: 10 }}>
         <Pressable
-
-        key={item?._id}
-        onPress={() =>
-          navigation.navigate("Product", {
-            orderId: item?._id,
-            orderImage: item?.image,
-            // productDetais: item?.description,
-            orderPrice: item?.price,
-          })
-        }
-
+          key={item?._id}
           style={{
             flexDirection: "row",
             borderColor: "#DDDEDF",
@@ -50,26 +41,37 @@ const CartCard = ({item}) => {
                 padding: 10,
               }}
             >
-              <Text style={{ fontSize: 24 }}>Janurary 23,2024{item?.price}</Text>
+              <Text key={index} style={{ fontSize: 24 }}>
+                {formattedDate}
+              </Text>
+
               <Entypo name="chevron-small-right" size={24} color="black" />
             </View>
+
             <View
               style={{
                 justifyContent: "space-between",
                 width: "100%",
+
                 padding: 10,
               }}
             >
-              <Text style={{ fontSize: 24 }}>Rishika Kothari</Text>
-              <Text style={{ fontSize: 21 }}>65d9978d7644354ab1bc4161</Text>
+              <Text style={{ fontSize: 21, color: "white" }}>{item?._id}</Text>
 
-              <Text style={{ fontSize: 21 }}>Delivered</Text>
+              <Text style={{ fontSize: 21, color: "white" }}>
+                {item?.orderStatus}
+              </Text>
 
-              <Text style={{ fontSize: 20, color: "gray" }}>{item?.price}</Text>
+              <Text style={{ fontSize: 20, color: "white" }}>
+                Rs. {item?.amount} /-
+              </Text>
             </View>
             <View style={styles.line}></View>
 
             <Pressable
+              // onPress={() =>
+              //   navigation.navigate("OrderConfirmation", { orderData: item })
+              // }
               style={{
                 backgroundColor: "#28635D",
                 padding: 14,
@@ -99,8 +101,7 @@ const styles = StyleSheet.create({
   line: {
     width: "95%",
     height: 1,
-    backgroundColor: "gray",
-    // marginVertical: 10,
+    backgroundColor: "white",
     marginHorizontal: 10,
   },
 });

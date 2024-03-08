@@ -21,6 +21,8 @@ import axios from "axios";
 
 const ShopScreen = () => {
   const navigate = useNavigation();
+  const [selectedCategory, setSelectedCategory] = useState(null);
+
   const [open, setOpen] = useState(false);
   const [activeFilter, setActiveFilter] = useState({
     filter: "",
@@ -52,159 +54,132 @@ const ShopScreen = () => {
     }
   }, [searchField]);
   const { data: categories } = useFetch("/api/allCategory");
-
-  const applyFilter = (e, index) => {
-    if (index == 2) {
-      if (e.target.value === "select the Category") {
-        setSearchField("");
-        setActiveFilter({ [e.target.name]: "" });
-      } else {
-        setSearchField(e.target.value);
-        setActiveFilter({ [e.target.name]: e.target.value });
-      }
-      setOpen(false);
-    } else {
-      if (index == 1) {
-        if (activeFilter.filter === "") {
-          setProducts(
-            products.sort(function (a, b) {
-              return a.price - b.price;
-            })
-          );
-          setActiveFilter({ ["filter"]: `` });
-          document
-            .getElementById("allproduct")
-            .scrollIntoView({ behavior: "smooth", block: "start" });
-        } else {
-          setProducts(
-            searchProducts.sort(function (a, b) {
-              return a.price - b.price;
-            })
-          );
-          setActiveFilter({ ["filter"]: `` });
-        }
-      } else {
-        if (activeFilter.filter === "") {
-          setProducts(
-            products.sort(function (a, b) {
-              return b.price - a.price;
-            })
-          );
-
-          setActiveFilter({ ["filter"]: `` });
-          document
-            .getElementById("allproduct")
-            .scrollIntoView({ behavior: "smooth", block: "start" });
-        } else {
-          setProducts(
-            searchProducts.sort(function (a, b) {
-              return b.price - a.price;
-            })
-          );
-          setActiveFilter({ ["filter"]: `` });
-        }
-      }
-      setOpen(false);
-    }
-    setOpenForSort(false);
-    setOpen(false);
+  const handleCategoryClick = (category) => {
+    setSelectedCategory(category);
   };
 
-  return (
-    <SafeAreaView>
-      <ScrollView>
-        <View
-          style={{
-            flex: 1,
-            flexDirection: "row",
-            backgroundColor: "#FAFAFA",
-            justifyContent: "space-between",
-            alignItems: "center",
-            // gap: 10,
-            height: 60,
-            // backgroundColor: "yellow",
-          }}
-        >
-          <Pressable
-            onPress={() => navigate.navigate("Home")}
-            style={styles.headerlogo}
-          >
-            <Image
-              style={{ width: 130, height: 48 }}
-              source={require("../assets/logo.png")}
-            />
-          </Pressable>
-          <Pressable style={styles.headericons}>
-            <Ionicons
-              name="person-outline"
-              size={24}
-              color="black"
-              onPress={() => navigate.navigate("Profile")}
-            />
-            <AntDesign
-              name="shoppingcart"
-              size={24}
-              color="black"
-              onPress={() => navigate.navigate("Cart")}
-            />
-          </Pressable>
-        </View>
-        <View style={styles.searchmain}>
-          <View style={styles.searchpress}>
-            <TextInput
-              placeholder="Search"
-              onChangeText={(text) => {
-                setSearchField(text);
-                if (text === "") {
-                  setHasSearched(false);
-                } else {
-                  setHasSearched(true);
-                }
-              }}
-              value={searchField}
-              style={{
-                marginLeft: 20,
-                width: "100%",
-              }}
-            />
-          </View>
-          {hasSearched ? (
-            searchProducts.length > 0 ? (
-              <ScrollView>
-                {searchProducts.map((item, index) => (
-                  <ProductCard item={item} key={index} />
-                ))}
-              </ScrollView>
-            ) : (
-              <Text>No Results Found</Text>
-            )
-          ) : null}
-        </View>
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  useEffect(() => {
+    const checkToken = async () => {
+      try {
+        const token = await AsyncStorage.getItem("auth_token");
+        if (token !== null) {
+          setIsLoggedIn(true);
+        } else {
+          setIsLoggedIn(false);
+          navigate.navigate("Login");
+        }
+      } catch (error) {
+        console.error("Error checking token:", error);
+      }
+    };
 
-        <ScrollView horizontal showsHorizontalScrollIndicator>
-          {activeFilter.filter === "" &&
-            searchField === "" &&
-            categories &&
-            categories?.map((item, index) => {
-              return <ShopCategory item={item} key={index} />;
-            })}
-        </ScrollView>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            flexWrap: "wrap",
-          }}
-        >
-          {activeFilter.filter === "" &&
-            searchField === "" &&
-            products &&
-            products?.map((item, index) => {
-              return <ProductCard item={item} key={index} />;
-            })}
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    checkToken();
+  }, [navigate]);
+
+  return (
+    <>
+      {isLoggedIn && (
+        <SafeAreaView>
+          <ScrollView>
+            <View
+              style={{
+                flex: 1,
+                flexDirection: "row",
+                backgroundColor: "#FAFAFA",
+                justifyContent: "space-between",
+                alignItems: "center",
+                height: 60,
+              }}
+            >
+              <Pressable
+                onPress={() => navigate.navigate("Home")}
+                style={styles.headerlogo}
+              >
+                <Image
+                  style={{ width: 130, height: 48 }}
+                  source={require("../assets/logo.png")}
+                />
+              </Pressable>
+              <Pressable style={styles.headericons}>
+                <Ionicons
+                  name="person-outline"
+                  size={24}
+                  color="black"
+                  onPress={() => navigate.navigate("Profile")}
+                />
+                <AntDesign
+                  name="shoppingcart"
+                  size={24}
+                  color="black"
+                  onPress={() => navigate.navigate("Cart")}
+                />
+              </Pressable>
+            </View>
+            <View style={styles.searchmain}>
+              <View style={styles.searchpress}>
+                <TextInput
+                  placeholder="Search"
+                  onChangeText={(text) => {
+                    setSearchField(text);
+                    if (text === "") {
+                      setHasSearched(false);
+                    } else {
+                      setHasSearched(true);
+                    }
+                  }}
+                  value={searchField}
+                  style={{
+                    marginLeft: 20,
+                    width: "100%",
+                  }}
+                />
+              </View>
+              {hasSearched ? (
+                searchProducts.length > 0 ? (
+                  <ScrollView>
+                    {searchProducts.map((item, index) => (
+                      <ProductCard item={item} key={index} />
+                    ))}
+                  </ScrollView>
+                ) : (
+                  <Text>No Results Found</Text>
+                )
+              ) : null}
+            </View>
+
+            <ScrollView horizontal showsHorizontalScrollIndicator>
+              {searchField === "" &&
+                categories &&
+                categories?.map((item, index) => {
+                  const isSelected = selectedCategory === item;
+                  return (
+                    <ShopCategory
+                      item={item}
+                      key={index}
+                      selected={isSelected}
+                      onPress={() => handleCategoryClick(item)}
+                    />
+                  );
+                })}
+            </ScrollView>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                flexWrap: "wrap",
+              }}
+            >
+              {searchField === "" &&
+                products &&
+                products?.map((item, index) => {
+                  return <ProductCard item={item} key={index} />;
+                })}
+            </View>
+          </ScrollView>
+        </SafeAreaView>
+      )}
+    </>
   );
 };
 
@@ -220,7 +195,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#FAFAFA",
     justifyContent: "space-between",
     alignItems: "center",
-    // gap: 10,
     height: 40,
     // backgroundColor: "yellow",
   },

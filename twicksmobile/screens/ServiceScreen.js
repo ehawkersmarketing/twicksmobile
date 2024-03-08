@@ -48,92 +48,113 @@ const ServiceScreen = () => {
     }
   }, [searchField]);
 
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  useEffect(() => {
+    const checkToken = async () => {
+      try {
+        const token = await AsyncStorage.getItem("auth_token");
+        if (token !== null) {
+          setIsLoggedIn(true);
+        } else {
+          setIsLoggedIn(false);
+          navigate.navigate("Login");
+        }
+      } catch (error) {
+        console.error("Error checking token:", error);
+      }
+    };
+
+    checkToken();
+  }, [navigate]);
   return (
     <>
-      <SafeAreaView>
-        <ScrollView>
-          <View>
-            <View
-              style={{
-                flex: 1,
-                flexDirection: "row",
-                backgroundColor: "#FAFAFA",
-                justifyContent: "space-between",
-                alignItems: "center",
-                height: 60,
-              }}
-            >
-              <Pressable
-                onPress={() => navigation.navigate("Home")}
-                style={styles.headerlogo}
+      {isLoggedIn && (
+        <SafeAreaView>
+          <ScrollView>
+            <View>
+              <View
+                style={{
+                  flex: 1,
+                  flexDirection: "row",
+                  backgroundColor: "#FAFAFA",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  height: 60,
+                }}
               >
-                <Image
-                  style={{ width: 130, height: 48 }}
-                  source={require("../assets/logo.png")}
-                />
-              </Pressable>
-              <Pressable style={styles.headericons}>
-                <Ionicons
-                  name="person-outline"
-                  size={24}
-                  color="black"
-                  onPress={() => navigation.navigate("Profile")}
-                />
-                <AntDesign
-                  name="shoppingcart"
-                  size={24}
-                  color="black"
-                  onPress={() => navigation.navigate("Cart")}
-                />
-              </Pressable>
-            </View>
-            <View style={styles.searchmain}>
-              <View style={styles.searchpress}>
-                <TextInput
-                  placeholder="Search"
-                  onChangeText={(text) => {
-                    setSearchField(text);
-                    if (text === "") {
-                      setHasSearched(false);
-                    } else {
-                      setHasSearched(true);
-                    }
-                  }}
-                  value={searchField}
-                  style={{
-                    marginLeft: 20,
-                    width: "100%",
-                  }}
-                />
+                <Pressable
+                  onPress={() => navigation.navigate("Home")}
+                  style={styles.headerlogo}
+                >
+                  <Image
+                    style={{ width: 130, height: 48 }}
+                    source={require("../assets/logo.png")}
+                  />
+                </Pressable>
+                <Pressable style={styles.headericons}>
+                  <Ionicons
+                    name="person-outline"
+                    size={24}
+                    color="black"
+                    onPress={() => navigation.navigate("Profile")}
+                  />
+                  <AntDesign
+                    name="shoppingcart"
+                    size={24}
+                    color="black"
+                    onPress={() => navigation.navigate("Cart")}
+                  />
+                </Pressable>
               </View>
+              <View style={styles.searchmain}>
+                <View style={styles.searchpress}>
+                  <TextInput
+                    placeholder="Search"
+                    onChangeText={(text) => {
+                      setSearchField(text);
+                      if (text === "") {
+                        setHasSearched(false);
+                      } else {
+                        setHasSearched(true);
+                      }
+                    }}
+                    value={searchField}
+                    style={{
+                      marginLeft: 20,
+                      width: "100%",
+                    }}
+                  />
+                </View>
 
-              {hasSearched ? (
-                searchService.length > 0 ? (
-                  <ScrollView>
-                    {searchService.map((item, index) => (
-                      <ServiceCard item={item} key={index} />
-                    ))}
-                  </ScrollView>
+                {hasSearched ? (
+                  searchService.length > 0 ? (
+                    <ScrollView>
+                      {searchService.map((item, index) => (
+                        <ServiceCard item={item} key={index} />
+                      ))}
+                    </ScrollView>
+                  ) : (
+                    <Text>No Results Found</Text>
+                  )
                 ) : (
-                  <Text>No Results Found</Text>
-                )
-              ) :  <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                flexWrap: "wrap",
-              }}
-            >
-              {services?.map((item, index) => {
-                // console.log(item);
-                return <ServiceCard key={item._id} item={item} />;
-              })}
-            </View>}
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      flexWrap: "wrap",
+                    }}
+                  >
+                    {services?.map((item, index) => {
+                      // console.log(item);
+                      return <ServiceCard key={item._id} item={item} />;
+                    })}
+                  </View>
+                )}
+              </View>
             </View>
-           
-          </View>
-        </ScrollView>
-      </SafeAreaView>
+          </ScrollView>
+        </SafeAreaView>
+      )}
     </>
   );
 };
