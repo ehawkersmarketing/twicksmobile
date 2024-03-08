@@ -23,7 +23,7 @@ const ServiceCard = (props) => {
         marginVertical: 15,
         backgroundColor: "white",
         borderRadius: 20,
-        height: 190,
+        height: 170,
         width: "46%",
         overflow: "hidden",
       }}

@@ -20,6 +20,7 @@ const ProductCard = ({ item }) => {
         const token = await AsyncStorage.getItem("auth_token");
         if (token !== null) {
           setIsLoggedIn(true);
+
         } else {
           setIsLoggedIn(false);
           navigation.navigate("Login");
@@ -31,7 +32,7 @@ const ProductCard = ({ item }) => {
 
     checkToken();
   }, [navigation]);
-
+console.log(item)
   const navigation = useNavigation();
 
   return (
@@ -47,6 +48,8 @@ const ProductCard = ({ item }) => {
               productDetais: item?.description,
               productPrice: item?.price,
               productCategory: item?.category.category,
+              productReview: item?.reviews,
+              productRating:item?.rating,
             })
           }
           style={{
@@ -76,7 +79,7 @@ const ProductCard = ({ item }) => {
               style={{ flexDirection: "row", alignItems: "center", gap: 5 }}
             >
               <FontAwesome name="star" size={15} color="#FFBB56" />
-              <Text>{item?.rating}</Text>
+              <Text>{item?.rating} {item?.reviews}</Text>
             </View>
           </View>
           <Image
