@@ -7,11 +7,16 @@ import {
   View,
   Pressable,
 } from "react-native";
-import React from "react";
+import React,{useState,useEffect} from "react";
+import { useNavigation } from "@react-navigation/native";
+
 import { useRoute } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const SingleServiceScreen = () => {
+  const navigate = useNavigation();
+
   const route = useRoute();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   useEffect(() => {

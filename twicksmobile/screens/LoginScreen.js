@@ -28,7 +28,7 @@ const LoginScreen = () => {
     checkbox: 0,
   });
   const { data: users } = useFetch("/auth/users");
-  const [token, setToken] = useState(null); // Use state for the token
+  const [token, setToken] = useState(null);
 
   const handleChangeFormField = (name, value) => {
     if (name === "phone" || name === "otp" || name === "userName") {
@@ -37,6 +37,7 @@ const LoginScreen = () => {
     console.log(name, value);
     setFormField({ ...formField, [name]: value });
   };
+  console.log("token",token);
 
   const onSendOtp = async () => {
     try {
@@ -64,7 +65,7 @@ const LoginScreen = () => {
               phone: formField.phone,
             }
           );
-          setToken(data.token); 
+          setToken(data.token);
           if (data.success) {
             Alert.alert(
               "Success",
@@ -153,145 +154,168 @@ const LoginScreen = () => {
       );
     }
   };
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  useEffect(() => {
+    const checkToken = async () => {
+      try {
+        const token = await AsyncStorage.getItem("auth_token");
+        if (token !== null) {
+          setIsLoggedIn(true);
+        } else {
+          setIsLoggedIn(false);
+          // navigation.navigate("Login");
+        }
+      } catch (error) {
+        console.error("Error checking token:", error);
+      }
+    };
+
+    checkToken();
+  }, [navigation]);
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <SafeAreaView style={styles.homemain}>
-        <View
-          style={{
-            backgroundColor: "#FAFAFA",
-            alignItems: "center",
-            height: 60,
-            justifyContent: "center",
-          }}
-        >
-          <Pressable style={styles.headerlogo}>
-            <Image
-              style={{ width: 130, height: 48 }}
-              source={require("../assets/logo.png")}
-            />
-          </Pressable>
-        </View>
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: "#20746C",
-            justifyContent: "center",
-          }}
-        >
-          <View style={{ flexDirection: "column" }}>
-            <View style={{ backgroundColor: "#20756C", alignItems: "center" }}>
+    <>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <SafeAreaView style={styles.homemain}>
+          <View
+            style={{
+              backgroundColor: "#FAFAFA",
+              alignItems: "center",
+              height: 60,
+              justifyContent: "center",
+            }}
+          >
+            <Pressable style={styles.headerlogo}>
               <Image
-                style={{ width: 90, height: 90 }}
-                source={require("../assets/login.png")}
+                style={{ width: 130, height: 48 }}
+                source={require("../assets/logo.png")}
               />
-            </View>
-            <View style={{ alignItems: "center", marginVertical: 20 }}>
-              <Text style={{ fontSize: 50, color: "white", fontWeight: 600 }}>
-                Login Account
-              </Text>
-            </View>
-          </View>
-          <View style={{ padding: "4%" }}>
-            <View>
-              <View
-                style={{
-                  justifyContent: "center",
-                  paddingVertical: 10,
-                  flexDirection: "row",
-                }}
-              >
-                <TextInput
-                  style={{
-                    flex: 2,
-                    height: 40,
-                    padding: 10,
-                    backgroundColor: "#EBF6F5",
-                    borderLeftColor: "#44A98B",
-                    borderLeftWidth: 8,
-                  }}
-                  onChangeText={(value) =>
-                    handleChangeFormField("phone", value)
-                  }
-                  value={formField.phone}
-                  placeholder="Enter your phone number"
-                  keyboardType="phone-pad"
-                  maxLength={10}
-                />
-                <Pressable
-                  style={{
-                    flex: 1,
-                    height: 40,
-                    backgroundColor: "#4EB666",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                  onPress={onSendOtp}
-                >
-                  <Text style={{ fontSize: 16, color: "gray" }}>
-                    Generate OTP
-                  </Text>
-                </Pressable>
-              </View>
-            </View>
-            <View style={styles.container}>
-              <TextInput
-                style={styles.input}
-                onChangeText={(value) => handleChangeFormField("otp", value)}
-                value={formField.otp}
-                placeholder="Enter OTP"
-                keyboardType="numeric"
-              />
-            </View>
-            <View>
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                }}
-              >
-                <Text style={{ color: "white" }}>Keep me signed in</Text>
-                <Pressable style={{ margin: 0 }}>
-                  <Text style={{ color: "white" }}>Forgot Password?</Text>
-                </Pressable>
-              </View>
-            </View>
-          </View>
-          <View style={{ paddingHorizontal: 15 }}>
-            <Pressable onPress={onLogin}>
-              <LinearGradient
-                start={{ x: 0.0, y: 0.25 }}
-                end={{ x: 1.3, y: 1.0 }}
-                locations={[0, 0.5, 1]}
-                colors={["#4EB666", "#42A559", "#ffffff"]}
-                style={{
-                  alignItems: "center",
-                  justifyContent: "center",
-                  marginVertical: 30,
-                  padding: 10,
-                  backgroundColor: "green",
-                  borderRadius: 25,
-                }}
-              >
-                <Text style={{ fontSize: 30, color: "white" }}>Login</Text>
-              </LinearGradient>
             </Pressable>
           </View>
           <View
             style={{
-              alignItems: "center",
+              flex: 1,
+              backgroundColor: "#20746C",
               justifyContent: "center",
-              flexDirection: "row",
             }}
           >
-            <Text style={{ color: "white" }}>Haven't registered yet? </Text>
-            <Pressable onPress={() => navigation.navigate("Register")}>
-              <Text style={{ color: "blue" }}> Create an account.</Text>
-            </Pressable>
+            <View style={{ flexDirection: "column" }}>
+              <View
+                style={{ backgroundColor: "#20756C", alignItems: "center" }}
+              >
+                <Image
+                  style={{ width: 90, height: 90 }}
+                  source={require("../assets/login.png")}
+                />
+              </View>
+              <View style={{ alignItems: "center", marginVertical: 20 }}>
+                <Text style={{ fontSize: 50, color: "white", fontWeight: 600 }}>
+                  Login Account
+                </Text>
+              </View>
+            </View>
+            <View style={{ padding: "4%" }}>
+              <View>
+                <View
+                  style={{
+                    justifyContent: "center",
+                    paddingVertical: 10,
+                    flexDirection: "row",
+                  }}
+                >
+                  <TextInput
+                    style={{
+                      flex: 2,
+                      height: 40,
+                      padding: 10,
+                      backgroundColor: "#EBF6F5",
+                      borderLeftColor: "#44A98B",
+                      borderLeftWidth: 8,
+                    }}
+                    onChangeText={(value) =>
+                      handleChangeFormField("phone", value)
+                    }
+                    value={formField.phone}
+                    placeholder="Enter your phone number"
+                    keyboardType="phone-pad"
+                    maxLength={10}
+                  />
+                  <Pressable
+                    style={{
+                      flex: 1,
+                      height: 40,
+                      backgroundColor: "#4EB666",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                    onPress={onSendOtp}
+                  >
+                    <Text style={{ fontSize: 16, color: "gray" }}>
+                      Generate OTP
+                    </Text>
+                  </Pressable>
+                </View>
+              </View>
+              <View style={styles.container}>
+                <TextInput
+                  style={styles.input}
+                  onChangeText={(value) => handleChangeFormField("otp", value)}
+                  value={formField.otp}
+                  placeholder="Enter OTP"
+                  keyboardType="numeric"
+                />
+              </View>
+              <View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Text style={{ color: "white" }}>Keep me signed in</Text>
+                  <Pressable style={{ margin: 0 }}>
+                    <Text style={{ color: "white" }}>Forgot Password?</Text>
+                  </Pressable>
+                </View>
+              </View>
+            </View>
+            <View style={{ paddingHorizontal: 15 }}>
+              <Pressable onPress={onLogin}>
+                <LinearGradient
+                  start={{ x: 0.0, y: 0.25 }}
+                  end={{ x: 1.3, y: 1.0 }}
+                  locations={[0, 0.5, 1]}
+                  colors={["#4EB666", "#42A559", "#ffffff"]}
+                  style={{
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginVertical: 30,
+                    padding: 10,
+                    backgroundColor: "green",
+                    borderRadius: 25,
+                  }}
+                >
+                  <Text style={{ fontSize: 30, color: "white" }}>Login</Text>
+                </LinearGradient>
+              </Pressable>
+            </View>
+            <View
+              style={{
+                alignItems: "center",
+                justifyContent: "center",
+                flexDirection: "row",
+              }}
+            >
+              <Text style={{ color: "white" }}>Haven't registered yet? </Text>
+              <Pressable onPress={() => navigation.navigate("Register")}>
+                <Text style={{ color: "blue" }}> Create an account.</Text>
+              </Pressable>
+            </View>
           </View>
-        </View>
-      </SafeAreaView>
-    </TouchableWithoutFeedback>
+        </SafeAreaView>
+      </TouchableWithoutFeedback>
+    </>
   );
 };
 
