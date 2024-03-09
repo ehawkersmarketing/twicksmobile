@@ -315,6 +315,7 @@ const LoginScreen = () => {
           </View>
         </SafeAreaView>
       </TouchableWithoutFeedback>
+
     </>
   );
 };
