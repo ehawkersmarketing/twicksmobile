@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import axios from "axios";
 import React, { useState, useEffect } from "react";
 // import RNHTMLtoPDF from 'react-native-html-to-pdf';
 // import generateInvoiceHTML from './../component/invoice/InvoiceTemplete';
@@ -90,6 +90,38 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
     checkToken();
   }, [navigate]);
 
+  const cancelOrderHandler = async () => {
+    try {
+      const data = await axios.post(
+        "https://backend.twicks.in/api/ship/cancelRequest",
+        {
+          orderId: orderId,
+        }
+      );
+      if (data.data.success) {
+        // alert.success("order Cancelled successfully", {
+        //   position: "bottom-right",
+        //   autoClose: 8000,
+        //   pauseOnHover: true,
+        //   draggable: true,
+        //   theme: "dark",
+        // });
+        console.log(data)
+      } else {
+        // alert.success("order Cancelled successfully", {
+        //   position: "bottom-right",
+        //   autoClose: 8000,
+        //   pauseOnHover: true,
+        //   draggable: true,
+        //   theme: "dark",
+        // });
+        console.log("nahi hua")
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
       {isLoggedIn && (
@@ -162,7 +194,7 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
                         padding: 10,
                         height: "100%",
                         justifyContent: "center",
-                      }}
+                      }} onPress={cancelOrderHandler}
                     >
                       <Text
                         style={{
@@ -170,7 +202,7 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
                           color: "#38944D",
                           fontSize: 23,
                           fontWeight: 600,
-                        }}
+                        }} 
                       >
                         Cancel
                       </Text>
