@@ -23,6 +23,7 @@ import TermAndConditionScreen from "../screens/TermAndConditionScreen";
 import LegalScreen from "../screens/LegalScreen";
 import EditScreen from "../screens/EditScreen";
 import OrderScreen from "../screens/OrderScreen";
+import ConfirmOrderDetails from "../screens/ConfirmOrderDetails";
 
 import { Entypo } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
@@ -221,6 +222,11 @@ const StackNavigator = () => {
         <Stack.Screen
           name="Order"
           component={OrderScreen}
+          options={{ headerShown: true }}
+        />
+        <Stack.Screen
+          name="ConfirmDetails"
+          component={ConfirmOrderDetails}
           options={{ headerShown: true }}
         />
       </Stack.Navigator>

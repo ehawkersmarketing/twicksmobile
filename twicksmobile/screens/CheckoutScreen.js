@@ -37,7 +37,13 @@ const CheckoutScreen = () => {
   return (
     <>
       {isLoggedIn && (
-        <SafeAreaView>
+        <SafeAreaView style={{
+            flex: 1,
+            // justifyContent: "center",
+            // alignItems: "center",
+            backgroundColor: "#F5FCFF",
+            width:"100%",
+          }}>
           <ScrollView>
             <View style={{ padding: 10 }}>
               <Text style={{ fontSize: 17, padding: 5 }}>Name</Text>
@@ -139,7 +145,9 @@ const CheckoutScreen = () => {
               padding: 10,
               backgroundColor: "#F5FCFF",
             }}>
-            <Pressable onPress={() => navigation.navigate("Checkout")}
+              <View style={styles.line}></View>
+            <Pressable onPress={() => navigation.navigate("ConfirmDetails")}
+
                   style={{
                     backgroundColor: "#28635D",
                     padding: 14,
@@ -151,7 +159,8 @@ const CheckoutScreen = () => {
                     flex: 1
                   }}>
               <Text style={{ color: "white", fontSize: 20 }}>
-                Proceed To Checkout
+                Continue
+
               </Text>
             </Pressable>
           </View>
@@ -164,4 +173,11 @@ const CheckoutScreen = () => {
 
 export default CheckoutScreen;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  line: {
+    width: "100%",
+    height: 1,
+    backgroundColor: "gray",
+    marginVertical: 10,
+  },
+});
