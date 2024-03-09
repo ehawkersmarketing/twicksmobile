@@ -162,9 +162,9 @@ const LoginScreen = () => {
         const token = await AsyncStorage.getItem("auth_token");
         if (token !== null) {
           setIsLoggedIn(true);
+          navigation.navigate("Back");
         } else {
           setIsLoggedIn(false);
-          // navigation.navigate("Login");
         }
       } catch (error) {
         console.error("Error checking token:", error);
@@ -175,6 +175,7 @@ const LoginScreen = () => {
   }, [navigation]);
   return (
     <>
+    {isLoggedIn && (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <SafeAreaView style={styles.homemain}>
           <View
@@ -314,7 +315,7 @@ const LoginScreen = () => {
             </View>
           </View>
         </SafeAreaView>
-      </TouchableWithoutFeedback>
+      </TouchableWithoutFeedback>)}
     </>
   );
 };

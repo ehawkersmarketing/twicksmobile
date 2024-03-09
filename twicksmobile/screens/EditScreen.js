@@ -21,7 +21,6 @@ const EditScreen = () => {
         const userString = await AsyncStorage.getItem("user");
         const user = JSON.parse(userString);
         setUserData(user);
-        console.log(user);
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
@@ -139,7 +138,7 @@ const EditScreen = () => {
               }}
             >
               <Text style={{ color: "white", padding: 14, fontSize: 20 }}>
-                Edit
+                Save
               </Text>
             </Pressable>
           </View>

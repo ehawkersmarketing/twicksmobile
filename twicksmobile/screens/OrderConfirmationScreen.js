@@ -15,7 +15,24 @@ import React, { useState, useEffect } from "react";
 // import RNHTMLtoPDF from 'react-native-html-to-pdf';
 // import generateInvoiceHTML from './../component/invoice/InvoiceTemplete';
 
-const OrderConfirmationScreen = ({ route }) => {
+const OrderConfirmationScreen = ({ item, route, index }) => {
+  const navigation = useNavigation();
+  const {
+    orderId,
+    orderAmount,
+    orderCreatedAt,
+    orderStatus,
+    orderName,
+    orderStreet,
+    orderCity,
+    orderState,
+    orderCountry,
+    orderZipCode,
+    orderEmail,
+    orderPhoneNo,
+  } = route.params;
+  console.log(item?.user?.phone)
+
   // const orderId = "65d992287644354ab1bc4137" ;
   // const { orderData } = route.params;
   // const { orderId, orderAmount } = route.params;
@@ -182,7 +199,7 @@ const OrderConfirmationScreen = ({ route }) => {
                           color: "#BAD8D5",
                         }}
                       >
-                        Order ID: jbhj
+                        Order ID: {orderId}
                       </Text>
                       <Text
                         style={{
@@ -191,7 +208,7 @@ const OrderConfirmationScreen = ({ route }) => {
                           color: "#BAD8D5",
                         }}
                       >
-                        Order Total: 10
+                        Order Total: Rs. {orderAmount}/-
                       </Text>
                     </View>
                     <View style={{ flex: 1 }}>
@@ -202,7 +219,7 @@ const OrderConfirmationScreen = ({ route }) => {
                           color: "#BAD8D5",
                         }}
                       >
-                        Date:
+                        Date: {orderCreatedAt}
                       </Text>
                       <Text
                         style={{
@@ -230,17 +247,17 @@ const OrderConfirmationScreen = ({ route }) => {
                     <Text
                       style={{ color: "white", fontSize: 17, color: "#BAD8D5" }}
                     >
-                      Name:
+                      Name : {orderName}
                     </Text>
                     <Text
                       style={{ color: "white", fontSize: 17, color: "#BAD8D5" }}
                     >
-                      Address:
+                      Address: {orderStreet} , {orderCity} , {orderState} , {orderCountry}
                     </Text>
                     <Text
                       style={{ color: "white", fontSize: 17, color: "#BAD8D5" }}
                     >
-                      Contact No.:
+                      Contact No.: {orderPhoneNo}
                     </Text>
                   </View>
                 </View>
@@ -252,12 +269,12 @@ const OrderConfirmationScreen = ({ route }) => {
                     <Text
                       style={{ color: "white", fontSize: 17, color: "#BAD8D5" }}
                     >
-                      Sadar Road Balod
+                      {orderStreet} , {orderCity} , {orderState} , {orderCountry}
                     </Text>
                     <Text
                       style={{ color: "white", fontSize: 17, color: "#BAD8D5" }}
                     >
-                      Pin: <Text>49226</Text>
+                      Pin: <Text>{orderZipCode}</Text>
                     </Text>
                   </View>
                 </View>

@@ -19,6 +19,22 @@ const CartCard = ({ item, index }) => {
     <>
       <View style={{ paddingHorizontal: 10 }}>
         <Pressable
+          onPress={() =>
+            navigation.navigate("OrderConfirmation", {
+              orderId: item?._id,
+              orderAmount: item?.amount,
+              orderCreatedAt: item?.createdAt,
+              orderStatus: item?.orderstatus,
+              orderName:item?.user?.userName,
+              orderStreet:item.userAddress.street,
+              orderCity:item.userAddress.city,
+              orderState:item.userAddress.state,
+              orderCountry:item.userAddress.country,
+              orderZipCode:item.userAddress.zipCode,
+              orderEmail:item?.user?.email,
+              orderPhoneNo:item?.user?.phone
+            })
+          }
           key={item?._id}
           style={{
             flexDirection: "row",
