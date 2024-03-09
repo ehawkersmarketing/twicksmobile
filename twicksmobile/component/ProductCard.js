@@ -32,7 +32,6 @@ const ProductCard = ({ item }) => {
 
     checkToken();
   }, [navigation]);
-console.log(item)
   const navigation = useNavigation();
 
   return (
@@ -114,7 +113,7 @@ console.log(item)
                 >
                   {item?.title}
                 </Text>
-                <Text style={{ fontSize: 15 }}>Rs. {item?.price}/-</Text>
+                <Text style={{ fontSize: 15 }}>₹ {item?.price}/-</Text>
               </View>
             </View>
           </ImageBackground>

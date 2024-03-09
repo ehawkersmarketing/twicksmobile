@@ -106,7 +106,7 @@ const ShopScreen = () => {
                   name="person-outline"
                   size={24}
                   color="black"
-                  onPress={() => navigate.navigate("Profile")}
+                  onPress={() => navigate.navigate("Pro")}
                 />
                 <AntDesign
                   name="shoppingcart"

@@ -15,7 +15,25 @@ import React, { useState, useEffect } from "react";
 // import RNHTMLtoPDF from 'react-native-html-to-pdf';
 // import generateInvoiceHTML from './../component/invoice/InvoiceTemplete';
 
-const OrderConfirmationScreen = ({ route }) => {
+const OrderConfirmationScreen = ({ item, route, index }) => {
+  const navigation = useNavigation();
+  const {
+    orderId,
+    orderAmount,
+    orderCreatedAt,
+    orderStatus,
+    orderName,
+    orderStreet,
+    orderCity,
+    orderState,
+    orderCountry,
+    orderZipCode,
+    orderEmail,
+    orderPhoneNo,
+  } = route.params;
+  console.log(item?.user?.phone);
+  console.log(orderStatus);
+
   // const orderId = "65d992287644354ab1bc4137" ;
   // const { orderData } = route.params;
   // const { orderId, orderAmount } = route.params;
@@ -89,76 +107,89 @@ const OrderConfirmationScreen = ({ route }) => {
               </Pressable>
             </View>
             <View>
-              <Text
-                style={{ fontSize: 35, marginBottom: "5%", marginTop: "8%" }}
-              >
-                Thank you, your order has been placed!
-              </Text>
-              <Text style={{ color: "#64B79E", fontSize: 17 }}>
-                The order confirmation is sent to your email address
-              </Text>
-              <View
-                style={{
-                  borderRadius: 4,
-                  flexDirection: "row",
-                  marginVertical: "10%",
-                  alignItems: "flex-start",
-                  width: "100%",
-                  justifyContent: "space-between",
-                  flex: 1,
-                  gap: 10,
-                }}
-              >
-                <Pressable
-                  // onPress={generatePDF}
-                  style={{
-                    backgroundColor: "white",
-                    borderRadius: 6,
-                    marginLeft: "auto",
-                    marginRight: "auto",
-                    padding: 10,
-                    flex: 1,
-                  }}
-                >
+              {orderStatus === "Packed" ? (
+                <>
                   <Text
                     style={{
-                      textAlign: "center",
-                      color: "#38944D",
-                      fontSize: 23,
-                      fontWeight: 600,
+                      fontSize: 35,
+                      marginBottom: "5%",
+                      marginTop: "8%",
                     }}
                   >
-                    Download Invoice
+                    Thank you, your order has been placed!
                   </Text>
-                </Pressable>
-                <Pressable
-                  style={{
-                    flex: 1,
-                    backgroundColor: "white",
-                    borderRadius: 6,
-                    marginLeft: "auto",
-                    marginRight: "auto",
-                    padding: 10,
-                    height: "100%",
-                    justifyContent: "center",
-                  }}
-                >
+
+                  <View
+                    style={{
+                      borderRadius: 4,
+                      flexDirection: "row",
+                      marginVertical: "10%",
+                      alignItems: "flex-start",
+                      width: "100%",
+                      justifyContent: "space-between",
+                      flex: 1,
+                      gap: 10,
+                    }}
+                  >
+                    <Pressable
+                      style={{
+                        backgroundColor: "white",
+                        borderRadius: 6,
+                        marginLeft: "auto",
+                        marginRight: "auto",
+                        padding: 10,
+                        flex: 1,
+                      }}
+                    >
+                      <Text
+                        style={{
+                          textAlign: "center",
+                          color: "#38944D",
+                          fontSize: 23,
+                          fontWeight: 600,
+                        }}
+                      >
+                        Download Invoice
+                      </Text>
+                    </Pressable>
+                    <Pressable
+                      style={{
+                        flex: 1,
+                        backgroundColor: "white",
+                        borderRadius: 6,
+                        marginLeft: "auto",
+                        marginRight: "auto",
+                        padding: 10,
+                        height: "100%",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <Text
+                        style={{
+                          textAlign: "center",
+                          color: "#38944D",
+                          fontSize: 23,
+                          fontWeight: 600,
+                        }}
+                      >
+                        Cancel
+                      </Text>
+                    </Pressable>
+                  </View>
+                </>
+              ) : (
+                <>
                   <Text
                     style={{
-                      textAlign: "center",
-                      color: "#38944D",
-                      fontSize: 23,
-                      fontWeight: 600,
+                      fontSize: 35,
+                      marginBottom: "5%",
+                      marginTop: "8%",
                     }}
                   >
-                    Cancel
+                    Your order has been canceled!
                   </Text>
-                </Pressable>
-                {/* <Button
-              title="Cancle"
-              titleStyle={{ fontSize: 40 }}
-            ></Button> */}
-              </View>
+                </>
+              )}
             </View>
             <View style={{}}>
               <View style={{ backgroundColor: "#437E78", borderRadius: 13 }}>
@@ -175,44 +206,62 @@ const OrderConfirmationScreen = ({ route }) => {
                     }}
                   >
                     <View style={{ flex: 1 }}>
-                      <Text
-                        style={{
-                          color: "white",
-                          fontSize: 17,
-                          color: "#BAD8D5",
-                        }}
-                      >
-                        Order ID: jbhj
-                      </Text>
-                      <Text
-                        style={{
-                          color: "white",
-                          fontSize: 17,
-                          color: "#BAD8D5",
-                        }}
-                      >
-                        Order Total: 10
-                      </Text>
-                    </View>
-                    <View style={{ flex: 1 }}>
-                      <Text
-                        style={{
-                          color: "white",
-                          fontSize: 17,
-                          color: "#BAD8D5",
-                        }}
-                      >
-                        Date:
-                      </Text>
-                      <Text
-                        style={{
-                          color: "white",
-                          fontSize: 17,
-                          color: "#BAD8D5",
-                        }}
-                      >
-                        Time:
-                      </Text>
+                      <View style={{ flexDirection: "row" }}>
+                        <Text
+                          style={{
+                            color: "white",
+                            fontSize: 17,
+                            color: "#BAD8D5",
+                            fontWeight: "bold",
+                          }}
+                        >
+                          Order ID:
+                        </Text>
+                        <Text
+                          style={{
+                            color: "white",
+                            fontSize: 17,
+                            color: "#BAD8D5",
+                          }}
+                        >
+                          {orderId}
+                        </Text>
+                      </View>
+                      <View style={{ flexDirection: "row" }}>
+                        <Text
+                          style={{
+                            color: "white",
+                            fontSize: 17,
+                            color: "#BAD8D5",
+                          }}
+                        >
+                          <Text style={{ fontWeight: "bold" }}>
+                            Order Total :
+                          </Text> 
+                          ₹ {orderAmount}/-
+                        </Text>
+                      </View>
+                      <View style={{ flexDirection: "row" }}>
+                        <Text
+                          style={{
+                            color: "white",
+                            fontSize: 17,
+                            color: "#BAD8D5",
+                            fontWeight: "bold",
+                          }}
+                        >
+                          Date:
+                        </Text>
+                        <Text
+                          style={{
+                            color: "white",
+                            fontSize: 17,
+                            color: "#BAD8D5",
+                          }}
+                        >
+                          {orderCreatedAt}
+                        </Text>
+                      </View>
                     </View>
                   </View>
                 </View>
@@ -227,21 +276,70 @@ const OrderConfirmationScreen = ({ route }) => {
                     Shipping Details:
                   </Text>
                   <View style={{ paddingVertical: 10 }}>
-                    <Text
-                      style={{ color: "white", fontSize: 17, color: "#BAD8D5" }}
-                    >
-                      Name:
-                    </Text>
-                    <Text
-                      style={{ color: "white", fontSize: 17, color: "#BAD8D5" }}
-                    >
-                      Address:
-                    </Text>
-                    <Text
-                      style={{ color: "white", fontSize: 17, color: "#BAD8D5" }}
-                    >
-                      Contact No.:
-                    </Text>
+                    <View style={{ flexDirection: "row" }}>
+                      <Text
+                        style={{
+                          color: "white",
+                          fontSize: 17,
+                          color: "#BAD8D5",
+                          fontWeight: "bold",
+                        }}
+                      >
+                        Name :
+                      </Text>
+                      <Text
+                        style={{
+                          color: "white",
+                          fontSize: 17,
+                          color: "#BAD8D5",
+                        }}
+                      >
+                        {orderName}
+                      </Text>
+                    </View>
+                    <View style={{ flexDirection: "row" }}>
+                      <Text
+                        style={{
+                          color: "white",
+                          fontSize: 17,
+                          color: "#BAD8D5",
+                          fontWeight: "bold",
+                        }}
+                      >
+                        Address :
+                      </Text>
+                      <Text
+                        style={{
+                          color: "white",
+                          fontSize: 17,
+                          color: "#BAD8D5",
+                        }}
+                      >
+                        {orderStreet} , {orderCity} , {orderState} ,{" "}
+                        {orderCountry}
+                      </Text>
+                    </View>
+                    <View style={{ flexDirection: "row" }}>
+                      <Text
+                        style={{
+                          color: "white",
+                          fontSize: 17,
+                          color: "#BAD8D5",
+                          fontWeight: "bold",
+                        }}
+                      >
+                        Contact No. :
+                      </Text>
+                      <Text
+                        style={{
+                          color: "white",
+                          fontSize: 17,
+                          color: "#BAD8D5",
+                        }}
+                      >
+                        {orderPhoneNo}
+                      </Text>
+                    </View>
                   </View>
                 </View>
                 <View style={{ padding: 10 }}>
@@ -252,13 +350,30 @@ const OrderConfirmationScreen = ({ route }) => {
                     <Text
                       style={{ color: "white", fontSize: 17, color: "#BAD8D5" }}
                     >
-                      Sadar Road Balod
+                      {orderStreet} , {orderCity} , {orderState} ,{" "}
+                      {orderCountry}
                     </Text>
-                    <Text
-                      style={{ color: "white", fontSize: 17, color: "#BAD8D5" }}
-                    >
-                      Pin: <Text>49226</Text>
-                    </Text>
+                    <View style={{ flexDirection: "row" }}>
+                      <Text
+                        style={{
+                          color: "white",
+                          fontSize: 17,
+                          color: "#BAD8D5",
+                          fontWeight: "bold",
+                        }}
+                      >
+                        Pin:
+                      </Text>
+                      <Text
+                        style={{
+                          color: "white",
+                          fontSize: 17,
+                          color: "#BAD8D5",
+                        }}
+                      >
+                        {orderZipCode}
+                      </Text>
+                    </View>
                   </View>
                 </View>
               </View>
@@ -276,6 +391,7 @@ const styles = StyleSheet.create({
   homemain: {
     // backgroundColor: "pink",
     paddingHorizontal: 20,
+    height: "100%",
   },
   header: {
     flex: 1,
