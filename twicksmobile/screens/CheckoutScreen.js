@@ -1,4 +1,5 @@
 import {
+  Pressable,
   SafeAreaView,
   TextInput,
   ScrollView,
@@ -90,7 +91,7 @@ const CheckoutScreen = () => {
                 }}
               />
               <Text style={{ fontSize: 17, padding: 5 }}>Town / City</Text>
-              <TextInput
+              <TextInput onChangeText={(value) => onChangeInputHandler(value, "City")}
                 placeholder="Town / City"
                 style={{
                   padding: 10,
@@ -131,6 +132,30 @@ const CheckoutScreen = () => {
               />
             </View>
           </ScrollView>
+          <View style={{
+              position: "absolute",
+              bottom: 0,
+              width: "100%",
+              padding: 10,
+              backgroundColor: "#F5FCFF",
+            }}>
+            <Pressable onPress={() => navigation.navigate("Checkout")}
+                  style={{
+                    backgroundColor: "#28635D",
+                    padding: 14,
+                    borderRadius: 10,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    marginHorizontal: 10,
+                    marginTop: 10,
+                    flex: 1
+                  }}>
+              <Text style={{ color: "white", fontSize: 20 }}>
+                Proceed To Checkout
+              </Text>
+            </Pressable>
+          </View>
+          
         </SafeAreaView>
       )}
     </>
