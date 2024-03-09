@@ -71,14 +71,14 @@ const ServiceScreen = () => {
   return (
     <>
       {isLoggedIn && (
-        <SafeAreaView>
+        <SafeAreaView  style={{backgroundColor:"#FAFAFABC",height:"100%"}}>
           <ScrollView>
             <View>
               <View
                 style={{
                   flex: 1,
                   flexDirection: "row",
-                  backgroundColor: "#FAFAFA",
+                  backgroundColor: "#FAFAFABC",
                   justifyContent: "space-between",
                   alignItems: "center",
                   height: 60,
@@ -108,7 +108,7 @@ const ServiceScreen = () => {
                   />
                 </Pressable>
               </View>
-              <View style={styles.searchmain}>
+              <View style={{padding:15,gap:10,backgroundColor:"#FAFAFABC"}}>
                 <View style={styles.searchpress}>
                   <TextInput
                     placeholder="Search"
@@ -127,31 +127,40 @@ const ServiceScreen = () => {
                     }}
                   />
                 </View>
-
-                {hasSearched ? (
-                  searchService.length > 0 ? (
-                    <ScrollView>
-                      {searchService.map((item, index) => (
-                        <ServiceCard item={item} key={index} />
-                      ))}
-                    </ScrollView>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    flexWrap: "wrap",
+                    width: "100%",
+                    justifyContent: "space-around",
+                  }}
+                >
+                  {hasSearched ? (
+                    searchService.length > 0 ? (
+                      <>
+                        {searchService.map((item, index) => (
+                          <ServiceCard item={item} key={index} />
+                        ))}
+                      </>
+                    ) : (
+                      <Text>No Results Found</Text>
+                    )
                   ) : (
-                    <Text>No Results Found</Text>
-                  )
-                ) : (
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                      flexWrap: "wrap",
-                    }}
-                  >
-                    {services?.map((item, index) => {
-                      // console.log(item);
-                      return <ServiceCard key={item._id} item={item} />;
-                    })}
-                  </View>
-                )}
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        flexWrap: "wrap",
+                      }}
+                    >
+                      {services?.map((item, index) => {
+                        // console.log(item);
+                        return <ServiceCard key={item._id} item={item} />;
+                      })}
+                    </View>
+                  )}
+                </View>
               </View>
             </View>
           </ScrollView>
@@ -165,12 +174,12 @@ export default ServiceScreen;
 
 const styles = StyleSheet.create({
   homemain: {
-    backgroundColor: "#FAFAFA",
+    backgroundColor: "#FAFAFABC",
   },
   header: {
     flex: 1,
     flexDirection: "row",
-    backgroundColor: "#FAFAFA",
+    backgroundColor: "#FAFAFABC",
     justifyContent: "space-between",
     alignItems: "center",
     height: 40,
@@ -188,7 +197,7 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   searchmain: {
-    backgroundColor: "#FAFAFA",
+    backgroundColor: "#FAFAFABC",
     padding: 10,
     alignItems: "center",
   },
@@ -201,6 +210,13 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     height: 38,
     flex: 1,
-    justifyContent: "space-between",
+    justifyContent: "space-between",shadowOffset:{
+      width: 2,
+      height: 2,
+    },
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
 });

@@ -62,9 +62,11 @@ const SingleServiceScreen = () => {
             </View>
 
             <View style={{ padding: 10 }}>
-              <Text style={{ fontSize: 35, paddingBottom: 10 }}>
+              <Text style={{ fontSize: 35 }}>
                 {serviceName}
               </Text>
+              <View style={styles.line}></View>
+
               <Text style={{ fontSize: 20, textAlign: "justify" }}>
                 {serviceDetais}
               </Text>

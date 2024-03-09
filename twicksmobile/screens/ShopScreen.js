@@ -86,7 +86,7 @@ const ShopScreen = () => {
               style={{
                 flex: 1,
                 flexDirection: "row",
-                backgroundColor: "#FAFAFA",
+                backgroundColor: "#FAFAFABC",
                 justifyContent: "space-between",
                 alignItems: "center",
                 height: 60,
@@ -116,7 +116,7 @@ const ShopScreen = () => {
                 />
               </Pressable>
             </View>
-            <View style={styles.searchmain}>
+            <View style={{ padding: 15, backgroundColor: "#FAFAFABC" }}>
               <View style={styles.searchpress}>
                 <TextInput
                   placeholder="Search"
@@ -135,20 +135,35 @@ const ShopScreen = () => {
                   }}
                 />
               </View>
-              {hasSearched ? (
-                searchProducts.length > 0 ? (
-                  <ScrollView>
-                    {searchProducts.map((item, index) => (
-                      <ProductCard item={item} key={index} />
-                    ))}
-                  </ScrollView>
-                ) : (
-                  <Text>No Results Found</Text>
-                )
-              ) : null}
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  flexWrap: "wrap",
+                  width: "100%",
+                  backgroundColor: "#FAFAFABC",
+                  justifyContent: "space-around",
+                }}
+              >
+                {hasSearched ? (
+                  searchProducts.length > 0 ? (
+                    <>
+                      {searchProducts.map((item, index) => (
+                        <ProductCard item={item} key={index} />
+                      ))}
+                    </>
+                  ) : (
+                    <Text>No Results Found</Text>
+                  )
+                ) : null}
+              </View>
             </View>
 
-            <ScrollView horizontal showsHorizontalScrollIndicator>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator
+              style={{ backgroundColor: "#FAFAFABC" }}
+            >
               {searchField === "" &&
                 categories &&
                 categories?.map((item, index) => {
@@ -168,6 +183,7 @@ const ShopScreen = () => {
                 flexDirection: "row",
                 alignItems: "center",
                 flexWrap: "wrap",
+                backgroundColor: "#FAFAFABC",
               }}
             >
               {searchField === "" &&
@@ -187,12 +203,12 @@ export default ShopScreen;
 
 const styles = StyleSheet.create({
   homemain: {
-    backgroundColor: "#FAFAFA",
+    backgroundColor: "#FAFAFABC",
   },
   header: {
     flex: 1,
     flexDirection: "row",
-    backgroundColor: "#FAFAFA",
+    backgroundColor: "#FAFAFABC",
     justifyContent: "space-between",
     alignItems: "center",
     height: 40,
@@ -213,7 +229,7 @@ const styles = StyleSheet.create({
     // flex:3
   },
   searchmain: {
-    backgroundColor: "#FAFAFA",
+    backgroundColor: "#FAFAFABC",
     padding: 10,
     // flexDirection: "row",
     alignItems: "center",
@@ -228,5 +244,13 @@ const styles = StyleSheet.create({
     height: 38,
     flex: 1,
     justifyContent: "space-between",
+    shadowOffset: {
+      width: 2,
+      height: 2,
+    },
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
 });

@@ -6,7 +6,7 @@ import { useNavigation } from "@react-navigation/native";
 const ServiceCard = (props) => {
   const navigation = useNavigation();
   // console.log(props);
-  const item = props.item; 
+  const item = props.item;
 
   return (
     <Pressable
@@ -26,32 +26,39 @@ const ServiceCard = (props) => {
         height: 170,
         width: "46%",
         overflow: "hidden",
+        shadowOffset: {
+          width: 2,
+          height: 2,
+        },
+        shadowColor: "#000",
+        shadowOpacity: 0.1,
+        shadowRadius: 3.84,
+        elevation: 5,
       }}
     >
-      <View style={{flex:1.5}}>
+      <View style={{ flex: 1.5 }}>
         <Image
           style={{
             resizeMode: "contain",
             width: "100%",
             height: "100%",
           }}
-          source={{uri: item?.image}}
+          source={{ uri: item?.image }}
         />
       </View>
 
       <View
         style={{
-          flex:1,
+          flex: 1,
           display: "flex",
           flexDirection: "row",
           justifyContent: "space-between",
         }}
       >
         <View style={{ marginLeft: 10 }}>
-          <Text style={{ color: "#1E786F", fontSize: 23, marginVertical: 3 }}>
+          <Text style={{ color: "#1E786F", fontSize: 21, marginVertical: 3 }}>
             {item?.title}
           </Text>
-       
         </View>
       </View>
     </Pressable>

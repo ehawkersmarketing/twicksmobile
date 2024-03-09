@@ -5,12 +5,12 @@ import {
   View,
   ImageBackground,
   Pressable,
+  Platform,
 } from "react-native";
-import React,{useState,useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
 
 const ProductCard = ({ item }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -20,7 +20,6 @@ const ProductCard = ({ item }) => {
         const token = await AsyncStorage.getItem("auth_token");
         if (token !== null) {
           setIsLoggedIn(true);
-
         } else {
           setIsLoggedIn(false);
           navigation.navigate("Login");
@@ -33,6 +32,10 @@ const ProductCard = ({ item }) => {
     checkToken();
   }, [navigation]);
   const navigation = useNavigation();
+  const fontSize = Platform.select({
+    ios: 24, 
+    android: 19, 
+  });
 
   return (
     <>
@@ -48,17 +51,25 @@ const ProductCard = ({ item }) => {
               productPrice: item?.price,
               productCategory: item?.category.category,
               productReview: item?.reviews,
-              productRating:item?.rating,
+              productRating: item?.rating,
             })
           }
           style={{
             marginVertical: 15,
             backgroundColor: "white",
             borderRadius: 20,
-            height: 220,
+            height: "auto",
             width: "46%",
             overflow: "hidden",
             marginHorizontal: "2%",
+            shadowOffset: {
+              width: 2,
+              height: 2,
+            },
+            shadowColor: "#000",
+            shadowOpacity: 0.1,
+            shadowRadius: 3.84,
+            elevation: 5,
           }}
         >
           <View
@@ -93,8 +104,8 @@ const ProductCard = ({ item }) => {
           <ImageBackground
             style={{
               width: "100%",
-              height: 130,
               marginTop: -40,
+              paddingBottom: 10,
               resizeMode: "contain",
             }}
             source={require("../assets/homepage-below-main.png")}
@@ -108,12 +119,10 @@ const ProductCard = ({ item }) => {
               }}
             >
               <View style={{ marginLeft: 10 }}>
-                <Text
-                  style={{ color: "#1E786F", fontSize: 17, marginVertical: 3 }}
-                >
-                  {item?.title}
+                <Text style={[styles.title, { fontSize }]}>{item?.title}</Text>
+                <Text style={styles.price}>
+                  ₹ {item?.price}/-
                 </Text>
-                <Text style={{ fontSize: 15 }}>₹ {item?.price}/-</Text>
               </View>
             </View>
           </ImageBackground>
@@ -126,5 +135,11 @@ const ProductCard = ({ item }) => {
 export default ProductCard;
 
 const styles = StyleSheet.create({
-  productImage: {},
+  title: {
+    color: "#1E786F",
+    marginVertical: 3,
+  },
+  price:{
+    fontSize:17
+  }
 });
