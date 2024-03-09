@@ -113,7 +113,7 @@ const ProductCard = ({ item }) => {
                 >
                   {item?.title}
                 </Text>
-                <Text style={{ fontSize: 15 }}>Rs. {item?.price}/-</Text>
+                <Text style={{ fontSize: 15 }}>₹ {item?.price}/-</Text>
               </View>
             </View>
           </ImageBackground>

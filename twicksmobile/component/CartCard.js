@@ -105,9 +105,13 @@ const CartCard = ({ item, index }) => {
             backgroundColor: "white",
             flexDirection: "row",
             justifyContent: "space-between",
+            shadowOffset:{
+              width: 2,
+              height: 2,
+            },
             shadowColor: "#000",
             shadowOpacity: 0.1,
-            shadowRadius: 0.84,
+            shadowRadius: 3.84,
             elevation: 1,
           }}
         >
@@ -127,7 +131,7 @@ const CartCard = ({ item, index }) => {
             </Text>
 
             <Text style={{ fontWeight: "500", fontSize: 19, color: "#4F6E80" }}>
-              Rs. {item?.productId.price}/-
+            ₹ {item?.productId.price}/-
             </Text>
             <View
               style={{
