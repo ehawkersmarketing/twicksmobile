@@ -90,6 +90,10 @@ const CartScreen = () => {
               </View>
 
               <View style={{ flex: 1 }}>
+              <Button
+                  title="OrderConfirmation"
+                  onPress={() => navigation.navigate("OrderConfirmation")}
+                ></Button>
                 <Button
                   title="Login"
                   onPress={() => navigation.navigate("Login")}

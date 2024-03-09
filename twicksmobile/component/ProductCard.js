@@ -79,7 +79,7 @@ console.log(item)
               style={{ flexDirection: "row", alignItems: "center", gap: 5 }}
             >
               <FontAwesome name="star" size={15} color="#FFBB56" />
-              <Text>{item?.rating} {item?.reviews}</Text>
+              <Text>{item?.rating} </Text>
             </View>
           </View>
           <Image

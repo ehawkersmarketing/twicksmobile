@@ -194,7 +194,7 @@ const StackNavigator = () => {
         <Stack.Screen
           name="Product"
           component={SingleShopScreen}
-          options={{ headerShown: true }}
+          options={{ headerShown: true }}s
         />
         <Stack.Screen
           name="OrderConfirmation"
