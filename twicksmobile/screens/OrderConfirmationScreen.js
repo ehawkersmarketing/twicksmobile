@@ -17,8 +17,8 @@ import React, { useState, useEffect } from "react";
 
 const OrderConfirmationScreen = ({ route }) => {
   // const orderId = "65d992287644354ab1bc4137" ;
-  const { orderData } = route.params;
-  const { orderId, orderAmount } = route.params;
+  // const { orderData } = route.params;
+  // const { orderId, orderAmount } = route.params;
 
   //  const fetchInvoiceDetails = async (orderId) => {
   //     try {
@@ -110,7 +110,7 @@ const OrderConfirmationScreen = ({ route }) => {
                 }}
               >
                 <Pressable
-                  onPress={generatePDF}
+                  // onPress={generatePDF}
                   style={{
                     backgroundColor: "white",
                     borderRadius: 6,
@@ -182,7 +182,7 @@ const OrderConfirmationScreen = ({ route }) => {
                           color: "#BAD8D5",
                         }}
                       >
-                        Order ID: {orderId}
+                        Order ID: jbhj
                       </Text>
                       <Text
                         style={{
@@ -191,7 +191,7 @@ const OrderConfirmationScreen = ({ route }) => {
                           color: "#BAD8D5",
                         }}
                       >
-                        Order Total: {orderAmount}
+                        Order Total: 10
                       </Text>
                     </View>
                     <View style={{ flex: 1 }}>
