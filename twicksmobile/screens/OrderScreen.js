@@ -51,7 +51,8 @@ const OrderScreen = () => {
       {isLoggedIn && (
         <SafeAreaView>
           <ScrollView
-            style={{ padding: 10, backgroundColor: "#237169", height: "100%" }}
+            key={userData?._id}
+            style={{ padding: 10, backgroundColor: "white", height: "100%" }}
           >
             {fetchedOrders &&
               fetchedOrders.map((item, index) => {

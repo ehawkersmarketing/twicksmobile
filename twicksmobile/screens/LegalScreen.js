@@ -30,7 +30,7 @@ const LegalScreen = () => {
     <>
       {isLoggedIn && (
         <View
-          style={{ padding: 10, backgroundColor: "#237169", height: "100%" }}
+            style={{ padding: 10, backgroundColor: "#237169", height: "100%" }}
         >
           <Pressable
             onPress={() => navigate.navigate("ReturnAndRefund")}

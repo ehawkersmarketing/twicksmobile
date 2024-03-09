@@ -186,7 +186,7 @@ const StackNavigator = () => {
         <Stack.Screen
           name="OrderConfirmation"
           component={OrderConfirmationScreen}
-          options={{ headerShown: true }}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Checkout"
