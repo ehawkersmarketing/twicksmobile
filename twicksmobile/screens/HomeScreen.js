@@ -21,6 +21,24 @@ import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 
 const HomeScreen = ({ navigation }) => {
+
+  
+  useEffect(() => {
+     const unsubscribe = navigation.addListener('beforeRemove', (e) => {
+       // Prevent default behavior of leaving the screen
+       e.preventDefault();
+       // Optionally, navigate to the home screen
+      //  navigateToLoginIfNotLoggedIn();
+     });
+ 
+     return unsubscribe;
+  }, [navigation, navigateToLoginIfNotLoggedIn]);
+ 
+
+
+
+
+
   const [open, setOpen] = useState(false);
   const [activeFilter, setActiveFilter] = useState({
     filter: "",
@@ -74,6 +92,14 @@ const HomeScreen = ({ navigation }) => {
 
     checkToken();
   }, [navigation]);
+  const navigateToLoginIfNotLoggedIn = () =>{
+   if(isLoggedIn){
+    console.log("true")
+   }else {
+    console.log("false")
+   }
+  } 
+ 
 
   return (
     <>

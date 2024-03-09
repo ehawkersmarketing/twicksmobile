@@ -147,6 +147,7 @@ const CheckoutScreen = () => {
             }}>
               <View style={styles.line}></View>
             <Pressable onPress={() => navigation.navigate("ConfirmDetails")}
+
                   style={{
                     backgroundColor: "#28635D",
                     padding: 14,
@@ -159,6 +160,7 @@ const CheckoutScreen = () => {
                   }}>
               <Text style={{ color: "white", fontSize: 20 }}>
                 Continue
+
               </Text>
             </Pressable>
           </View>
