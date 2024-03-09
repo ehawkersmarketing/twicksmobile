@@ -139,7 +139,7 @@ const CheckoutScreen = () => {
               padding: 10,
               backgroundColor: "#F5FCFF",
             }}>
-            <Pressable onPress={() => navigation.navigate("Checkout")}
+            <Pressable onPress={() => navigation.navigate("ConfirmDetails")}
                   style={{
                     backgroundColor: "#28635D",
                     padding: 14,
