@@ -208,13 +208,13 @@ const LoginScreen = () => {
                   source={require("../assets/login.png")}
                 />
               </View>
-              <View style={{ alignItems: "center", marginVertical: 20 }}>
-                <Text style={{ fontSize: 50, color: "white", fontWeight: 600 }}>
+              <View style={{ alignItems: "center", marginVertical: 10 }}>
+                <Text style={{ fontSize: 40, color: "white", fontWeight: 600 }}>
                   Login Account
                 </Text>
               </View>
             </View>
-            <View style={{ padding: "4%" }}>
+            <View style={{ paddingHorizontal: "4%", paddingVertical: "2%"}}>
               <View>
                 <View
                   style={{
@@ -226,7 +226,7 @@ const LoginScreen = () => {
                   <TextInput
                     style={{
                       flex: 2,
-                      height: 40,
+                      height: 45,
                       padding: 10,
                       backgroundColor: "#EBF6F5",
                       borderLeftColor: "#44A98B",
@@ -243,7 +243,7 @@ const LoginScreen = () => {
                   <Pressable
                     style={{
                       flex: 1,
-                      height: 40,
+                      height: 45,
                       backgroundColor: "#4EB666",
                       alignItems: "center",
                       justifyContent: "center",
@@ -296,7 +296,7 @@ const LoginScreen = () => {
                     borderRadius: 25,
                   }}
                 >
-                  <Text style={{ fontSize: 30, color: "white" }}>Login</Text>
+                  <Text style={{ fontSize: 20, color: "white" }}>Login</Text>
                 </LinearGradient>
               </Pressable>
             </View>
@@ -309,7 +309,7 @@ const LoginScreen = () => {
             >
               <Text style={{ color: "white" }}>Haven't registered yet? </Text>
               <Pressable onPress={() => navigation.navigate("Register")}>
-                <Text style={{ color: "blue" }}> Create an account.</Text>
+                <Text style={{ color: "#D4D7F3" }}> Create an account.</Text>
               </Pressable>
             </View>
           </View>
@@ -337,7 +337,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   input: {
-    height: 40,
+    height: 45,
     padding: 10,
     backgroundColor: "#EBF6F5",
     borderLeftColor: "#44A98B",

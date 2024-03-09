@@ -110,7 +110,7 @@ const HomeScreen = ({ navigation }) => {
               style={{
                 flex: 1,
                 flexDirection: "row",
-                backgroundColor: "#FAFAFA",
+                backgroundColor: "#FAFAFABC",
                 justifyContent: "space-between",
                 alignItems: "center",
                 height: 60,
@@ -140,7 +140,7 @@ const HomeScreen = ({ navigation }) => {
                 />
               </Pressable>
             </View>
-            <View style={styles.searchmain}>
+            <View style={{ padding: 15 }}>
               <View style={styles.searchpress}>
                 <TextInput
                   placeholder="Search"
@@ -159,18 +159,27 @@ const HomeScreen = ({ navigation }) => {
                   }}
                 />
               </View>
-
-              {hasSearched ? (
-                searchProducts.length > 0 ? (
-                  <ScrollView>
-                    {searchProducts.map((item, index) => (
-                      <ProductCard item={item} key={index} />
-                    ))}
-                  </ScrollView>
-                ) : (
-                  <Text>No Results Found</Text>
-                )
-              ) : null}
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  flexWrap: "wrap",
+                  width: "100%",
+                  justifyContent: "space-around",
+                }}
+              >
+                {hasSearched ? (
+                  searchProducts.length > 0 ? (
+                    <>
+                      {searchProducts.map((item, index) => (
+                        <ProductCard item={item} key={index} />
+                      ))}
+                    </>
+                  ) : (
+                    <Text>No Results Found</Text>
+                  )
+                ) : null}
+              </View>
             </View>
             <View>
               <View style={styles.header}>
@@ -192,15 +201,15 @@ const HomeScreen = ({ navigation }) => {
             </View>
             <View>
               <View style={styles.header}>
-                <Text style={{ fontSize: 20, paddingLeft: 15 }}>
+                <Text style={{ fontSize: 20}}>
                   Featured Products
                 </Text>
-                <Button
-                  title="See All"
+                <Pressable
                   color="#1E786F"
                   onPress={() => navigation.navigate("Shop")}
-                  accessibilityLabel="Learn more about this purple button"
-                />
+                >
+                  <Text style={{fontSize:19 }}>View All</Text>
+                </Pressable>
               </View>
             </View>
             <View
@@ -228,15 +237,16 @@ export default HomeScreen;
 
 const styles = StyleSheet.create({
   homemain: {
-    backgroundColor: "#FAFAFA",
+    backgroundColor: "#FAFAFABC",
   },
   header: {
     flex: 1,
     flexDirection: "row",
-    backgroundColor: "#FAFAFA",
+    backgroundColor: "#FAFAFABC",
     justifyContent: "space-between",
     alignItems: "center",
     height: 40,
+    paddingHorizontal:15
   },
   headerlogo: {
     flexDirection: "row",
@@ -251,9 +261,10 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   searchmain: {
-    backgroundColor: "#FAFAFA",
+    backgroundColor: "#FAFAFABC",
     padding: 10,
     alignItems: "center",
+    width: "100%",
   },
   searchpress: {
     flexDirection: "row",
@@ -265,5 +276,13 @@ const styles = StyleSheet.create({
     height: 38,
     flex: 1,
     justifyContent: "space-between",
+    shadowOffset: {
+      width: 2,
+      height: 2,
+    },
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
 });
