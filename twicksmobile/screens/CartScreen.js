@@ -21,7 +21,7 @@ const CartScreen = () => {
 
   useEffect(() => {
     if (user) {
-      console.log("yaha hu me ", user);
+      // console.log("yaha hu me ", user);
     } else {
     }
   }, []);

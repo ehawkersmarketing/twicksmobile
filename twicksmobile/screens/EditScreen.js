@@ -21,7 +21,7 @@ const EditScreen = () => {
         const userString = await AsyncStorage.getItem("user");
         const user = JSON.parse(userString);
         setUserData(user);
-        console.log(user);
+        // console.log(user);
       } catch (error) {
         console.error("Error fetching user data:", error);
       }

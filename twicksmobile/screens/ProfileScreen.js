@@ -25,13 +25,23 @@ const ProfileScreen = () => {
 
     fetchUser();
   }, []);
-
+let signedIn
   const onLogOut = async () => {
     try {
+       signedIn = AsyncStorage.setItem('keepMeSigned', "false")
       Alert.alert(
         "Logout",
         "Please login again",
-        [{ text: "OK", onPress: () => navigate.navigate("Login") }],
+        [{ text: "OK", onPress: () =>{
+        let g = signedIn ==="false";
+         
+        if(g === "false"){
+          console.log("go to heel")
+        }else{
+          console.log("go to heel")
+        }
+        
+        }}],
         { cancelable: false }
       );
 

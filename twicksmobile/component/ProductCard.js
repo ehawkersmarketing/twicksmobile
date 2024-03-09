@@ -32,7 +32,7 @@ const ProductCard = ({ item }) => {
 
     checkToken();
   }, [navigation]);
-console.log(item)
+// console.log(item)
   const navigation = useNavigation();
 
   return (

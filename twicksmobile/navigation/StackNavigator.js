@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
@@ -29,11 +29,27 @@ import { AntDesign } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { FontAwesome6 } from "@expo/vector-icons";
+import { useSafeArea } from "native-base";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const StackNavigator = () => {
   const Stack = createNativeStackNavigator();
   const Tab = createBottomTabNavigator();
   const Top = createMaterialTopTabNavigator();
+
+const [loading ,setLoading]= useState(true)
+  const [keepMeSigned , setKeepMeSigned] = useState(false)
+
+  const AuthVerified = async()=>{
+    const data = AsyncStorage.getItem("keepMeSigned")
+    // console.log(data)
+    setKeepMeSigned(data);
+  }
+  useEffect(()=>{
+    AuthVerified()
+    setTimeout(()=>setLoading(false),1000)
+  },[])
+
 
   function TopTabs() {
     return (
@@ -155,21 +171,27 @@ const StackNavigator = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
+        {keepMeSigned ?
         <Stack.Screen
-          name="Login"
-          component={LoginScreen}
+          name="HomePage"
+          component={BottomTabs}
           options={{ headerShown: false }}
-        />
+        />:<Stack.Screen
+        name="Login"
+        component={LoginScreen}
+        options={{ headerShown: false }}
+      /> }
         <Stack.Screen
           name="Register"
           component={RegisterScreen}
           options={{ headerShown: false }}
         />
-        <Stack.Screen
+         <Stack.Screen
           name="Back"
           component={BottomTabs}
           options={{ headerShown: false }}
         />
+        
         <Stack.Screen
           name="Pro"
           component={TopTabs}

@@ -21,6 +21,18 @@ import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 
 const HomeScreen = ({ navigation }) => {
+  console.log("qwweerrtreee")
+  const valjue = AsyncStorage.getItem('keepMeSigned')
+  let s = valjue === "true" ; 
+  if(s){
+    console.log("good")
+  }else{
+    console.log("bad")
+  }
+  console.log("asfbn",valjue)
+
+
+
   const [open, setOpen] = useState(false);
   const [activeFilter, setActiveFilter] = useState({
     filter: "",
@@ -74,6 +86,8 @@ const HomeScreen = ({ navigation }) => {
 
     checkToken();
   }, [navigation]);
+
+  let dataAbc = AsyncStorage.getItem('keepMeSigned')
 
   return (
     <>

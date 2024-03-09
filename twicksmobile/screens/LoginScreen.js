@@ -34,7 +34,7 @@ const LoginScreen = () => {
     if (name === "phone" || name === "otp" || name === "userName") {
       value = value.replace(/[^0-9]/g, "");
     }
-    console.log(name, value);
+    // console.log(name, value);
     setFormField({ ...formField, [name]: value });
   };
   console.log("token",token);
@@ -117,7 +117,9 @@ const LoginScreen = () => {
             token: token,
           }
         );
+        let val
         if (data.success) {
+          val =  AsyncStorage.setItem("keepMeSigned","true")
           AsyncStorage.setItem("auth_token", token);
           AsyncStorage.setItem("user", JSON.stringify(data.data));
           AsyncStorage.setItem("user_id", data.data._id);
@@ -125,7 +127,12 @@ const LoginScreen = () => {
           Alert.alert(
             "Success",
             "Login Successfully",
-            [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+            [{ text: "OK", onPress: () => {
+              let d = val === "true"
+              
+              console.log("OK Pressed" , d)
+            
+            } }],
             { cancelable: false }
           );
           navigation.navigate("Back");
