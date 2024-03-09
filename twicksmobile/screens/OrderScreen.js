@@ -1,4 +1,4 @@
-import { SafeAreaView, StyleSheet, ScrollView, Text, View } from "react-native";
+import { SafeAreaView, StyleSheet, Pressable,ScrollView, Text, View } from "react-native";
 import React, { useState, useEffect } from "react";
 import OrderCard from "../component/OrderCard";
 import { useNavigation } from "@react-navigation/native";
@@ -33,10 +33,10 @@ const OrderScreen = () => {
       try {
         const token = await AsyncStorage.getItem("auth_token");
         if (token !== null) {
-          setIsLoggedIn(true);
-        } else {
           setIsLoggedIn(false);
           navigate.navigate("Login");
+        } else {
+          setIsLoggedIn(true);
         }
       } catch (error) {
         console.error("Error checking token:", error);
@@ -50,15 +50,40 @@ const OrderScreen = () => {
     <>
       {isLoggedIn && (
         <SafeAreaView>
-          <ScrollView
-            key={userData?._id}
-            style={{ padding: 10, backgroundColor: "white", height: "100%" }}
-          >
-            {fetchedOrders &&
-              fetchedOrders.map((item, index) => {
-                return <OrderCard item={item} index={index} />;
-              })}
-          </ScrollView>
+          {fetchedOrders && fetchedOrders.length > 0 ? (
+            <ScrollView
+              key={userData?._id}
+              style={{ padding: 10, backgroundColor: "white", height: "100%" }}
+            >
+              {fetchedOrders &&
+                fetchedOrders.map((item, index) => {
+                  return <OrderCard item={item} index={index} />;
+                })}
+            </ScrollView>
+          ) : (
+            <View style={{ alignItems: "center", justifyContent: "center" ,paddingVertical:"50%",gap:70}}>
+              <Text style={{ fontSize: 20 }}>
+                You don't have any order yet!!
+              </Text>
+              <Pressable
+                onPress={() => navigate.navigate("Back")}
+                style={{
+                  backgroundColor: "#28635D",
+                  padding: 14,
+                  borderRadius: 10,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginHorizontal: 10,
+                  marginTop: 10,
+                  
+                }}
+              >
+                <Text style={{ color: "white", fontSize: 20 }}>
+                  Continue Shopping
+                </Text>
+              </Pressable>
+            </View>
+          )}
         </SafeAreaView>
       )}
     </>
