@@ -84,7 +84,7 @@ const CartCard = ({ item, index }) => {
         key={item?._id}
         style={{
           width: "100%",
-          paddingVertical: 10,
+          paddingVertical: 8,
           flex: 1,
           flexDirection: "row",
         }}
@@ -99,13 +99,16 @@ const CartCard = ({ item, index }) => {
           }
           style={{
             borderColor: "#EBF6F5",
-            borderWidth: 1,
             width: "100%",
             padding: 20,
-            borderRadius: 10,
-            backgroundColor: "#FFFFFF",
+            borderRadius: 15,
+            backgroundColor: "white",
             flexDirection: "row",
             justifyContent: "space-between",
+            shadowColor: "#000",
+            shadowOpacity: 0.1,
+            shadowRadius: 0.84,
+            elevation: 1,
           }}
         >
           <View style={{ width: "30%" }}>
@@ -119,7 +122,7 @@ const CartCard = ({ item, index }) => {
             />
           </View>
           <View style={{ width: "65%" }}>
-            <Text style={{ fontWeight: "500", fontSize: 24 }}>
+            <Text style={{ fontWeight: "500", fontSize: 20 }}>
               {item?.productId.title}
             </Text>
 
@@ -130,7 +133,7 @@ const CartCard = ({ item, index }) => {
               style={{
                 flexDirection: "row",
                 alignItems: "center",
-                gap: 10,
+                gap: 15,
                 paddingTop: 10,
               }}
             >
@@ -139,15 +142,14 @@ const CartCard = ({ item, index }) => {
                 style={({ pressed }) => [
                   {
                     alignItems: "center",
-                    gap: 10,
                     backgroundColor: pressed ? "#D8E8E7" : "#FFFFFF",
                   },
                 ]}
               >
-                <AntDesign name="minuscircleo" size={24} color="black" />
+                <AntDesign name="minuscircleo" size={18} color="black" />
               </Pressable>
 
-              <Text style={{ fontSize: 21 }}>{item?.units}</Text>
+              <Text style={{ fontSize: 20 }}>{item?.units}</Text>
               <Pressable
                 onPress={() => increaseValueHandler(index)}
                 style={({ pressed }) => [
@@ -158,7 +160,7 @@ const CartCard = ({ item, index }) => {
                   },
                 ]}
               >
-                <AntDesign name="pluscircleo" size={24} color="black" />
+                <AntDesign name="pluscircleo" size={18} color="black" />
               </Pressable>
             </View>
           </View>

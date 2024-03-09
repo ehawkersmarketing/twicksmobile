@@ -53,21 +53,7 @@ const StackNavigator = () => {
               ),
           }}
         />
-        <Top.Screen
-          name="Edit"
-          component={EditScreen}
-          options={{
-            tabBarLabel: "Edit",
-            tabBarLabelStyle: { color: "#008E97" },
-            headerShown: false,
-            tabBarIcon: ({ focused }) =>
-              focused ? (
-                <Entypo name="edit" size={24} color="#237169" />
-              ) : (
-                <Entypo name="edit" size={24} color="black" />
-              ),
-          }}
-        />
+
         <Top.Screen
           name="Order"
           component={OrderScreen}
@@ -173,7 +159,7 @@ const StackNavigator = () => {
         <Stack.Screen
           name="Pro"
           component={TopTabs}
-          options={{ headerShown: true }}
+          options={{ headerShown: false }}
         />
 
         <Stack.Screen
@@ -194,7 +180,8 @@ const StackNavigator = () => {
         <Stack.Screen
           name="Product"
           component={SingleShopScreen}
-          options={{ headerShown: true }}s
+          options={{ headerShown: true }}
+          s
         />
         <Stack.Screen
           name="OrderConfirmation"
