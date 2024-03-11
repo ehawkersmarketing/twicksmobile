@@ -35,6 +35,7 @@ const CartCard = ({ item, index }) => {
     }
   }, [cart]);
   let { data: cart } = useFetch(`/api/getCartByUser/${user?._id}`);
+  console.log(cart)
   const increaseValueHandler = async (index) => {
     try {
       if (
