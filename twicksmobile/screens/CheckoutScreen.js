@@ -13,7 +13,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const CheckoutScreen = () => {
   const navigation = useNavigation();
-
+  
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   useEffect(() => {
     const checkToken = async () => {

@@ -35,7 +35,7 @@ console.log(item?._id);
     }
   }, [cart]);
   let { data: cart } = useFetch(`/api/getCartByUser/${user?._id}`);
-  console.log(cart)
+  // console.log(cart?.products)
   const increaseValueHandler = async (index) => {
     try {
       if (
@@ -67,7 +67,7 @@ console.log(item?._id);
   const decreaseValueHandler = async (index) => {
     try {
       const { data } = await axios.delete(
-        `https://backend.twicks.in/api/dropFromCart/${user._id}/${cart.products[index].productId._id}`
+        `https://backend.twicks.in/api/dropFromCart/${user._id}/${cart?.products[index]?.productId._id}`
       );
       if (data.success) {
         console.log("success");
@@ -128,11 +128,11 @@ console.log(item?._id);
           </View>
           <View style={{ width: "65%" }}>
             <Text style={{ fontWeight: "500", fontSize: 20 }}>
-              {item?.productId.title}
+              {item?.productId?.title}
             </Text>
 
             <Text style={{ fontWeight: "500", fontSize: 19, color: "#4F6E80" }}>
-            ₹ {item?.productId.price}/-
+            ₹ {item?.productId?.price}/-
             </Text>
             <View
               style={{
