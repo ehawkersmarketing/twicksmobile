@@ -155,7 +155,6 @@ const ServiceScreen = () => {
                       }}
                     >
                       {services?.map((item, index) => {
-                        // console.log(item);
                         return <ServiceCard key={item._id} item={item} />;
                       })}
                     </View>

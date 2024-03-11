@@ -34,10 +34,8 @@ const LoginScreen = () => {
     if (name === "phone" || name === "otp" || name === "userName") {
       value = value.replace(/[^0-9]/g, "");
     }
-    console.log(name, value);
     setFormField({ ...formField, [name]: value });
   };
-  console.log("token",token);
 
   const onSendOtp = async () => {
     try {
@@ -52,7 +50,6 @@ const LoginScreen = () => {
             [
               {
                 text: "OK",
-                onPress: () => console.log("OK Pressed"),
                 style: "default",
               },
             ],
@@ -73,7 +70,6 @@ const LoginScreen = () => {
               [
                 {
                   text: "OK",
-                  onPress: () => console.log("OK Pressed"),
                   style: "default",
                 },
               ],
@@ -88,7 +84,6 @@ const LoginScreen = () => {
           [
             {
               text: "OK",
-              onPress: () => console.log("OK Pressed"),
               style: "default",
             },
           ],
@@ -96,11 +91,9 @@ const LoginScreen = () => {
         );
       }
     } catch (error) {
-      console.log("catch", error);
       Alert.alert(
         "Error",
         error.response.data.message,
-        [{ text: "OK", onPress: () => console.log("OK Pressed") }],
         { cancelable: false }
       );
     }
@@ -125,7 +118,6 @@ const LoginScreen = () => {
           Alert.alert(
             "Success",
             "Login Successfully",
-            [{ text: "OK", onPress: () => console.log("OK Pressed") }],
             { cancelable: false }
           );
           navigation.navigate("Back");
@@ -133,7 +125,6 @@ const LoginScreen = () => {
           Alert.alert(
             "Error",
             "Please enter a valid OTP",
-            [{ text: "OK", onPress: () => console.log("OK Pressed") }],
             { cancelable: false }
           );
         }
@@ -141,7 +132,6 @@ const LoginScreen = () => {
         Alert.alert(
           "Error",
           "Please enter a valid phone number",
-          [{ text: "OK", onPress: () => console.log("OK Pressed") }],
           { cancelable: false }
         );
       }
@@ -149,7 +139,6 @@ const LoginScreen = () => {
       Alert.alert(
         "Error",
         error.response.data.message,
-        [{ text: "OK", onPress: () => console.log("OK Pressed") }],
         { cancelable: false }
       );
     }

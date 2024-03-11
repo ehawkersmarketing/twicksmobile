@@ -22,13 +22,9 @@ import axios from "axios";
 
 const HomeScreen = ({ navigation }) => {
 
-  
   useEffect(() => {
      const unsubscribe = navigation.addListener('beforeRemove', (e) => {
-       // Prevent default behavior of leaving the screen
        e.preventDefault();
-       // Optionally, navigate to the home screen
-      //  navigateToLoginIfNotLoggedIn();
      });
  
      return unsubscribe;

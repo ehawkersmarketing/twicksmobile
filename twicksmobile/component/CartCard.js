@@ -9,7 +9,6 @@ const CartCard = ({ item, index }) => {
   const navigation = useNavigation();
   const [total, setTotal] = useState(0);
   const [user, setUser] = useState(null);
-console.log(item?._id);
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -35,7 +34,6 @@ console.log(item?._id);
     }
   }, [cart]);
   let { data: cart } = useFetch(`/api/getCartByUser/${user?._id}`);
-  console.log(cart)
   const increaseValueHandler = async (index) => {
     try {
       if (
@@ -67,10 +65,9 @@ console.log(item?._id);
   const decreaseValueHandler = async (index) => {
     try {
       const { data } = await axios.delete(
-        `https://backend.twicks.in/api/dropFromCart/${user._id}/${cart.products[index].productId._id}`
+        `https://backend.twicks.in/api/dropFromCart/${user._id}/${cart.products[index]?.productId?._id}`
       );
       if (data.success) {
-        console.log("success");
         // window.location.reload();
       } else {
         Alert.alert(data.message);
@@ -128,11 +125,11 @@ console.log(item?._id);
           </View>
           <View style={{ width: "65%" }}>
             <Text style={{ fontWeight: "500", fontSize: 20 }}>
-              {item?.productId.title}
+              {item?.productId?.title}
             </Text>
 
             <Text style={{ fontWeight: "500", fontSize: 19, color: "#4F6E80" }}>
-            ₹ {item?.productId.price}/-
+            ₹ {item?.productId?.price}/-
             </Text>
             <View
               style={{
