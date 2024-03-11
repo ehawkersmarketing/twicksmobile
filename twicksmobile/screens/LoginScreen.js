@@ -210,7 +210,7 @@ const LoginScreen = () => {
               </View>
               <View style={{ alignItems: "center", marginVertical: 10 }}>
                 <Text style={{ fontSize: 40, color: "white", fontWeight: 600 }}>
-                  Login Account
+                  Login
                 </Text>
               </View>
             </View>
@@ -264,20 +264,6 @@ const LoginScreen = () => {
                   placeholder="Enter OTP"
                   keyboardType="numeric"
                 />
-              </View>
-              <View>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <Text style={{ color: "white" }}>Keep me signed in</Text>
-                  <Pressable style={{ margin: 0 }}>
-                    <Text style={{ color: "white" }}>Forgot Password?</Text>
-                  </Pressable>
-                </View>
               </View>
             </View>
             <View style={{ paddingHorizontal: 15 }}>

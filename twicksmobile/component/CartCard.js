@@ -9,7 +9,7 @@ const CartCard = ({ item, index }) => {
   const navigation = useNavigation();
   const [total, setTotal] = useState(0);
   const [user, setUser] = useState(null);
-
+console.log(item?._id);
   useEffect(() => {
     const fetchUser = async () => {
       try {

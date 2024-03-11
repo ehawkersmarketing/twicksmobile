@@ -12,7 +12,7 @@ import {
 import React, { useState, useEffect, useCallback, useContext } from "react";
 import { useFetch } from "../hooks/api_hook";
 import ProductCard from "../component/ProductCard";
-import HomeImage from "../component/HomeImage";
+import HomeCarousel from "../component/HomeCarousel";
 import CategoryComponent from "../component/CategoryComponent";
 import { Ionicons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
@@ -130,7 +130,7 @@ const HomeScreen = ({ navigation }) => {
                   name="person-outline"
                   size={24}
                   color="black"
-                  onPress={() => navigation.navigate("Pro")}
+                  onPress={() => navigation.navigate("Account")}
                 />
                 <AntDesign
                   name="shoppingcart"
@@ -196,7 +196,7 @@ const HomeScreen = ({ navigation }) => {
             </View>
             <View>
               <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                <HomeImage />
+                <HomeCarousel />
               </ScrollView>
             </View>
             <View>
