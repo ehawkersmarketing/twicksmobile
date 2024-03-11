@@ -3,11 +3,13 @@ import {
   ScrollView,
   Image,
   Text,
+  Alert,
   View,
   SafeAreaView,
   ImageBackground,
   Pressable,
 } from "react-native";
+import { AntDesign } from "@expo/vector-icons";
 import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/core";
 
@@ -46,8 +48,9 @@ const SingleShopScreen = ({ item, route, index }) => {
     }
   }, [cart]);
   let { data: cart } = useFetch(`/api/getCartByUser/${user?._id}`);
+  console.log("qwert",cart)
   const increaseValueHandler = async (index) => {
-    console.log(index);
+    console.log("aaagya inex",index);
     try {
       if (
         cart.products[index].units ==
@@ -58,11 +61,12 @@ const SingleShopScreen = ({ item, route, index }) => {
         const { data } = await axios.put(
           `https://backend.twicks.in/api/addToCart`,
           {
-            userId: user._id,
-            productId: cart.products[index].productId._id,
+            userId: userData._id,
+            productId: cart.products[index]._id,
             units: 1,
           }
         );
+        console.log("cart",cart?.products[index])
         if (data.success) {
           navigation.navigate("Cart");
           // window.location.reload();
@@ -97,7 +101,7 @@ const SingleShopScreen = ({ item, route, index }) => {
     productCategory,
     productPrice,
     productReview,
-    productRating
+    productRating,
   } = route.params;
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   useEffect(() => {
@@ -111,12 +115,56 @@ const SingleShopScreen = ({ item, route, index }) => {
           navigation.navigate("Login");
         }
       } catch (error) {
-        console.error("Error checking token:", error);
+        // console.error("Error checking token:", error);
       }
     };
 
     checkToken();
   }, [navigation]);
+
+  const [userData, setUserData] = useState({});
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const userString = await AsyncStorage.getItem("user");
+        const user = JSON.parse(userString);
+        setUserData(user);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUser();
+  }, []);
+  // console.log(userData)
+
+  const [isInCart, setIsInCart] = useState(false); // State to track if item is in cart
+
+const onCartTap = async (id) => {
+  try {
+    console.log(userData._id)
+    if (userData._id) {
+      const response = await axios.put("https://backend.twicks.in/api/addToCart", {
+        productId: id,
+        userId: userData._id,
+        units: 1,
+      });
+      if (response.data.success) {
+        console.log("data fetched",response.data)
+        setIsInCart(true); 
+      } else {
+        console.error("Failed to add item to cart");
+      }
+    } else {
+      console.error("User not logged in");
+    }
+  } catch (error) {
+    console.error("Error adding item to cart:", error);
+  }
+};
+console.log(isInCart)
+
   return (
     <>
       {isLoggedIn && (
@@ -128,7 +176,7 @@ const SingleShopScreen = ({ item, route, index }) => {
             backgroundColor: "#F5FCFF",
           }}
         >
-          <ScrollView style={{ backgroundColor: "#1E786F" ,width:"100%"}}>
+          <ScrollView style={{ backgroundColor: "#1E786F", width: "100%" }}>
             <View style={{}}>
               <Image
                 style={{
@@ -141,9 +189,8 @@ const SingleShopScreen = ({ item, route, index }) => {
               />
             </View>
             <ImageBackground
-            style={{padding:10}}
+              style={{ padding: 10 }}
               source={require("../assets/categoryBack.png")}
-              
             >
               <View style={{ alignItems: "flex-start" }}>
                 <Text style={{ color: "#28635D", fontSize: 25 }}>
@@ -164,7 +211,9 @@ const SingleShopScreen = ({ item, route, index }) => {
                     color="#FFBB56"
                     style={{ paddingRight: 10 }}
                   />
-                  <Text>{productReview} ({productRating})</Text>
+                  <Text>
+                    {productReview} ({productRating})
+                  </Text>
                 </View>
               </View>
               <View style={{ justifyContent: "center", alignItems: "center" }}>
@@ -194,33 +243,6 @@ const SingleShopScreen = ({ item, route, index }) => {
                   <Text style={{ fontSize: 25 }}>{productPrice}/-</Text>
                   <Text style={{ color: "gray" }}>Total Price</Text>
                 </View>
-                <View style={{ flexDirection: "row", alignItems: "center" }}>
-                  <Text
-                    onPress={() => decreaseValueHandler(index)}
-                    style={({ pressed }) => [
-                      {
-                        alignItems: "center",
-                        gap: 10,
-                        backgroundColor: pressed ? "#D8E8E7" : "#FFFFFF",
-                      },
-                    ]}
-                  >
-                    -
-                  </Text>
-                  <Text style={{ padding: 10 }}>{item?.units}</Text>
-                  <Text
-                    onPress={() => increaseValueHandler(index)}
-                    style={({ pressed }) => [
-                      {
-                        alignItems: "center",
-                        gap: 10,
-                        backgroundColor: pressed ? "#D8E8E7" : "#FFFFFF",
-                      },
-                    ]}
-                  >
-                    +
-                  </Text>
-                </View>
               </View>
             </ImageBackground>
           </ScrollView>
@@ -232,6 +254,7 @@ const SingleShopScreen = ({ item, route, index }) => {
             }}
           >
             <Pressable
+            onPress={()=>navigation.navigate("Cart")}
               style={{
                 backgroundColor: "white",
                 padding: 10,
@@ -261,8 +284,46 @@ const SingleShopScreen = ({ item, route, index }) => {
               {/* {addedToCart ? ( */}
               <View>{/* <Text>Added to Cart</Text> */}</View>
               {/* ) : ( */}
-              <Text style={{ color: "white", fontSize: 20 }}>Add to Cart</Text>
-              {/* )} */}
+              <Text
+                style={{ color: "white", fontSize: 20 }}
+                onPress={() => onCartTap(productId)}
+              >
+                {isInCart ? (<View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                gap: 15,
+                paddingTop: 10,
+              }}
+            >
+              <Pressable
+                onPress={() => decreaseValueHandler(index)}
+                style={({ pressed }) => [
+                  {
+                    alignItems: "center",
+                    backgroundColor: pressed ? "#D8E8E7" : "#FFFFFF",
+                  },
+                ]}
+              >
+                <AntDesign name="minuscircleo" size={18} color="black" />
+              </Pressable>
+
+              <Text style={{ fontSize: 20 }}>{cart?.products?.units}</Text>
+              <Pressable
+                onPress={() => increaseValueHandler(index)}
+                style={({ pressed }) => [
+                  {
+                    flexDirection: "row",
+                    gap: 10,
+                    backgroundColor: pressed ? "#D8E8E7" : "#FFFFFF",
+                  },
+                ]}
+              >
+                <AntDesign name="pluscircleo" size={18} color="black" />
+              </Pressable>
+            </View>) :"Add to cart" }
+              </Text>
+
             </Pressable>
           </View>
         </SafeAreaView>
