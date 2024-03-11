@@ -52,7 +52,6 @@ const RegisterScreen = () => {
             [
               {
                 text: "OK",
-                onPress: () => console.log("OK Pressed"),
                 style: "default",
               },
             ],
@@ -67,14 +66,12 @@ const RegisterScreen = () => {
           );
           setToken(data.token);
           if (data.success) {
-            console.log("otp send successfully");
             Alert.alert(
               "Success",
               "OTP Sent successfully",
               [
                 {
                   text: "OK",
-                  onPress: () => console.log("OK Pressed"),
                   style: "default",
                 },
               ],
@@ -83,20 +80,16 @@ const RegisterScreen = () => {
           }
         }
       } else {
-        console.log("please enter a valid number");
         Alert.alert(
           "Error",
           "Please enter a valid phone number",
-          [{ text: "OK", onPress: () => console.log("OK Pressed") }],
           { cancelable: false }
         );
       }
     } catch (error) {
-      console.log("error", error);
       Alert.alert(
         "Error",
         error.response.data.message,
-        [{ text: "OK", onPress: () => console.log("OK Pressed") }],
         { cancelable: false }
       );
     }
@@ -128,7 +121,6 @@ const RegisterScreen = () => {
             Alert.alert(
               "Success",
               "Successfully registered",
-              [{ text: "OK", onPress: () => console.log("OK Pressed") }],
               { cancelable: false }
             );
             navigation.navigate("Home");
@@ -136,7 +128,6 @@ const RegisterScreen = () => {
             Alert.alert(
               "Error",
               data.message,
-              [{ text: "OK", onPress: () => console.log("OK Pressed") }],
               { cancelable: false }
             );
           }
@@ -144,7 +135,6 @@ const RegisterScreen = () => {
           Alert.alert(
             "Error",
             data.message,
-            [{ text: "OK", onPress: () => console.log("OK Pressed") }],
             { cancelable: false }
           );
         }
@@ -152,7 +142,6 @@ const RegisterScreen = () => {
         Alert.alert(
           "Error",
           "Please enter a valid OTP",
-          [{ text: "OK", onPress: () => console.log("OK Pressed") }],
           { cancelable: false }
         );
       }
@@ -160,7 +149,6 @@ const RegisterScreen = () => {
       Alert.alert(
         "Error",
         error.response.data.error,
-        [{ text: "OK", onPress: () => console.log("OK Pressed") }],
         { cancelable: false }
       );
     }

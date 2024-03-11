@@ -31,8 +31,7 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
     orderEmail,
     orderPhoneNo,
   } = route.params;
-  console.log(item?.user?.phone);
-  console.log(orderStatus);
+
 
   // const orderId = "65d992287644354ab1bc4137" ;
   // const { orderData } = route.params;

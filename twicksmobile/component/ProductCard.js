@@ -34,7 +34,7 @@ const ProductCard = ({ item , index }) => {
   }, [navigation]);
   const navigation = useNavigation();
   const fontSize = Platform.select({
-    ios: 24, 
+    ios: 20, 
     android: 17, 
   });
 
@@ -65,14 +65,14 @@ const ProductCard = ({ item , index }) => {
             width: "46%",
             overflow: "hidden",
             marginHorizontal: "2%",
-            shadowOffset: {
+            shadowOffset:{
               width: 2,
               height: 2,
             },
             shadowColor: "#000",
             shadowOpacity: 0.1,
             shadowRadius: 3.84,
-            elevation: 5,
+            elevation: 1,
           }}
         >
           <View

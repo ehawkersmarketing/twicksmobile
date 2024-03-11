@@ -5,7 +5,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 
 import { NavigationContainer } from "@react-navigation/native";
-
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import HomeScreen from "../screens/HomeScreen";
 import LoginScreen from "../screens/LoginScreen";
 import RegisterScreen from "../screens/RegisterScreen";
@@ -125,9 +125,17 @@ let tokenValue
             headerShown: false,
             tabBarIcon: ({ focused }) =>
               focused ? (
-                <Entypo name="shop" size={24} color="#008E97" />
+                <MaterialCommunityIcons
+                  name="shopping"
+                  size={24}
+                  color="#008E97"
+                />
               ) : (
-                <Entypo name="shop" size={24} color="black" />
+                <MaterialCommunityIcons
+                  name="shopping-outline"
+                  size={24}
+                  color="black"
+                />
               ),
           }}
         />
@@ -140,9 +148,9 @@ let tokenValue
             headerShown: false,
             tabBarIcon: ({ focused }) =>
               focused ? (
-                <Entypo name="home" size={24} color="#008E97" />
+                <AntDesign name="isv" size={24} color="#008E97" />
               ) : (
-                <AntDesign name="home" size={24} color="black" />
+                <AntDesign name="isv" size={24} color="black" />
               ),
           }}
         />
