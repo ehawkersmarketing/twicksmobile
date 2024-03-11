@@ -34,8 +34,10 @@ const LoginScreen = () => {
     if (name === "phone" || name === "otp" || name === "userName") {
       value = value.replace(/[^0-9]/g, "");
     }
+    console.log(name, value);
     setFormField({ ...formField, [name]: value });
   };
+
 
   const onSendOtp = async () => {
     try {
@@ -50,6 +52,7 @@ const LoginScreen = () => {
             [
               {
                 text: "OK",
+                onPress: () => console.log("OK Pressed"),
                 style: "default",
               },
             ],
@@ -70,6 +73,7 @@ const LoginScreen = () => {
               [
                 {
                   text: "OK",
+                  onPress: () => console.log("OK Pressed"),
                   style: "default",
                 },
               ],
@@ -84,6 +88,7 @@ const LoginScreen = () => {
           [
             {
               text: "OK",
+              onPress: () => console.log("OK Pressed"),
               style: "default",
             },
           ],
@@ -91,9 +96,11 @@ const LoginScreen = () => {
         );
       }
     } catch (error) {
+      console.log("catch", error);
       Alert.alert(
         "Error",
         error.response.data.message,
+        [{ text: "OK", onPress: () => console.log("OK Pressed") }],
         { cancelable: false }
       );
     }
@@ -101,48 +108,55 @@ const LoginScreen = () => {
 
   const onLogin = async () => {
     try {
-
-      if (token) {
-        const { data } = await axios.post(
-          "https://backend.twicks.in/auth/login",
-          {
-            phone: formField.phone,
-            otp: formField.otp,
-            token: token,
-          }
-        );
-        if (data.success) {
-          AsyncStorage.setItem("auth_token", token);
-          AsyncStorage.setItem("user", JSON.stringify(data.data));
-          AsyncStorage.setItem("user_id", data.data._id);
-
-          Alert.alert(
-            "Success",
-            "Login Successfully",
-            { cancelable: false }
-          );
-          navigation.navigate("Back");
-        } else {
-          Alert.alert(
-            "Error",
-            "Please enter a valid OTP",
-            { cancelable: false }
-          );
-        }
-      } else {
-        Alert.alert(
-          "Error",
-          "Please enter a valid phone number",
-          { cancelable: false }
-        );
-      }
+       if (token) {
+         const { data } = await axios.post(
+           "https://backend.twicks.in/auth/login",
+           {
+             phone: formField.phone,
+             otp: formField.otp,
+             token: token,
+           }
+         );
+         if (data.success) {
+           AsyncStorage.setItem("auth_token", token);
+           AsyncStorage.setItem("user", JSON.stringify(data.data));
+           AsyncStorage.setItem("user_id", data.data._id);
+   
+           Alert.alert(
+             "Success",
+             "Login Successfully",
+             [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+             { cancelable: false } 
+           );
+           // Update the state to clear the form fields
+           setFormField({
+             phone: "",
+             otp: "",
+           });
+           navigation.navigate("Back");
+         } else {
+           Alert.alert(
+             "Error",
+             "Please enter a valid OTP",
+             [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+             { cancelable: false }
+           );
+         }
+       } else {
+         Alert.alert(
+           "Error",
+           "Please enter a valid phone number",
+           [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+           { cancelable: false }
+         );
+       }
     } catch (error) {
-      Alert.alert(
-        "Error",
-        error.response.data.message,
-        { cancelable: false }
-      );
-
+       Alert.alert(
+         "Error",
+         error.response.data.message,
+         [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+         { cancelable: false }
+       );
     }
    };
    
@@ -202,7 +216,7 @@ const LoginScreen = () => {
               </View>
               <View style={{ alignItems: "center", marginVertical: 10 }}>
                 <Text style={{ fontSize: 40, color: "white", fontWeight: 600 }}>
-                  Login
+                  Login Account
                 </Text>
               </View>
             </View>
@@ -256,6 +270,20 @@ const LoginScreen = () => {
                   placeholder="Enter OTP"
                   keyboardType="numeric"
                 />
+              </View>
+              <View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Text style={{ color: "white" }}>Keep me signed in</Text>
+                  <Pressable style={{ margin: 0 }}>
+                    <Text style={{ color: "white" }}>Forgot Password?</Text>
+                  </Pressable>
+                </View>
               </View>
             </View>
             <View style={{ paddingHorizontal: 15 }}>
