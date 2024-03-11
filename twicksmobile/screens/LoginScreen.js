@@ -101,6 +101,7 @@ const LoginScreen = () => {
 
   const onLogin = async () => {
     try {
+
       if (token) {
         const { data } = await axios.post(
           "https://backend.twicks.in/auth/login",
@@ -141,8 +142,10 @@ const LoginScreen = () => {
         error.response.data.message,
         { cancelable: false }
       );
+
     }
-  };
+   };
+   
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   useEffect(() => {

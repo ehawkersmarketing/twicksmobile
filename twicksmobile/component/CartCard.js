@@ -34,6 +34,8 @@ const CartCard = ({ item, index }) => {
     }
   }, [cart]);
   let { data: cart } = useFetch(`/api/getCartByUser/${user?._id}`);
+
+
   const increaseValueHandler = async (index) => {
     try {
       if (
@@ -65,7 +67,9 @@ const CartCard = ({ item, index }) => {
   const decreaseValueHandler = async (index) => {
     try {
       const { data } = await axios.delete(
-        `https://backend.twicks.in/api/dropFromCart/${user._id}/${cart.products[index]?.productId?._id}`
+
+        `https://backend.twicks.in/api/dropFromCart/${user._id}/${cart?.products[index]?.productId._id}`
+
       );
       if (data.success) {
         // window.location.reload();

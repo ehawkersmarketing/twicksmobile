@@ -6,6 +6,8 @@ import {
   ScrollView,
   Pressable,
   TextInput,
+  BackHandler,
+  Alert,
   Image,
   Button,
 } from "react-native";
@@ -19,22 +21,10 @@ import { AntDesign } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
+import { useRoute } from '@react-navigation/native';
+import { useNavigationState } from '@react-navigation/native';
 
 const HomeScreen = ({ navigation }) => {
-
-  useEffect(() => {
-     const unsubscribe = navigation.addListener('beforeRemove', (e) => {
-       e.preventDefault();
-     });
- 
-     return unsubscribe;
-  }, [navigation, navigateToLoginIfNotLoggedIn]);
- 
-
-
-
-
-
   const [open, setOpen] = useState(false);
   const [activeFilter, setActiveFilter] = useState({
     filter: "",
@@ -45,7 +35,8 @@ const HomeScreen = ({ navigation }) => {
   const { data: products, setData: setProducts } = useFetch("/api/allProducts");
   const [searchField, setSearchField] = useState("");
   const [searchProducts, setSearchProducts] = useState([]);
-
+  // const currentRouteName = navigation.getcurrentRouteName();
+  
   const search = async (text) => {
     if (text !== "") {
       try {
@@ -71,6 +62,11 @@ const HomeScreen = ({ navigation }) => {
   const { data: categories } = useFetch("/api/allCategory");
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const route = useRoute();
+  const state = useNavigationState(state => state);
+  const currentRouteName = state.routes[state.index].name;
+
   useEffect(() => {
     const checkToken = async () => {
       try {
@@ -88,14 +84,34 @@ const HomeScreen = ({ navigation }) => {
 
     checkToken();
   }, [navigation]);
-  const navigateToLoginIfNotLoggedIn = () =>{
-   if(isLoggedIn){
-    console.log("true")
-   }else {
-    console.log("false")
-   }
-  } 
- 
+
+
+
+  useEffect(() => {
+    const backAction = () => {
+       // Check if the current route is "Home"
+       if (currentRouteName === 'Home') {
+         Alert.alert('Leaving too soon ?', 'Seeds of success are waiting! Continue Shopping with TAFI.', [
+           {
+             text: 'Cancel',
+             onPress: () => navigation.navigate("Home"),
+             style: 'cancel',
+           },
+           {text: 'YES', onPress: () => BackHandler.exitApp()},
+         ]);
+         return true; // Prevent the default back action
+       }
+       return false; // Allow the default back action
+    };
+   
+    const backHandler = BackHandler.addEventListener(
+       'hardwareBackPress',
+       backAction,
+    );
+   
+    return () => backHandler.remove();
+   }, [currentRouteName, navigation]); // Add currentRouteName and navigation to the dependency array
+   
 
   return (
     <>
@@ -219,7 +235,7 @@ const HomeScreen = ({ navigation }) => {
             >
               {products &&
                 products?.map((item, index) => {
-                  return <ProductCard item={item} key={index} />;
+                  return <ProductCard item={item} index={index} />;
                 })}
             </View>
           </ScrollView>
