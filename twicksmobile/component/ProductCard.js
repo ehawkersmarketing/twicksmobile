@@ -12,8 +12,9 @@ import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const ProductCard = ({ item }) => {
+const ProductCard = ({ item , index }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // /.log(index)
   useEffect(() => {
     const checkToken = async () => {
       try {
@@ -52,6 +53,8 @@ const ProductCard = ({ item }) => {
               productCategory: item?.category.category,
               productReview: item?.reviews,
               productRating: item?.rating,
+              productQuantity:item?.quantity,
+              index:index
             })
           }
           style={{

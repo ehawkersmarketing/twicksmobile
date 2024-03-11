@@ -44,7 +44,7 @@ const ProfileScreen = () => {
       );
 
       await AsyncStorage.clear();
-      navigate.navigate("Login");
+      // navigate.navigate("Login");
     } catch (error) {
       console.error("Error logging out:", error);
     }
