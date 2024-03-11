@@ -39,7 +39,7 @@ const ProfileScreen = () => {
       Alert.alert(
         "Logout",
         "Please login again",
-        [{ text: "OK", onPress: () => navigate.navigate("Login") }],
+        [{ text: "OK", onPress: () => navigate.navigate("Register") }],
         { cancelable: false }
       );
 

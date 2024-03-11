@@ -19,6 +19,7 @@ const OrderScreen = () => {
   const { data: fetchedOrders } = useFetch(
     `/api/getAllOrderByUser/${userData._id}`
   );
+  console.log(userData?._id)
 
   useEffect(() => {
     const fetchUser = async () => {

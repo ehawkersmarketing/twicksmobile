@@ -98,7 +98,7 @@ const ServiceScreen = () => {
                     name="person-outline"
                     size={24}
                     color="black"
-                    onPress={() => navigation.navigate("Pro")}
+                    onPress={() => navigation.navigate("Account")}
                   />
                   <AntDesign
                     name="shoppingcart"

@@ -34,7 +34,7 @@ const ProductCard = ({ item }) => {
   const navigation = useNavigation();
   const fontSize = Platform.select({
     ios: 24, 
-    android: 19, 
+    android: 17, 
   });
 
   return (
@@ -140,6 +140,6 @@ const styles = StyleSheet.create({
     marginVertical: 3,
   },
   price:{
-    fontSize:17
+    fontSize:14
   }
 });
