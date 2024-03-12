@@ -19,23 +19,14 @@ const CheckoutScreen = () => {
   const [errors, setErrors] = useState({});
   const [total, setTotal] = useState(0);
   const [user, setUser] = useState(null);
-
-  const [formData, setFormData] = useState({
-    userName: "",
-    Contact: "",
-    Email: "",
-    Address: "",
-    City: "",
-    State: "",
-    PinCode: "",
-    Country: "",
-  });
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     if (user) {
     } else {
     }
   }, []);
+
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -49,17 +40,37 @@ const CheckoutScreen = () => {
 
     fetchUser();
   }, []);
-  let { data: cart } = useFetch(`/api/getCartByUser/${user?._id}`);
+
   useEffect(() => {
-    if (cart) {
-      let totalPrice = 0;
-      for (let i = 0; i < cart.products.length; i++) {
-        totalPrice +=
-          cart.products[i]?.productId?.price * cart.products[i]?.units;
+    const checkToken = async () => {
+      try {
+        const token = await AsyncStorage.getItem("auth_token");
+        if (token !== null) {
+          setIsLoggedIn(true);
+        } else {
+          setIsLoggedIn(false);
+          navigation.navigate("Login");
+        }
+      } catch (error) {
+        console.error("Error checking token:", error);
       }
-      setTotal(totalPrice);
-    }
-  }, [cart]);
+    };
+
+    checkToken();
+  }, [navigation]);
+
+
+  const [formData, setFormData] = useState({
+    userName: "",
+    Contact: "",
+    Email: "",
+    Address: "",
+    City: "",
+    State: "",
+    PinCode: "",
+    Country: "",
+  });
+
   const handleInputChange = (name, value) => {
     setFormData({ ...formData, [name]: value });
     setErrors({ ...errors, [name]: false });
@@ -80,33 +91,38 @@ const CheckoutScreen = () => {
     return Object.keys(errors).length === 0;
   };
 
-  const handleSubmit = async () => {
-    if (validateForm()) {
-      await calculateShippingCharges(formData.PinCode);
-
-      navigation.navigate("ConfirmDetails", { formData, shipCharge });
-    } else {
-    }
-  };
-
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  let { data: cart } = useFetch(`/api/getCartByUser/${user?._id}`);
   useEffect(() => {
-    const checkToken = async () => {
-      try {
-        const token = await AsyncStorage.getItem("auth_token");
-        if (token !== null) {
-          setIsLoggedIn(true);
-        } else {
-          setIsLoggedIn(false);
-          navigation.navigate("Login");
-        }
-      } catch (error) {
-        console.error("Error checking token:", error);
+    if (cart) {
+      let totalPrice = 0;
+      for (let i = 0; i < cart.products.length; i++) {
+        totalPrice +=
+          cart.products[i]?.productId?.price * cart.products[i]?.units;
       }
-    };
+      setTotal(totalPrice);
+    }
+  }, [cart]);
 
-    checkToken();
-  }, [navigation]);
+   const handleSubmit = async () => {
+    if (validateForm()) {
+      const shippmentChargeValue = await calculateShippingCharges(formData.PinCode);
+
+      navigation.navigate("ConfirmDetails", { formData, shippmentChargeValue });
+      setFormData({
+        userName: "",
+        Contact: "",
+        Email: "",
+        Address: "",
+        City: "",
+        State: "",
+        PinCode: "",
+        Country: "",
+      }); // Reset form data after submission
+    } else {
+      // Handle form validation errors
+    }
+ };
+
 
   const [shipCharge, setShipCharge] = useState(undefined);
   const calculateShippingCharges = async (pincode) => {
@@ -132,12 +148,12 @@ const CheckoutScreen = () => {
           is_return: 0,
         }
       );
-      setShipCharge(response.data.shipPrice);
-      if (shipCharge != undefined) {
-        return shipCharge;
-        
-      } else {
-        Alert.alert("Please enter valid Pin");
+      const shipChargeValue = await response.data.shipPrice
+      setShipCharge(shipChargeValue)
+      if (shipChargeValue != undefined) {
+        return shipChargeValue; 
+      }else{
+        Alert('INVALID OTP', "Please check your otp!!")
       }
     } catch (error) {
       Alert.alert(error);

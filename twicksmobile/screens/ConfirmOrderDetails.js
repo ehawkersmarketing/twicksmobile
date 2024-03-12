@@ -16,11 +16,10 @@ import {
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 const ConfirmOrderDetails = ({ route }) => {
-  const { formData, shipCharge } = route.params;
+  const { formData, shippmentChargeValue } = route.params;
   const navigation = useNavigation();
   const [total, setTotal] = useState(0);
   const [user, setUser] = useState(null);
- 
 
   useEffect(() => {
     if (user) {
@@ -135,7 +134,7 @@ const ConfirmOrderDetails = ({ route }) => {
                     Shipping Charges:
                   </Text>
                   <Text style={{ fontWeight: "bold", fontSize: 13 }}>
-                    ₹{shipCharge}
+                    ₹{shippmentChargeValue}
                   </Text>
                 </View>
                 <View
@@ -150,7 +149,7 @@ const ConfirmOrderDetails = ({ route }) => {
                     Order Total:
                   </Text>
                   <Text style={{ fontWeight: "bold", fontSize: 13 }}>
-                    ₹{total + shipCharge}
+                    ₹{total + shippmentChargeValue}
                   </Text>
                 </View>
               </View>

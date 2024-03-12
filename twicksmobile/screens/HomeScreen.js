@@ -24,6 +24,7 @@ import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import { useRoute } from '@react-navigation/native';
 import { useNavigationState } from '@react-navigation/native';
+import {  useFocusEffect } from '@react-navigation/native';
 
 const HomeScreen = ({ navigation }) => {
   const [open, setOpen] = useState(false);
@@ -64,10 +65,6 @@ const HomeScreen = ({ navigation }) => {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const route = useRoute();
-  const state = useNavigationState(state => state);
-  const currentRouteName = state.routes[state.index].name;
-
   useEffect(() => {
     const checkToken = async () => {
       try {
@@ -87,32 +84,25 @@ const HomeScreen = ({ navigation }) => {
   }, [navigation]);
 
 
+ useFocusEffect(
+    React.useCallback(() => {
+      const backAction = () => {
+        Alert.alert('Leaving too soon?', 'Seeds of success are waiting! Continue Shopping with TAFI.', [
+          {
+            text: 'Cancel',
+            onPress: () => navigation.navigate("Home"),
+            style: 'cancel',
+          },
+          {text: 'YES', onPress: () => BackHandler.exitApp()},
+        ]);
+        return true; // Prevent the default back action
+      };
 
-  useEffect(() => {
-    const backAction = () => {
-       // Check if the current route is "Home"
-       if (currentRouteName === 'Home') {
-         Alert.alert('Leaving too soon ?', 'Seeds of success are waiting! Continue Shopping with TAFI.', [
-           {
-             text: 'Cancel',
-             onPress: () => navigation.navigate("Home"),
-             style: 'cancel',
-           },
-           {text: 'YES', onPress: () => BackHandler.exitApp()},
-         ]);
-         return true; // Prevent the default back action
-       }
-       return false; // Allow the default back action
-    };
-   
-    const backHandler = BackHandler.addEventListener(
-       'hardwareBackPress',
-       backAction,
-    );
-   
-    return () => backHandler.remove();
-   }, [currentRouteName, navigation]); // Add currentRouteName and navigation to the dependency array
-   
+      const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+
+      return () => backHandler.remove();
+    }, [navigation])
+ );
 
   return (
     <>
@@ -238,12 +228,6 @@ const HomeScreen = ({ navigation }) => {
                 })}
             </View>
             <View>
-              <OpenURLButton url={supportedURL}>
-                Open supported URL
-              </OpenURLButton>
-              <OpenURLButton url={unsupportedURL}>
-                Open supported URL
-              </OpenURLButton>
             </View>
           </ScrollView>
         </SafeAreaView>
