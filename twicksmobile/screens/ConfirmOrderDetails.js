@@ -41,6 +41,7 @@ const ConfirmOrderDetails = ({ route }) => {
   }, []);
 
   let { data: cart } = useFetch(`/api/getCartByUser/${user?._id}`);
+  console.log(cart)
   useEffect(() => {
     if (cart) {
       let totalPrice = 0;
@@ -81,7 +82,7 @@ const ConfirmOrderDetails = ({ route }) => {
             "https://backend.twicks.in/api/pay/phonePePayment",
             {
               amount: totalPayAmount,
-              cartId: cart.cartId,
+              cartId: cart._id,
             }
           );
           if (data.success) {
