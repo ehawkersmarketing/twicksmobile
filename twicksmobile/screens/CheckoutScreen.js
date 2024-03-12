@@ -33,6 +33,7 @@ const CheckoutScreen = () => {
         const userString = await AsyncStorage.getItem("user");
         const userData = JSON.parse(userString);
         setUser(userData);
+        console.log(userData?.userName);
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
@@ -58,7 +59,6 @@ const CheckoutScreen = () => {
 
     checkToken();
   }, [navigation]);
-
 
   const [formData, setFormData] = useState({
     userName: "",
@@ -103,9 +103,11 @@ const CheckoutScreen = () => {
     }
   }, [cart]);
 
-   const handleSubmit = async () => {
+  const handleSubmit = async () => {
     if (validateForm()) {
-      const shippmentChargeValue = await calculateShippingCharges(formData.PinCode);
+      const shippmentChargeValue = await calculateShippingCharges(
+        formData.PinCode
+      );
 
       navigation.navigate("ConfirmDetails", { formData, shippmentChargeValue });
       setFormData({
@@ -121,8 +123,7 @@ const CheckoutScreen = () => {
     } else {
       // Handle form validation errors
     }
- };
-
+  };
 
   const [shipCharge, setShipCharge] = useState(undefined);
   const calculateShippingCharges = async (pincode) => {
@@ -148,12 +149,12 @@ const CheckoutScreen = () => {
           is_return: 0,
         }
       );
-      const shipChargeValue = await response.data.shipPrice
-      setShipCharge(shipChargeValue)
+      const shipChargeValue = await response.data.shipPrice;
+      setShipCharge(shipChargeValue);
       if (shipChargeValue != undefined) {
-        return shipChargeValue; 
-      }else{
-        Alert('INVALID OTP', "Please check your otp!!")
+        return shipChargeValue;
+      } else {
+        Alert("INVALID OTP", "Please check your otp!!");
       }
     } catch (error) {
       Alert.alert(error);
@@ -176,17 +177,34 @@ const CheckoutScreen = () => {
             <View style={{ padding: 10 }}>
               <Text style={{ fontSize: 14, padding: 5 }}>Name</Text>
               <TextInput
-                placeholder="Name"
-                style={[styles.input, errors.userName ? styles.inputError : {}]}
-                onChangeText={(value) => handleInputChange("userName", value)}
+                placeholder={user?.userName}
+                style={{
+                  padding: 10,
+                  fontSize: 15,
+                  backgroundColor: "#CAE4DE",
+                  borderRadius: 10,
+                  borderWidth: 1,
+                  borderColor: "transparent",
+                }}
+                value={user?.userName}
+                editable={false}
               />
+
               <Text style={{ fontSize: 14, padding: 5 }}>Number</Text>
               <TextInput
-                placeholder="Number"
-                style={[styles.input, errors.Contact ? styles.inputError : {}]}
-                onChangeText={(value) => handleInputChange("Contact", value)}
+                placeholder={user?.phone}
+                style={{
+                  padding: 10,
+                  fontSize: 15,
+                  backgroundColor: "#CAE4DE",
+                  borderRadius: 10,
+                  borderWidth: 1,
+                  borderColor: "transparent",
+                }}
                 maxLength={10}
                 keyboardType="numeric"
+                value={user?.phone}
+                editable={false}
               />
               <Text style={{ fontSize: 14, padding: 5 }}>Email Address</Text>
               <TextInput
@@ -196,7 +214,7 @@ const CheckoutScreen = () => {
               />
               <Text style={{ fontSize: 14, padding: 5 }}>Address Line</Text>
               <TextInput
-                placeholder="Address Lineevevre"
+                placeholder="Address Line"
                 style={[styles.input, errors.Address ? styles.inputError : {}]}
                 onChangeText={(value) => handleInputChange("Address", value)}
               />

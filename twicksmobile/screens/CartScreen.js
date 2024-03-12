@@ -114,8 +114,8 @@ const CartScreen = () => {
                   flex: 1,
                 }}
               >
-                <Text style={{ color: "white", fontSize: 20 }}>
-                  Proceed To Checkout
+                <Text style={{ color: "white", fontSize: 18 }}>
+                   Checkout
                 </Text>
               </Pressable>
               <Pressable
@@ -131,7 +131,7 @@ const CartScreen = () => {
                   flex: 1,
                 }}
               >
-                <Text style={{ color: "white", fontSize: 20 }}>
+                <Text style={{ color: "white", fontSize: 18 }}>
                   Continue Shopping
                 </Text>
               </Pressable>
