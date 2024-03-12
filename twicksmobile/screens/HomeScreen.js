@@ -24,6 +24,7 @@ import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import { useRoute } from '@react-navigation/native';
 import { useNavigationState } from '@react-navigation/native';
+import {  useFocusEffect } from '@react-navigation/native';
 
 const HomeScreen = ({ navigation }) => {
   const [open, setOpen] = useState(false);
@@ -36,6 +37,7 @@ const HomeScreen = ({ navigation }) => {
   const { data: products, setData: setProducts } = useFetch("/api/allProducts");
   const [searchField, setSearchField] = useState("");
   const [searchProducts, setSearchProducts] = useState([]);
+  // const currentRouteName = navigation.getcurrentRouteName();
   
   const search = async (text) => {
     if (text !== "") {
@@ -63,10 +65,6 @@ const HomeScreen = ({ navigation }) => {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const route = useRoute();
-  const state = useNavigationState(state => state);
-  const currentRouteName = state.routes[state.index].name;
-
   useEffect(() => {
     const checkToken = async () => {
       try {
@@ -86,35 +84,30 @@ const HomeScreen = ({ navigation }) => {
   }, [navigation]);
 
 
+ useFocusEffect(
+    React.useCallback(() => {
+      const backAction = () => {
+        Alert.alert('Leaving too soon?', 'Seeds of success are waiting! Continue Shopping with TAFI.', [
+          {
+            text: 'Cancel',
+            onPress: () => navigation.navigate("Home"),
+            style: 'cancel',
+          },
+          {text: 'YES', onPress: () => BackHandler.exitApp()},
+        ]);
+        return true; // Prevent the default back action
+      };
 
-  useEffect(() => {
-    const backAction = () => {
-       if (currentRouteName === 'Home') {
-         Alert.alert('Leaving too soon ?', 'Seeds of success are waiting! Continue Shopping with TAFI.', [
-           {
-             text: 'Cancel',
-             onPress: () => navigation.navigate("Home"),
-             style: 'cancel',
-           },
-           {text: 'YES', onPress: () => BackHandler.exitApp()},
-         ]);
-         return true;
-       }
-       return false;
-    };
-   
-    const backHandler = BackHandler.addEventListener(
-       'hardwareBackPress',
-       backAction,
-    );
-   
-    return () => backHandler.remove();
-   }, [currentRouteName, navigation]);
+      const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+
+      return () => backHandler.remove();
+    }, [navigation])
+ );
 
   return (
     <>
       {isLoggedIn && (
-        <SafeAreaView style={styles.homemain} >
+        <SafeAreaView style={styles.homemain}>
           <ScrollView>
             <View
               style={{
@@ -233,6 +226,8 @@ const HomeScreen = ({ navigation }) => {
                 products?.map((item, index) => {
                   return <ProductCard item={item} index={index} />;
                 })}
+            </View>
+            <View>
             </View>
           </ScrollView>
         </SafeAreaView>
