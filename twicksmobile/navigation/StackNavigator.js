@@ -30,12 +30,22 @@ import { AntDesign } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { FontAwesome6 } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const StackNavigator = () => {
   const Stack = createNativeStackNavigator();
   const Tab = createBottomTabNavigator();
   const Top = createMaterialTopTabNavigator();
-
+let tokenValue
+  AsyncStorage.getItem("auth_token")
+ .then(token => {
+    console.log(token);
+    tokenValue = token;
+     // This will log the actual token value
+ })
+ .catch(error => {
+    console.error('Error retrieving token: ', error);
+ });
   function TopTabs() {
     return (
       <Top.Navigator>
@@ -150,16 +160,18 @@ const StackNavigator = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen
+
+       <Stack.Screen
           name="Login"
           component={LoginScreen}
           options={{ headerShown: false }}
         />
-        <Stack.Screen
+              <Stack.Screen
           name="Register"
           component={RegisterScreen}
           options={{ headerShown: false }}
         />
+        
         <Stack.Screen
           name="Back"
           component={BottomTabs}
