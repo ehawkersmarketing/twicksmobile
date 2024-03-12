@@ -12,8 +12,9 @@ import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const ProductCard = ({ item }) => {
+const ProductCard = ({ item , index }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // /.log(index)
   useEffect(() => {
     const checkToken = async () => {
       try {
@@ -33,7 +34,7 @@ const ProductCard = ({ item }) => {
   }, [navigation]);
   const navigation = useNavigation();
   const fontSize = Platform.select({
-    ios: 24, 
+    ios: 20, 
     android: 17, 
   });
 
@@ -52,6 +53,8 @@ const ProductCard = ({ item }) => {
               productCategory: item?.category.category,
               productReview: item?.reviews,
               productRating: item?.rating,
+              productQuantity:item?.quantity,
+              index:index
             })
           }
           style={{
@@ -62,14 +65,14 @@ const ProductCard = ({ item }) => {
             width: "46%",
             overflow: "hidden",
             marginHorizontal: "2%",
-            shadowOffset: {
+            shadowOffset:{
               width: 2,
               height: 2,
             },
             shadowColor: "#000",
             shadowOpacity: 0.1,
             shadowRadius: 3.84,
-            elevation: 5,
+            elevation: 1,
           }}
         >
           <View

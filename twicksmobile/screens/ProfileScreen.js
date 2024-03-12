@@ -25,7 +25,6 @@ const ProfileScreen = () => {
         const userString = await AsyncStorage.getItem("user");
         const user = JSON.parse(userString);
         setUserData(user);
-        console.log(user);
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
@@ -39,12 +38,12 @@ const ProfileScreen = () => {
       Alert.alert(
         "Logout",
         "Please login again",
-        [{ text: "OK", onPress: () => navigate.navigate("Register") }],
+        [{ text: "OK", onPress: () => navigate.navigate("Login") }],
         { cancelable: false }
       );
 
       await AsyncStorage.clear();
-      navigate.navigate("Login");
+      // navigate.navigate("Login");
     } catch (error) {
       console.error("Error logging out:", error);
     }

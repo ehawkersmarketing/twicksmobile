@@ -5,7 +5,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 
 import { NavigationContainer } from "@react-navigation/native";
-
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import HomeScreen from "../screens/HomeScreen";
 import LoginScreen from "../screens/LoginScreen";
 import RegisterScreen from "../screens/RegisterScreen";
@@ -30,12 +30,22 @@ import { AntDesign } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { FontAwesome6 } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const StackNavigator = () => {
   const Stack = createNativeStackNavigator();
   const Tab = createBottomTabNavigator();
   const Top = createMaterialTopTabNavigator();
-
+let tokenValue
+  AsyncStorage.getItem("auth_token")
+ .then(token => {
+    console.log(token);
+    tokenValue = token;
+     // This will log the actual token value
+ })
+ .catch(error => {
+    console.error('Error retrieving token: ', error);
+ });
   function TopTabs() {
     return (
       <Top.Navigator>
@@ -115,9 +125,17 @@ const StackNavigator = () => {
             headerShown: false,
             tabBarIcon: ({ focused }) =>
               focused ? (
-                <Entypo name="shop" size={24} color="#008E97" />
+                <MaterialCommunityIcons
+                  name="shopping"
+                  size={24}
+                  color="#008E97"
+                />
               ) : (
-                <Entypo name="shop" size={24} color="black" />
+                <MaterialCommunityIcons
+                  name="shopping-outline"
+                  size={24}
+                  color="black"
+                />
               ),
           }}
         />
@@ -130,9 +148,9 @@ const StackNavigator = () => {
             headerShown: false,
             tabBarIcon: ({ focused }) =>
               focused ? (
-                <Entypo name="home" size={24} color="#008E97" />
+                <AntDesign name="isv" size={24} color="#008E97" />
               ) : (
-                <AntDesign name="home" size={24} color="black" />
+                <AntDesign name="isv" size={24} color="black" />
               ),
           }}
         />
@@ -142,16 +160,18 @@ const StackNavigator = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen
+
+       <Stack.Screen
           name="Login"
           component={LoginScreen}
           options={{ headerShown: false }}
         />
-        <Stack.Screen
+              <Stack.Screen
           name="Register"
           component={RegisterScreen}
           options={{ headerShown: false }}
         />
+        
         <Stack.Screen
           name="Back"
           component={BottomTabs}
