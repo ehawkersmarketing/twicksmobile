@@ -185,22 +185,6 @@ const LoginScreen = () => {
         <SafeAreaView style={styles.homemain}>
           <View
             style={{
-              backgroundColor: "#FAFAFA",
-              alignItems: "center",
-              height: 60,
-              justifyContent: "center",
-              position:"relative"
-            }}
-          >
-            <Pressable style={styles.headerlogo}>
-              <Image
-                style={{ width: 130, height: 48 }}
-                source={require("../assets/logo.png")}
-              />
-            </Pressable>
-          </View>
-          <View
-            style={{
               flex: 1,
               backgroundColor: "#20746C",
               justifyContent: "center",
@@ -257,7 +241,7 @@ const LoginScreen = () => {
                     }}
                     onPress={onSendOtp}
                   >
-                    <Text style={{ fontSize: 16, color: "gray" }}>
+                    <Text style={{ fontSize: 16, color: "white" }}>
                       Generate OTP
                     </Text>
                   </Pressable>
@@ -271,20 +255,6 @@ const LoginScreen = () => {
                   placeholder="Enter OTP"
                   keyboardType="numeric"
                 />
-              </View>
-              <View>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <Text style={{ color: "white" }}>Keep me signed in</Text>
-                  <Pressable style={{ margin: 0 }}>
-                    <Text style={{ color: "white" }}>Forgot Password?</Text>
-                  </Pressable>
-                </View>
               </View>
             </View>
             <View style={{ paddingHorizontal: 15 }}>
@@ -338,6 +308,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     height: 130,
+    position:"relative"
   },
   container: {
     justifyContent: "center",
