@@ -54,13 +54,14 @@ const SingleShopScreen = ({ route }) => {
   const [inCart, setInCart] = useState(false);
   useEffect(() => {
     if (cart) {
-       const productInCart = cart.products.find((product) => product.productId._id === productId);
-       console.log("Product in cart:", productInCart);
-       setInCart(!!productInCart);
-       setQuantity(productInCart ? productInCart.units : 0);
+      const productInCart = cart.products.find(
+        (product) => product.productId._id === productId
+      );
+      console.log("Product in cart:", productInCart);
+      setInCart(!!productInCart);
+      setQuantity(productInCart ? productInCart.units : 0);
     }
-   }, [cart, productId]);
-   
+  }, [cart, productId]);
 
   const {
     productId,
@@ -139,7 +140,7 @@ const SingleShopScreen = ({ route }) => {
           }
         );
         if (data.success) {
-           setQuantity((prevQuantity) => prevQuantity + 1); // Correct
+          setQuantity((prevQuantity) => prevQuantity + 1); // Correct
         } else {
           Alert("Quantity Does not Added");
         }
@@ -158,7 +159,7 @@ const SingleShopScreen = ({ route }) => {
           units: 1,
         });
         setInCart(true);
-        setQuantity(quantity+1)
+        setQuantity(quantity + 1);
       } else {
         Alert("please login to add product in cart");
       }
@@ -173,32 +174,41 @@ const SingleShopScreen = ({ route }) => {
         <SafeAreaView
           style={{
             flex: 1,
+            height: "100%",
             justifyContent: "center",
             alignItems: "center",
             backgroundColor: "White",
           }}
         >
-          <ScrollView style={{ backgroundColor:"white", width: "100%" }}>
-            <View style={{}}>
+          <ScrollView
+            style={{ backgroundColor: "white", width: "100%", height: "100%" }}
+          >
+            <View style={{ paddingBottom: 25, backgroundColor: "#28635D" }}>
               <Image
                 style={{
                   justifyContent: "center",
                   alignItems: "center",
                   height: 250,
-                  backgroundColor: "#28635D",
                 }}
                 source={{ uri: productImage }}
               />
             </View>
-            <ImageBackground
-              style={{ padding: 10,height:"100%" }}
-              source={require("../assets/categoryBack.png")}
+            <View
+              style={{
+                height: "160%",
+                padding: 20,
+                // paddingBottom:150,
+                borderTopRightRadius: 20,
+                borderTopLeftRadius: 20,
+                backgroundColor: "white",
+                marginTop: -25,
+              }}
             >
               <View style={{ alignItems: "flex-start" }}>
-                <Text style={{ color: "#28635D", fontSize: 25 }}>
+                <Text style={{ color: "#28635D", fontSize: 20 }}>
                   {productCategory}
                 </Text>
-                <Text style={{ fontSize: 40 }}>{productName}</Text>
+                <Text style={{ fontSize: 30 }}>{productName}</Text>
                 <View
                   style={{
                     display: "flex",
@@ -224,7 +234,7 @@ const SingleShopScreen = ({ route }) => {
               <View>
                 <Text
                   style={{
-                    fontSize: 25,
+                    fontSize: 20,
                     fontWeight: 600,
                     paddingBottom: 20,
                     paddingTop: "4%",
@@ -232,7 +242,7 @@ const SingleShopScreen = ({ route }) => {
                 >
                   Description
                 </Text>
-                <Text style={{ fontSize: 20 }}>{productDetais}</Text>
+                <Text style={{ fontSize: 17 }}>{productDetais}</Text>
               </View>
               <View
                 style={{
@@ -242,17 +252,106 @@ const SingleShopScreen = ({ route }) => {
                 }}
               >
                 <View>
-                  <Text style={{ fontSize: 25 }}>{productPrice}/-</Text>
+                  <Text style={{ fontSize: 20 }}>{productPrice}/-</Text>
                   <Text style={{ color: "gray" }}>Total Price</Text>
                 </View>
               </View>
-            </ImageBackground>
+            </View>
           </ScrollView>
-          <View
+          
+            {inCart ? (
+              <View
+              style={{
+                alignItems: "center",
+                justifyContent: "space-between",
+                flexDirection: "row",
+                backgroundColor: "white",
+                paddingHorizontal: 10,
+                gap: 10,
+              }}
+            >
+              <Pressable
+                onPress={() => navigation.navigate("Cart")}
+                style={{
+                  backgroundColor: "white",
+                  padding: 14,
+                  borderWidth: 1,
+                  borderRadius: 10,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Ionicons name="bag-outline" size={24} color="black" />
+              </Pressable>
+              <Pressable
+                style={{
+                  padding: 1,
+                  borderRadius: 10,
+                  justifyContent: "space-between",
+                  alignItems: "flex-end",
+                  marginVertical: 12,
+                  flex: 1,
+                }}
+              >
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    gap: 30,
+                  }}
+                >
+                  <View>
+                    <Pressable
+                      onPress={() => decreaseValueHandler()}
+                      style={{
+                        backgroundColor: "#28635D",
+                        padding: 13,
+                        borderRadius: 10,
+                      }}
+                    >
+                      <AntDesign
+                        style={{ fontSize: 30, color: "white" }}
+                        name="minus"
+                        size={18}
+                        color="black"
+                      />
+                    </Pressable>
+                  </View>
+                  <View>
+                    <Text style={{ fontSize: 25, color: "black", padding: 14 }}>
+                      {quantity}
+                    </Text>
+                  </View>
+                  <View>
+                    <Pressable
+                      onPress={() => increaseValueHandler()}
+                      style={{
+                        backgroundColor: "#28635D",
+                        padding: 13,
+                        borderRadius: 10,
+                      }}
+                    >
+                      <AntDesign
+                        style={{ fontSize: 30, color: "white" }}
+                        name="plus"
+                        size={18}
+                        color="black"
+                      />
+                    </Pressable>
+                  </View>
+                </View>
+              </Pressable>
+              </View>
+            ) : (
+              <View
             style={{
               alignItems: "center",
-              justifyContent: "center",
+              justifyContent: "space-between",
               flexDirection: "row",
+              backgroundColor: "white",
+              paddingHorizontal: 10,
+              gap: 10,
             }}
           >
             <Pressable
@@ -264,55 +363,28 @@ const SingleShopScreen = ({ route }) => {
                 borderRadius: 10,
                 justifyContent: "center",
                 alignItems: "center",
-                // marginHorizontal: 10,
-                // marginTop: 10,
               }}
             >
               <Ionicons name="bag-outline" size={24} color="black" />
             </Pressable>
-            <Pressable
-              // onPress={() => addItemToCart(item)}
-              style={{
-                backgroundColor: "#28635D",
-                padding: 1,
-                borderRadius: 10,
-                justifyContent: "center",
-                alignItems: "center",
-                marginHorizontal: 10,
-                // marginTop: 10,
-                marginVertical: 12,
-                flex: 1,
-              }}
-            >
-              {/* {addedToCart ? ( */}
-              <View>{/* <Text>Added to Cart</Text> */}</View>
-              {/* ) : ( */}
-              <View style={{ color: "white", marginBottom: 2, fontSize: 20 }}>
-                {inCart ? (
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      gap:20
-                    }}
-                  >
-                    <Pressable
-                      style={{ paddingTop: 12 , paddingBottom:12, borderRadius:"50%"}}
-                      onPress={() => decreaseValueHandler()}
-                    >
-                      <AntDesign  style={{ fontSize: 30 , color:"white" }} name="minuscircleo" size={18} color="black" />
-
-                    </Pressable>
-                    <View>
-                      <Text style={{ fontSize: 25 , color:"white" }}>{quantity}</Text>
-                    </View>
-                    <Pressable  onPress={() => increaseValueHandler()}>
-                      
-                <AntDesign style={{ fontSize: 30 , color:"white" }} name="pluscircleo" size={18} color="black" />
-                    </Pressable>
-                  </View>
-                ) : (
+              <Pressable
+                style={{
+                  backgroundColor: "#28635D",
+                  padding: 1,
+                  borderRadius: 10,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginVertical: 12,
+                  flex: 1,
+                }}
+              >
+                <View
+                  style={{
+                    color: "white",
+                    marginBottom: 2,
+                    fontSize: 20,
+                  }}
+                >
                   <View style={{ marginVertical: -5 }}>
                     <Pressable
                       style={{
@@ -336,10 +408,10 @@ const SingleShopScreen = ({ route }) => {
                       </Text>
                     </Pressable>
                   </View>
-                )}
+                </View>
+              </Pressable>
               </View>
-            </Pressable>
-          </View>
+            )}
         </SafeAreaView>
       )}
     </>
