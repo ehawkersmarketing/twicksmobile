@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/core";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useCallback } from "react";
 import { useFetch } from "../hooks/api_hook";
 import {
   Pressable,
@@ -51,7 +51,69 @@ const ConfirmOrderDetails = ({ route }) => {
       setTotal(totalPrice);
     }
   }, [cart]);
+  let url
 
+  const handleOrderFunction = async (event) => {
+    event.preventDefault();
+    try {
+      if (shippmentChargeValue === undefined) {
+        alert(
+          "Submit adress details and calculate shipment before placing order"
+        );
+      } else {
+        const { data } = await axios.post(
+          "https://backend.twicks.in/api/putUserAddress",
+          {
+            userId: user._id,
+            userName: formData.userName,
+            street: formData.Address,
+            landmark: formData.Address2,
+            email: formData.Email,
+            city: formData.City,
+            country: formData.Country,
+            state: formData.State,
+            zipCode: formData.PinCode,
+          }
+        );
+        if (data.success) {
+          const totalPayAmount = total + shippmentChargeValue;
+          const { data } = await axios.post(
+            "https://backend.twicks.in/api/pay/phonePePayment",
+            {
+              amount: totalPayAmount,
+              cartId: cart.cartId,
+            }
+          );
+          if (data.success) {
+           url = data?.data
+          handlePress(data.data)
+            // navigation.navigate(data.data)
+          }
+        } else {
+          toast.error(`${data.message}`, {
+            position: "bottom-right",
+            autoClose: 8000,
+            pauseOnHover: true,
+            draggable: true,
+            theme: "dark",
+          });
+        }
+      }
+    } catch (error) {
+      console.error("Failed to submit form", error);
+    }
+  };
+
+
+    const handlePress = useCallback(async (data) => {
+      const supported = await Linking.canOpenURL(data);
+      if (supported) {
+        await Linking.openURL(data);
+      } else {
+        Alert.alert(`Don't know how to open this URL: ${data }`);
+      }
+    }, []);
+   
   return (
     <>
       <SafeAreaView
@@ -207,6 +269,7 @@ const ConfirmOrderDetails = ({ route }) => {
         >
           <View style={styles.line}></View>
           <Pressable
+            onPress={handleOrderFunction}
             style={{
               backgroundColor: "#28635D",
               padding: 14,
@@ -219,9 +282,10 @@ const ConfirmOrderDetails = ({ route }) => {
             }}
           >
             <Text style={{ color: "white", fontSize: 20 }}>Place Order</Text>
+            {/* <OpenURLButton url={"https://google.com"}>Open Unsupported URL</OpenURLButton> */}
+
           </Pressable>
         </View>
-        
       </SafeAreaView>
     </>
   );
