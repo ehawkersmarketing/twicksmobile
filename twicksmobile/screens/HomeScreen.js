@@ -10,6 +10,7 @@ import {
   Alert,
   Image,
   Button,
+  Linking,
 } from "react-native";
 import React, { useState, useEffect, useCallback, useContext } from "react";
 import { useFetch } from "../hooks/api_hook";
@@ -213,14 +214,12 @@ const HomeScreen = ({ navigation }) => {
             </View>
             <View>
               <View style={styles.header}>
-                <Text style={{ fontSize: 20}}>
-                  Featured Products
-                </Text>
+                <Text style={{ fontSize: 20 }}>Featured Products</Text>
                 <Pressable
                   color="#1E786F"
                   onPress={() => navigation.navigate("Shop")}
                 >
-                  <Text style={{fontSize:19 }}>View All</Text>
+                  <Text style={{ fontSize: 19 }}>View All</Text>
                 </Pressable>
               </View>
             </View>
@@ -237,6 +236,14 @@ const HomeScreen = ({ navigation }) => {
                 products?.map((item, index) => {
                   return <ProductCard item={item} index={index} />;
                 })}
+            </View>
+            <View>
+              <OpenURLButton url={supportedURL}>
+                Open supported URL
+              </OpenURLButton>
+              <OpenURLButton url={unsupportedURL}>
+                Open supported URL
+              </OpenURLButton>
             </View>
           </ScrollView>
         </SafeAreaView>
@@ -258,7 +265,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     height: 40,
-    paddingHorizontal:15
+    paddingHorizontal: 15,
   },
   headerlogo: {
     flexDirection: "row",

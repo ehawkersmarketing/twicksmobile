@@ -175,23 +175,23 @@ const SingleShopScreen = ({ route }) => {
             flex: 1,
             justifyContent: "center",
             alignItems: "center",
-            backgroundColor: "#F5FCFF",
+            backgroundColor: "White",
           }}
         >
-          <ScrollView style={{ backgroundColor: "#1E786F", width: "100%" }}>
+          <ScrollView style={{ backgroundColor:"white", width: "100%" }}>
             <View style={{}}>
               <Image
                 style={{
                   justifyContent: "center",
                   alignItems: "center",
                   height: 250,
-                  backgroundColor: "transparent",
+                  backgroundColor: "#28635D",
                 }}
                 source={{ uri: productImage }}
               />
             </View>
             <ImageBackground
-              style={{ padding: 10 }}
+              style={{ padding: 10,height:"100%" }}
               source={require("../assets/categoryBack.png")}
             >
               <View style={{ alignItems: "flex-start" }}>

@@ -189,6 +189,7 @@ const LoginScreen = () => {
               alignItems: "center",
               height: 60,
               justifyContent: "center",
+              position:"relative"
             }}
           >
             <Pressable style={styles.headerlogo}>
