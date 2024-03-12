@@ -90,7 +90,6 @@ const HomeScreen = ({ navigation }) => {
 
   useEffect(() => {
     const backAction = () => {
-       // Check if the current route is "Home"
        if (currentRouteName === 'Home') {
          Alert.alert('Leaving too soon ?', 'Seeds of success are waiting! Continue Shopping with TAFI.', [
            {
@@ -100,9 +99,9 @@ const HomeScreen = ({ navigation }) => {
            },
            {text: 'YES', onPress: () => BackHandler.exitApp()},
          ]);
-         return true; // Prevent the default back action
+         return true;
        }
-       return false; // Allow the default back action
+       return false;
     };
    
     const backHandler = BackHandler.addEventListener(
@@ -111,8 +110,7 @@ const HomeScreen = ({ navigation }) => {
     );
    
     return () => backHandler.remove();
-   }, [currentRouteName, navigation]); // Add currentRouteName and navigation to the dependency array
-   
+   }, [currentRouteName, navigation]);
 
   return (
     <>
@@ -236,14 +234,6 @@ const HomeScreen = ({ navigation }) => {
                 products?.map((item, index) => {
                   return <ProductCard item={item} index={index} />;
                 })}
-            </View>
-            <View>
-              <OpenURLButton url={supportedURL}>
-                Open supported URL
-              </OpenURLButton>
-              <OpenURLButton url={unsupportedURL}>
-                Open supported URL
-              </OpenURLButton>
             </View>
           </ScrollView>
         </SafeAreaView>
