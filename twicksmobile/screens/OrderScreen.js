@@ -54,9 +54,9 @@ const OrderScreen = () => {
   }, [navigate]);
 
   return (
-    <>
+    <View key={userData?._id}>
       {isLoggedIn && (
-        <SafeAreaView key={userData?._id}>
+        <SafeAreaView>
           {fetchedOrders && fetchedOrders.length > 0 ? (
             <ScrollView
               style={{ padding: 10, backgroundColor: "white", height: "100%" }}
@@ -98,7 +98,7 @@ const OrderScreen = () => {
           )}
         </SafeAreaView>
       )}
-    </>
+    </View>
   );
 };
 
