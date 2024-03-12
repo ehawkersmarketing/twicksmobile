@@ -18,6 +18,7 @@ import axios from "axios";
 import { useFetch } from "../hooks/api_hook";
 import { Ionicons } from "@expo/vector-icons";
 import { Fontisto } from "@expo/vector-icons";
+import { FontAwesome } from "@expo/vector-icons";
 
 const SingleShopScreen = ({ route }) => {
   const navigation = useNavigation();
@@ -209,23 +210,18 @@ const SingleShopScreen = ({ route }) => {
                   {productCategory}
                 </Text>
                 <Text style={{ fontSize: 30 }}>{productName}</Text>
-                <View
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    paddingVertical: 10,
-                  }}
-                >
-                  <Fontisto
-                    name="star"
-                    size={15}
-                    color="#FFBB56"
-                    style={{ paddingRight: 10 }}
-                  />
-                  <Text>
-                    {productReview} ({productRating})
-                  </Text>
+                <View style={styles.ratingAndReview}>
+                  <View style={styles.rating}>
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <FontAwesome
+                        key={i}
+                        name={i >= productRating ? "star" : "star"}
+                        size={17}
+                        color={i >= productRating ? "#ccc" : "#FFBB56"}
+                      />
+                    ))}
+                  </View>
+                  <Text style={styles.review}>{productReview} Reviews</Text>
                 </View>
               </View>
               <View style={{ justifyContent: "center", alignItems: "center" }}>
@@ -258,9 +254,9 @@ const SingleShopScreen = ({ route }) => {
               </View>
             </View>
           </ScrollView>
-          
-            {inCart ? (
-              <View
+
+          {inCart ? (
+            <View
               style={{
                 alignItems: "center",
                 justifyContent: "space-between",
@@ -342,31 +338,31 @@ const SingleShopScreen = ({ route }) => {
                   </View>
                 </View>
               </Pressable>
-              </View>
-            ) : (
-              <View
-            style={{
-              alignItems: "center",
-              justifyContent: "space-between",
-              flexDirection: "row",
-              backgroundColor: "white",
-              paddingHorizontal: 10,
-              gap: 10,
-            }}
-          >
-            <Pressable
-              onPress={() => navigation.navigate("Cart")}
+            </View>
+          ) : (
+            <View
               style={{
-                backgroundColor: "white",
-                padding: 14,
-                borderWidth: 1,
-                borderRadius: 10,
-                justifyContent: "center",
                 alignItems: "center",
+                justifyContent: "space-between",
+                flexDirection: "row",
+                backgroundColor: "white",
+                paddingHorizontal: 10,
+                gap: 10,
               }}
             >
-              <Ionicons name="bag-outline" size={24} color="black" />
-            </Pressable>
+              <Pressable
+                onPress={() => navigation.navigate("Cart")}
+                style={{
+                  backgroundColor: "white",
+                  padding: 14,
+                  borderWidth: 1,
+                  borderRadius: 10,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Ionicons name="bag-outline" size={24} color="black" />
+              </Pressable>
               <Pressable
                 style={{
                   backgroundColor: "#28635D",
@@ -410,8 +406,8 @@ const SingleShopScreen = ({ route }) => {
                   </View>
                 </View>
               </Pressable>
-              </View>
-            )}
+            </View>
+          )}
         </SafeAreaView>
       )}
     </>
@@ -427,5 +423,18 @@ const styles = StyleSheet.create({
     backgroundColor: "gray",
     marginVertical: 10,
   },
-  AddCartStyle: {},
+  ratingAndReview: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 10,
+  },
+  rating: {
+    flexDirection: "row",
+    gap:2
+  },
+  review: {
+    marginLeft: 10,
+    fontSize:14
+  },
 });
