@@ -21,13 +21,19 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/logo.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.ehawkersdevelopers.twicksmobile"
     },
     "web": {
       "favicon": "./assets/logo.png"
     },
     "plugins": [
       "expo-secure-store"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "9a9afa10-4e35-4252-960f-a7770325d5d9"
+      }
+    }
   }
 }
