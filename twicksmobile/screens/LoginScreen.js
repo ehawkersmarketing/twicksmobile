@@ -256,20 +256,6 @@ const LoginScreen = () => {
                   keyboardType="numeric"
                 />
               </View>
-              <View>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <Text style={{ color: "white" }}>Keep me signed in</Text>
-                  <Pressable style={{ margin: 0 }}>
-                    <Text style={{ color: "white" }}>Forgot Password?</Text>
-                  </Pressable>
-                </View>
-              </View>
             </View>
             <View style={{ paddingHorizontal: 15 }}>
               <Pressable onPress={onLogin}>
