@@ -12,7 +12,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const ProductCard = ({ item , index }) => {
+const ProductCard = ({ item, index }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   // /.log(index)
   useEffect(() => {
@@ -34,8 +34,8 @@ const ProductCard = ({ item , index }) => {
   }, [navigation]);
   const navigation = useNavigation();
   const fontSize = Platform.select({
-    ios: 20, 
-    android: 17, 
+    ios: 20,
+    android: 17,
   });
 
   return (
@@ -53,8 +53,8 @@ const ProductCard = ({ item , index }) => {
               productCategory: item?.category.category,
               productReview: item?.reviews,
               productRating: item?.rating,
-              productQuantity:item?.quantity,
-              index:index
+              productQuantity: item?.quantity,
+              index: index,
             })
           }
           style={{
@@ -65,7 +65,7 @@ const ProductCard = ({ item , index }) => {
             width: "46%",
             overflow: "hidden",
             marginHorizontal: "2%",
-            shadowOffset:{
+            shadowOffset: {
               width: 2,
               height: 2,
             },
@@ -79,20 +79,26 @@ const ProductCard = ({ item , index }) => {
             style={{
               flexDirection: "row",
               padding: 10,
-              alignContent: "center",
+              alignItems: "center",
               justifyContent: "space-between",
             }}
           >
-            <View style={{ width: "80%" }}>
+            <View style={{width:"45%"}}>
               <Text numberOfLines={1} style={{ fontSize: 15 }}>
                 {item?.category.category}
               </Text>
             </View>
-            <View
-              style={{ flexDirection: "row", alignItems: "center", gap: 5 }}
-            >
-              <FontAwesome name="star" size={15} color="#FFBB56" />
-              <Text>{item?.rating} </Text>
+            <View style={styles.ratingAndReview}>
+              <View style={styles.rating}>
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <FontAwesome
+                    key={i}
+                    name={i >= item?.rating ? "star" : "star"}
+                    size={17}
+                    color={i >= item?.rating ? "#ccc" : "#FFBB56"}
+                  />
+                ))}
+              </View>
             </View>
           </View>
           <Image
@@ -123,9 +129,7 @@ const ProductCard = ({ item , index }) => {
             >
               <View style={{ marginLeft: 10 }}>
                 <Text style={[styles.title, { fontSize }]}>{item?.title}</Text>
-                <Text style={styles.price}>
-                  ₹ {item?.price}/-
-                </Text>
+                <Text style={styles.price}>₹ {item?.price}/-</Text>
               </View>
             </View>
           </ImageBackground>
@@ -142,7 +146,21 @@ const styles = StyleSheet.create({
     color: "#1E786F",
     marginVertical: 3,
   },
-  price:{
-    fontSize:14
-  }
+  price: {
+    fontSize: 14,
+  },
+  ratingAndReview: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 10,
+  },
+  rating: {
+    flexDirection: "row",
+    gap: 2,
+  },
+  review: {
+    marginLeft: 10,
+    fontSize: 14,
+  },
 });

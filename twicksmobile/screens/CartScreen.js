@@ -87,21 +87,6 @@ const CartScreen = () => {
                     <CartCard key={item._id} item={item} index={index} />
                   ))}
               </View>
-
-              <View style={{ flex: 1 }}>
-              <Button
-                  title="OrderConfirmation"
-                  onPress={() => navigation.navigate("OrderConfirmation")}
-                ></Button>
-                <Button
-                  title="Login"
-                  onPress={() => navigation.navigate("Login")}
-                ></Button>
-                <Button
-                  title="Register"
-                  onPress={() => navigation.navigate("Register")}
-                ></Button>
-              </View>
             </View>
           </ScrollView>
           <View

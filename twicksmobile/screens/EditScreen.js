@@ -107,7 +107,7 @@ const EditScreen = () => {
             <TextInput
               onChangeText={(value) => onChangeInputHandler(value, "userName")}
               placeholder={userData.userName}
-              style={{ fontSize: 30 }}
+              style={{ fontSize: 30,color: "white" }}
               placeholderTextColor={"rgb(187, 182, 182);"}
             />
             <View style={styles.line}></View>
@@ -120,7 +120,7 @@ const EditScreen = () => {
             <TextInput
               onChangeText={(value) => onChangeInputHandler(value, "email")}
               placeholder={userData.email}
-              style={{ fontSize: 30 }}
+              style={{ fontSize: 30,color: "white" }}
               placeholderTextColor={"rgb(187, 182, 182);"}
             />
             <View style={styles.line}></View>
