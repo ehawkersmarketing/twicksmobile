@@ -11,6 +11,7 @@ import {
   Image,
   View,
   Alert,
+  Linking,
 } from "react-native";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -19,6 +20,7 @@ const ConfirmOrderDetails = ({ route }) => {
   const navigation = useNavigation();
   const [total, setTotal] = useState(0);
   const [user, setUser] = useState(null);
+ 
 
   useEffect(() => {
     if (user) {
@@ -70,9 +72,9 @@ const ConfirmOrderDetails = ({ route }) => {
             <View
               style={{
                 margin: 20,
-                padding:10,
+                padding: 10,
                 backgroundColor: "white",
-                borderRadius:10,
+                borderRadius: 10,
                 shadowOffset: {
                   width: 2,
                   height: 2,
@@ -220,6 +222,7 @@ const ConfirmOrderDetails = ({ route }) => {
             <Text style={{ color: "white", fontSize: 20 }}>Place Order</Text>
           </Pressable>
         </View>
+        
       </SafeAreaView>
     </>
   );

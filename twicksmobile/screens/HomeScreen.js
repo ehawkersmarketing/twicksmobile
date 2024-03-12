@@ -8,6 +8,7 @@ import {
   TextInput,
   Image,
   Button,
+  Linking,
 } from "react-native";
 import React, { useState, useEffect, useCallback, useContext } from "react";
 import { useFetch } from "../hooks/api_hook";
@@ -21,19 +22,13 @@ import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 
 const HomeScreen = ({ navigation }) => {
-
   useEffect(() => {
-     const unsubscribe = navigation.addListener('beforeRemove', (e) => {
-       e.preventDefault();
-     });
- 
-     return unsubscribe;
+    const unsubscribe = navigation.addListener("beforeRemove", (e) => {
+      e.preventDefault();
+    });
+
+    return unsubscribe;
   }, [navigation, navigateToLoginIfNotLoggedIn]);
- 
-
-
-
-
 
   const [open, setOpen] = useState(false);
   const [activeFilter, setActiveFilter] = useState({
@@ -88,14 +83,34 @@ const HomeScreen = ({ navigation }) => {
 
     checkToken();
   }, [navigation]);
-  const navigateToLoginIfNotLoggedIn = () =>{
-   if(isLoggedIn){
-    console.log("true")
-   }else {
-    console.log("false")
-   }
-  } 
- 
+  const navigateToLoginIfNotLoggedIn = () => {
+    if (isLoggedIn) {
+      console.log("true");
+    } else {
+      console.log("false");
+    }
+  };
+
+  const supportedURL = "https://google.com";
+
+  const unsupportedURL = "slack://open?team=123456";
+
+  const OpenURLButton = ({ url, children }) => {
+    const handlePress = useCallback(async () => {
+      // Checking if the link is supported for links with custom URL scheme.
+      const supported = await Linking.canOpenURL(url);
+
+      if (supported) {
+        // Opening the link with some app, if the URL scheme is "http" the web link should be opened
+        // by some browser in the mobile
+        await Linking.openURL(url);
+      } else {
+        Alert.alert(`Don't know how to open this URL: ${url}`);
+      }
+    }, [url]);
+
+    return <Button title={children} onPress={handlePress} />;
+  };
 
   return (
     <>
@@ -197,14 +212,12 @@ const HomeScreen = ({ navigation }) => {
             </View>
             <View>
               <View style={styles.header}>
-                <Text style={{ fontSize: 20}}>
-                  Featured Products
-                </Text>
+                <Text style={{ fontSize: 20 }}>Featured Products</Text>
                 <Pressable
                   color="#1E786F"
                   onPress={() => navigation.navigate("Shop")}
                 >
-                  <Text style={{fontSize:19 }}>View All</Text>
+                  <Text style={{ fontSize: 19 }}>View All</Text>
                 </Pressable>
               </View>
             </View>
@@ -221,6 +234,14 @@ const HomeScreen = ({ navigation }) => {
                 products?.map((item, index) => {
                   return <ProductCard item={item} key={index} />;
                 })}
+            </View>
+            <View>
+              <OpenURLButton url={supportedURL}>
+                Open supported URL
+              </OpenURLButton>
+              <OpenURLButton url={unsupportedURL}>
+                Open supported URL
+              </OpenURLButton>
             </View>
           </ScrollView>
         </SafeAreaView>
@@ -242,7 +263,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     height: 40,
-    paddingHorizontal:15
+    paddingHorizontal: 15,
   },
   headerlogo: {
     flexDirection: "row",

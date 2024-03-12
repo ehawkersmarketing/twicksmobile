@@ -48,9 +48,7 @@ const SingleShopScreen = ({ item, route, index }) => {
     }
   }, [cart]);
   let { data: cart } = useFetch(`/api/getCartByUser/${user?._id}`);
-  console.log("qwert",cart)
   const increaseValueHandler = async (index) => {
-    console.log("aaagya inex",index);
     try {
       if (
         cart.products[index].units ==
@@ -66,7 +64,7 @@ const SingleShopScreen = ({ item, route, index }) => {
             units: 1,
           }
         );
-        console.log("cart",cart?.products[index])
+        console.log("cart", cart?.products[index]);
         if (data.success) {
           navigation.navigate("Cart");
           // window.location.reload();
@@ -141,29 +139,32 @@ const SingleShopScreen = ({ item, route, index }) => {
 
   const [isInCart, setIsInCart] = useState(false); // State to track if item is in cart
 
-const onCartTap = async (id) => {
-  try {
-    console.log(userData._id)
-    if (userData._id) {
-      const response = await axios.put("https://backend.twicks.in/api/addToCart", {
-        productId: id,
-        userId: userData._id,
-        units: 1,
-      });
-      if (response.data.success) {
-        console.log("data fetched",response.data)
-        setIsInCart(true); 
+  const onCartTap = async (id) => {
+    try {
+      console.log(userData._id);
+      if (userData._id) {
+        const response = await axios.put(
+          "https://backend.twicks.in/api/addToCart",
+          {
+            productId: id,
+            userId: userData._id,
+            units: 1,
+          }
+        );
+        if (response.data.success) {
+          console.log("data fetched", response.data);
+          setIsInCart(true);
+        } else {
+          console.error("Failed to add item to cart");
+        }
       } else {
-        console.error("Failed to add item to cart");
+        console.error("User not logged in");
       }
-    } else {
-      console.error("User not logged in");
+    } catch (error) {
+      console.error("Error adding item to cart:", error);
     }
-  } catch (error) {
-    console.error("Error adding item to cart:", error);
-  }
-};
-console.log(isInCart)
+  };
+  console.log(isInCart);
 
   return (
     <>
@@ -173,23 +174,23 @@ console.log(isInCart)
             flex: 1,
             justifyContent: "center",
             alignItems: "center",
-            backgroundColor: "#F5FCFF",
+            backgroundColor: "White",
           }}
         >
-          <ScrollView style={{ backgroundColor: "#1E786F", width: "100%" }}>
+          <ScrollView style={{ backgroundColor:"white", width: "100%" }}>
             <View style={{}}>
               <Image
                 style={{
                   justifyContent: "center",
                   alignItems: "center",
                   height: 250,
-                  backgroundColor: "transparent",
+                  backgroundColor: "#28635D",
                 }}
                 source={{ uri: productImage }}
               />
             </View>
             <ImageBackground
-              style={{ padding: 10 }}
+              style={{ padding: 10,height:"100%" }}
               source={require("../assets/categoryBack.png")}
             >
               <View style={{ alignItems: "flex-start" }}>
@@ -254,7 +255,7 @@ console.log(isInCart)
             }}
           >
             <Pressable
-            onPress={()=>navigation.navigate("Cart")}
+              onPress={() => navigation.navigate("Cart")}
               style={{
                 backgroundColor: "white",
                 padding: 10,
@@ -288,42 +289,47 @@ console.log(isInCart)
                 style={{ color: "white", fontSize: 20 }}
                 onPress={() => onCartTap(productId)}
               >
-                {isInCart ? (<View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                gap: 15,
-                paddingTop: 10,
-              }}
-            >
-              <Pressable
-                onPress={() => decreaseValueHandler(index)}
-                style={({ pressed }) => [
-                  {
-                    alignItems: "center",
-                    backgroundColor: pressed ? "#D8E8E7" : "#FFFFFF",
-                  },
-                ]}
-              >
-                <AntDesign name="minuscircleo" size={18} color="black" />
-              </Pressable>
+                {isInCart ? (
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      gap: 15,
+                      paddingTop: 10,
+                    }}
+                  >
+                    <Pressable
+                      onPress={() => decreaseValueHandler(index)}
+                      style={({ pressed }) => [
+                        {
+                          alignItems: "center",
+                          backgroundColor: pressed ? "#D8E8E7" : "#FFFFFF",
+                        },
+                      ]}
+                    >
+                      <AntDesign name="minuscircleo" size={18} color="black" />
+                    </Pressable>
 
-              <Text style={{ fontSize: 20 }}>{cart?.products?.units}</Text>
-              <Pressable
-                onPress={() => increaseValueHandler(index)}
-                style={({ pressed }) => [
-                  {
-                    flexDirection: "row",
-                    gap: 10,
-                    backgroundColor: pressed ? "#D8E8E7" : "#FFFFFF",
-                  },
-                ]}
-              >
-                <AntDesign name="pluscircleo" size={18} color="black" />
-              </Pressable>
-            </View>) :"Add to cart" }
+                    <Text style={{ fontSize: 20 }}>
+                      {cart?.products?.units}
+                    </Text>
+                    <Pressable
+                      onPress={() => increaseValueHandler(index)}
+                      style={({ pressed }) => [
+                        {
+                          flexDirection: "row",
+                          gap: 10,
+                          backgroundColor: pressed ? "#D8E8E7" : "#FFFFFF",
+                        },
+                      ]}
+                    >
+                      <AntDesign name="pluscircleo" size={18} color="black" />
+                    </Pressable>
+                  </View>
+                ) : (
+                  "Add to cart"
+                )}
               </Text>
-
             </Pressable>
           </View>
         </SafeAreaView>
