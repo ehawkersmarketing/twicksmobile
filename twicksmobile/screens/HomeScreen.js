@@ -36,7 +36,6 @@ const HomeScreen = ({ navigation }) => {
   const { data: products, setData: setProducts } = useFetch("/api/allProducts");
   const [searchField, setSearchField] = useState("");
   const [searchProducts, setSearchProducts] = useState([]);
-  // const currentRouteName = navigation.getcurrentRouteName();
   
   const search = async (text) => {
     if (text !== "") {
@@ -115,7 +114,7 @@ const HomeScreen = ({ navigation }) => {
   return (
     <>
       {isLoggedIn && (
-        <SafeAreaView style={styles.homemain}>
+        <SafeAreaView style={styles.homemain} >
           <ScrollView>
             <View
               style={{
