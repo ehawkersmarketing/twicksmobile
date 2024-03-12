@@ -57,6 +57,7 @@ const ShopScreen = () => {
   const handleCategoryClick = (category) => {
     setSelectedCategory(category);
   };
+  console.log(selectedCategory)
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   useEffect(() => {
@@ -178,6 +179,22 @@ const ShopScreen = () => {
                   );
                 })}
             </ScrollView>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                flexWrap: "wrap",
+                backgroundColor: "#FAFAFABC",
+              }}
+            >
+              {searchField === "" &&
+                products &&
+                products
+                  .filter((product) => product.category === selectedCategory)
+                  .map((item, index) => {
+                    return <ProductCard item={item} key={index} />;
+                  })}
+            </View>
             <View
               style={{
                 flexDirection: "row",

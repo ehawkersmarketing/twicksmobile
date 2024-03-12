@@ -7,6 +7,7 @@ import {
   Pressable,
   Image,
   Button,
+  Alert,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -31,7 +32,6 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
     orderEmail,
     orderPhoneNo,
   } = route.params;
-
 
   // const orderId = "65d992287644354ab1bc4137" ;
   // const { orderData } = route.params;
@@ -98,23 +98,12 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
         }
       );
       if (data.data.success) {
-        // alert.success("order Cancelled successfully", {
-        //   position: "bottom-right",
-        //   autoClose: 8000,
-        //   pauseOnHover: true,
-        //   draggable: true,
-        //   theme: "dark",
-        // });
-        console.log(data)
+        Alert.alert("order Cancelled successfully")
+       
       } else {
-        // alert.success("order Cancelled successfully", {
-        //   position: "bottom-right",
-        //   autoClose: 8000,
-        //   pauseOnHover: true,
-        //   draggable: true,
-        //   theme: "dark",
-        // });
-        console.log("nahi hua")
+        Alert.alert("Order Cancelled Successfully");
+     
+        console.log("nahi hua");
       }
     } catch (error) {
       console.log(error);
@@ -138,7 +127,7 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
               </Pressable>
             </View>
             <View>
-              {orderStatus === "Packed" ? (
+              {orderStatus === "PROCESSING" || orderStatus === "Packed" ? (
                 <>
                   <Text
                     style={{
@@ -193,7 +182,8 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
                         padding: 10,
                         height: "100%",
                         justifyContent: "center",
-                      }} onPress={cancelOrderHandler}
+                      }}
+                      onPress={cancelOrderHandler}
                     >
                       <Text
                         style={{
@@ -201,7 +191,7 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
                           color: "#38944D",
                           fontSize: 23,
                           fontWeight: 600,
-                        }} 
+                        }}
                       >
                         Cancel
                       </Text>
@@ -268,7 +258,7 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
                         >
                           <Text style={{ fontWeight: "bold" }}>
                             Order Total :
-                          </Text> 
+                          </Text>
                           ₹ {orderAmount}/-
                         </Text>
                       </View>
