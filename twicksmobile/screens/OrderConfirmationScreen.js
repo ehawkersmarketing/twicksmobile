@@ -89,24 +89,57 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
     checkToken();
   }, [navigate]);
 
+  // const cancelOrderHandler = async () => {
+  //   try {
+  //     const data = await axios.post(
+  //       "https://backend.twicks.in/api/ship/cancelRequest",
+  //       {
+  //         orderId: orderId,
+  //       }
+  //     );
+  //     if (data.data.success) {
+  //       Alert.alert("order Cancelled successfully")
+
+  //     } else {
+  //       Alert.alert("Order Cancelled Successfully");
+
+  //       console.log("nahi hua");
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
   const cancelOrderHandler = async () => {
+    console.log("me aagya");
     try {
       const data = await axios.post(
         "https://backend.twicks.in/api/ship/cancelRequest",
         {
           orderId: orderId,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
       );
-      if (data.data.success) {
-        Alert.alert("order Cancelled successfully")
-       
+      console.log("api called", data?.data.success);
+      if (data?.data?.success) {
+        navigation.navigate("Order");
       } else {
-        Alert.alert("Order Cancelled Successfully");
-     
-        console.log("nahi hua");
+        console.log("error", data.data.error);
       }
     } catch (error) {
-      console.log(error);
+      console.log("me hu catch error", error);
+      Alert.alert(error.message);
+      // toast.error(`${error.message}`, {
+      //   position: "bottom-right",
+      //   autoClose: 8000,
+      //   pauseOnHover: true,
+      //   draggable: true,
+      //   theme: "dark",
+      // });
     }
   };
 

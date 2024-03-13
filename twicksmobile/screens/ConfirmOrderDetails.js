@@ -85,13 +85,13 @@ const ConfirmOrderDetails = ({ route }) => {
     try {
       if (shippmentChargeValue === undefined) {
         alert(
-          "Submit adress details and calculate shipment before placing order"
+          "Submit address details and calculate shipment before placing order"
         );
       } else {
         const { data } = await axios.post(
           "https://backend.twicks.in/api/putUserAddress",
           {
-            userId: user._id,
+            userId: user?._id,
             userName: formData.userName,
             street: formData.Address,
             landmark: formData.Address2,
@@ -108,7 +108,7 @@ const ConfirmOrderDetails = ({ route }) => {
             "https://backend.twicks.in/api/pay/phonePePayment",
             {
               amount: totalPayAmount,
-              cartId: cart._id,
+              cartId: cart?._id,
             }
           );
           if (data.success) {
@@ -117,13 +117,8 @@ const ConfirmOrderDetails = ({ route }) => {
             navigation.navigate("OrderConfirmation");
           }
         } else {
-          toast.error(`${data.message}`, {
-            position: "bottom-right",
-            autoClose: 8000,
-            pauseOnHover: true,
-            draggable: true,
-            theme: "dark",
-          });
+          console.log("phonepe")
+          Alert.alert("phonepe",data.message)
         }
       }
     } catch (error) {

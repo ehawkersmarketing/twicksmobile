@@ -17,7 +17,7 @@ const OrderScreen = () => {
   const [userData, setUserData] = useState({});
   const [orders, setOrders] = useState([]);
   const { data: fetchedOrders } = useFetch(
-    `/api/getAllOrderByUser/${userData._id}`
+    `/api/getAllOrderByUser/${userData?._id}`
   );
 
   useEffect(() => {
