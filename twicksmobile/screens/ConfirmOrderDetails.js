@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/core";
-import React, { useState, useEffect,useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useFetch } from "../hooks/api_hook";
 import {
   Pressable,
@@ -41,7 +41,7 @@ const ConfirmOrderDetails = ({ route }) => {
   }, []);
 
   let { data: cart } = useFetch(`/api/getCartByUser/${user?._id}`);
-  console.log(cart)
+  console.log(cart);
   useEffect(() => {
     if (cart) {
       let totalPrice = 0;
@@ -52,7 +52,7 @@ const ConfirmOrderDetails = ({ route }) => {
       setTotal(totalPrice);
     }
   }, [cart]);
-  let url
+  let url;
 
   const handleOrderFunction = async (event) => {
     event.preventDefault();
@@ -86,9 +86,9 @@ const ConfirmOrderDetails = ({ route }) => {
             }
           );
           if (data.success) {
-           url = data?.data
-          handlePress(data.data)
-            // navigation.navigate(data.data)
+            url = data?.data;
+            handlePress(data.data);
+            navigation.navigate("OrderConfirmation");
           }
         } else {
           toast.error(`${data.message}`, {
@@ -105,16 +105,15 @@ const ConfirmOrderDetails = ({ route }) => {
     }
   };
 
+  const handlePress = useCallback(async (data) => {
+    const supported = await Linking.canOpenURL(data);
+    if (supported) {
+      await Linking.openURL(data);
+    } else {
+      Alert.alert(`Don't know how to open this URL: ${data}`);
+    }
+  }, []);
 
-    const handlePress = useCallback(async (data) => {
-      const supported = await Linking.canOpenURL(data);
-      if (supported) {
-        await Linking.openURL(data);
-      } else {
-        Alert.alert(`Don't know how to open this URL: ${data }`);
-      }
-    }, []);
-   
   return (
     <>
       <SafeAreaView
@@ -284,7 +283,6 @@ const ConfirmOrderDetails = ({ route }) => {
           >
             <Text style={{ color: "white", fontSize: 20 }}>Place Order</Text>
             {/* <OpenURLButton url={"https://google.com"}>Open Unsupported URL</OpenURLButton> */}
-
           </Pressable>
         </View>
       </SafeAreaView>
