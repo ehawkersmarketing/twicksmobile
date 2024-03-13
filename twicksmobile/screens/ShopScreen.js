@@ -7,6 +7,7 @@ import {
   TextInput,
   View,
   Text,
+  TouchableOpacity,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { useFetch } from "../hooks/api_hook";
@@ -22,7 +23,8 @@ import axios from "axios";
 const ShopScreen = () => {
   const navigate = useNavigation();
   const [selectedCategory, setSelectedCategory] = useState(null);
-
+  const [previousCategory, setPreviousCategory] = useState(null); // New state to keep track of the previously selected category
+  const [selectedCategories, setSelectedCategories] = useState([]);
   const [open, setOpen] = useState(false);
   const [activeFilter, setActiveFilter] = useState({
     filter: "",
@@ -31,6 +33,7 @@ const ShopScreen = () => {
   const [searchField, setSearchField] = useState("");
   const { data: products, setData: setProducts } = useFetch("/api/allProducts");
   const [searchProducts, setSearchProducts] = useState([]);
+  const [isTouchableVisible, setIsTouchableVisible] = useState(false);
 
   const search = async (text) => {
     if (text !== "") {
@@ -55,9 +58,18 @@ const ShopScreen = () => {
   }, [searchField]);
   const { data: categories } = useFetch("/api/allCategory");
   const handleCategoryClick = (category) => {
-    setSelectedCategory(category);
+    if (selectedCategory === category) {
+      setSelectedCategory(null);
+      setPreviousCategory(null);
+    } else {
+      if (previousCategory) {
+        setSelectedCategory(category);
+      } else {
+        setSelectedCategory(category);
+      }
+      setPreviousCategory(selectedCategory);
+    }
   };
-  console.log(selectedCategory)
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   useEffect(() => {
@@ -77,6 +89,16 @@ const ShopScreen = () => {
 
     checkToken();
   }, [navigate]);
+  const filterProducts = (category) => {
+    return products.filter(
+      (product) => product?.category?.category === category
+    );
+  };
+
+  const noProductsAvailable =
+    !products ||
+    (selectedCategory &&
+      filterProducts(selectedCategory.category).length === 0);
 
   return (
     <>
@@ -154,7 +176,9 @@ const ShopScreen = () => {
                       ))}
                     </>
                   ) : (
-                    <Text>No Results Found</Text>
+                    <View style={{ height: "100%" }}>
+                      <Text>No Results Found</Text>
+                    </View>
                   )
                 ) : null}
               </View>
@@ -163,7 +187,7 @@ const ShopScreen = () => {
             <ScrollView
               horizontal
               showsHorizontalScrollIndicator
-              style={{ backgroundColor: "#FAFAFABC" }}
+              style={{ backgroundColor: "#FAFAFABC", flex: 1 }}
             >
               {searchField === "" &&
                 categories &&
@@ -181,6 +205,7 @@ const ShopScreen = () => {
             </ScrollView>
             <View
               style={{
+                flex: 1,
                 flexDirection: "row",
                 alignItems: "center",
                 flexWrap: "wrap",
@@ -189,11 +214,24 @@ const ShopScreen = () => {
             >
               {searchField === "" &&
                 products &&
-                products
-                  .filter((product) => product.category === selectedCategory)
-                  .map((item, index) => {
-                    return <ProductCard item={item} key={index} />;
-                  })}
+                (noProductsAvailable ? (
+                  <View
+                    style={{
+                      flex: 1,
+                      backgroundColor: "FAFAFABC",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Text style={{ fontSize: 20 }}>No products available</Text>
+                  </View>
+                ) : (
+                  filterProducts(selectedCategory?.category).map(
+                    (item, index) => {
+                      return <ProductCard item={item} key={index} />;
+                    }
+                  )
+                ))}
             </View>
             <View
               style={{
@@ -205,7 +243,10 @@ const ShopScreen = () => {
             >
               {searchField === "" &&
                 products &&
-                products?.map((item, index) => {
+                (selectedCategory
+                  ? filterProducts(selectedCategory.category)
+                  : products
+                ).map((item, index) => {
                   return <ProductCard item={item} key={index} />;
                 })}
             </View>
@@ -229,7 +270,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     height: 40,
-    // backgroundColor: "yellow",
   },
   headerlogo: {
     flexDirection: "row",
@@ -237,18 +277,15 @@ const styles = StyleSheet.create({
     width: 10,
     height: 130,
     marginLeft: 20,
-    // flex:1
   },
   headericons: {
     flexDirection: "row",
     marginRight: 20,
     gap: 10,
-    // flex:3
   },
   searchmain: {
     backgroundColor: "#FAFAFABC",
     padding: 10,
-    // flexDirection: "row",
     alignItems: "center",
   },
   searchpress: {
