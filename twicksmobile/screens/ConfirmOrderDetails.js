@@ -14,12 +14,39 @@ import {
   Linking,
 } from "react-native";
 import axios from "axios";
+
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { WebView } from 'react-native-webview';
+
 const ConfirmOrderDetails = ({ route }) => {
   const { formData, shippmentChargeValue } = route.params;
   const navigation = useNavigation();
   const [total, setTotal] = useState(0);
   const [user, setUser] = useState(null);
+
+
+  const handleShouldStartLoadWithRequest = (request) => {
+    // Check if the URL matches your app's deep link pattern
+    if (request.url.startsWith('https://twicks.in/orderConfirmationPage/')) {
+      // Prevent the WebView from navigating to the web
+      return false;
+    }
+    // Allow other navigations
+    return true;
+ };
+
+ const handleNavigationStateChange = (navState) => {
+  if (navState.url.startsWith('https://twicks.in/orderConfirmationPage/')) {
+    // Extract any necessary data from the URL
+    const orderConfirmationData = navState.url.split('twicks.in//OrderConfirmation')[1];
+
+    // Navigate to the order confirmation page within your app
+    navigation.navigate('OrderConfirmation', { data: orderConfirmationData });
+  }
+};
+
+
+
 
   useEffect(() => {
     if (user) {
@@ -46,8 +73,7 @@ const ConfirmOrderDetails = ({ route }) => {
     if (cart) {
       let totalPrice = 0;
       for (let i = 0; i < cart.products.length; i++) {
-        totalPrice +=
-          cart.products[i]?.productId?.price * cart.products[i]?.units;
+        totalPrice +=cart.products[i]?.productId?.price * cart.products[i]?.units;
       }
       setTotal(totalPrice);
     }
@@ -287,6 +313,7 @@ const ConfirmOrderDetails = ({ route }) => {
 
           </Pressable>
         </View>
+
       </SafeAreaView>
     </>
   );
