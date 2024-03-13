@@ -32,7 +32,14 @@ import { FontAwesome } from "@expo/vector-icons";
 import { FontAwesome6 } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+import { useEffect } from 'react';
+import { Linking } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+
+
 const StackNavigator = () => {
+
+  const navigation = useNavigation
   const Stack = createNativeStackNavigator();
   const Tab = createBottomTabNavigator();
   const Top = createMaterialTopTabNavigator();
@@ -46,6 +53,43 @@ let tokenValue
  .catch(error => {
     console.error('Error retrieving token: ', error);
  });
+
+
+
+ useEffect(() => {
+  async function getInitialURL() {
+    const url = await Linking.getInitialURL();
+    if (url) {
+      handleDeepLink(url);
+    }
+  }
+
+  Linking.addEventListener('url', handleDeepLink);
+
+  return () => {
+    Linking.removeEventListener('url', handleDeepLink);
+  };
+}, []);
+
+const handleDeepLink = (url) => {
+  // Parse the URL to extract the path and parameters
+  // For example, if your URL is "yourapp://order-confirmation?orderId=123"
+  const { path, queryParams } = Linking.parse(url);
+
+  if (path === 'order-confirmation') {
+    // Navigate to the order confirmation screen
+    navigation.navigate('OrderConfirmation', { orderId: queryParams.orderId });
+  }
+};
+
+
+
+
+
+
+
+
+
   function TopTabs() {
     return (
       <Top.Navigator>
