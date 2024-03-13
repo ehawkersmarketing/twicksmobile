@@ -14,7 +14,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ProductCard = ({ item, index }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  // /.log(index)
   useEffect(() => {
     const checkToken = async () => {
       try {
