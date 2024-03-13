@@ -13,7 +13,7 @@ const ShopCategory = ({ item, selected, onPress }) => {
         {selected ? (
           <View style={{flexDirection:"row",gap:7}}>
             <Text style={styles.text}>{item.category}</Text>
-            <Entypo name="cross" size={20} color="black" />
+            <Entypo name="cross" size={15} color="black" />
           </View>
         ) : (
           <Text style={styles.text}>{item.category}</Text>

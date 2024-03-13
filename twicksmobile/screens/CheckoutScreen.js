@@ -33,7 +33,6 @@ const CheckoutScreen = () => {
         const userString = await AsyncStorage.getItem("user");
         const userData = JSON.parse(userString);
         setUser(userData);
-        console.log(userData?.userName);
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
@@ -178,33 +177,14 @@ const CheckoutScreen = () => {
               <Text style={{ fontSize: 14, padding: 5 }}>Name</Text>
               <TextInput
                 placeholder={user?.userName}
-                style={{
-                  padding: 10,
-                  fontSize: 15,
-                  backgroundColor: "#CAE4DE",
-                  borderRadius: 10,
-                  borderWidth: 1,
-                  borderColor: "transparent",
-                }}
-                value={user?.userName}
-                editable={false}
+                style={[styles.input, errors.userName ? styles.inputError : {}]}
+                onChangeText={(value) => handleInputChange("userName", value)}
               />
-
-              <Text style={{ fontSize: 14, padding: 5 }}>Number</Text>
+              <Text style={{ fontSize: 14, padding: 5 }}>Mobile</Text>
               <TextInput
                 placeholder={user?.phone}
-                style={{
-                  padding: 10,
-                  fontSize: 15,
-                  backgroundColor: "#CAE4DE",
-                  borderRadius: 10,
-                  borderWidth: 1,
-                  borderColor: "transparent",
-                }}
-                maxLength={10}
-                keyboardType="numeric"
-                value={user?.phone}
-                editable={false}
+                style={[styles.input, errors.Contact ? styles.inputError : {}]}
+                onChangeText={(value) => handleInputChange("Contact", value)}
               />
               <Text style={{ fontSize: 14, padding: 5 }}>Email Address</Text>
               <TextInput
