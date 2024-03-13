@@ -96,7 +96,7 @@ const ProfileScreen = () => {
                   >
                     <FontAwesome name="user-circle-o" size={24} color="white" />
                     <Text style={{ fontSize: 24, color: "white" }}>
-                      {userData.userName}
+                      {userData?.userName}
                     </Text>
                   </View>
                   <Pressable
@@ -117,13 +117,13 @@ const ProfileScreen = () => {
                   <View style={{ flexDirection: "row", gap: 10 }}>
                     <Feather name="phone" size={17} color="white" />
                     <Text style={{ fontSize: 17, color: "white" }}>
-                      {userData.phone}
+                      {userData?.phone}
                     </Text>
                   </View>
                   <View style={{ flexDirection: "row", gap: 10 }}>
                     <Entypo name="email" size={17} color="white" />
                     <Text style={{ fontSize: 17, color: "white" }}>
-                      {userData.email}
+                      {userData?.email}
                     </Text>
                   </View>
                 </View>

@@ -22,9 +22,9 @@ import { AntDesign } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
-import { useRoute } from '@react-navigation/native';
-import { useNavigationState } from '@react-navigation/native';
-import {  useFocusEffect } from '@react-navigation/native';
+import { useRoute } from "@react-navigation/native";
+import { useNavigationState } from "@react-navigation/native";
+import { useFocusEffect } from "@react-navigation/native";
 
 const HomeScreen = ({ navigation }) => {
   const [open, setOpen] = useState(false);
@@ -32,13 +32,13 @@ const HomeScreen = ({ navigation }) => {
     filter: "",
   });
   const [hasSearched, setHasSearched] = useState(false);
-
+  const [isSelected, setIsSelected] = useState(false);
   const [openForSort, setOpenForSort] = useState(false);
   const { data: products, setData: setProducts } = useFetch("/api/allProducts");
   const [searchField, setSearchField] = useState("");
   const [searchProducts, setSearchProducts] = useState([]);
   // const currentRouteName = navigation.getcurrentRouteName();
-  
+
   const search = async (text) => {
     if (text !== "") {
       try {
@@ -83,26 +83,32 @@ const HomeScreen = ({ navigation }) => {
     checkToken();
   }, [navigation]);
 
-
- useFocusEffect(
+  useFocusEffect(
     React.useCallback(() => {
       const backAction = () => {
-        Alert.alert('Leaving too soon?', 'Seeds of success are waiting! Continue Shopping with TAFI.', [
-          {
-            text: 'Cancel',
-            onPress: () => navigation.navigate("Home"),
-            style: 'cancel',
-          },
-          {text: 'YES', onPress: () => BackHandler.exitApp()},
-        ]);
+        Alert.alert(
+          "Leaving too soon?",
+          "Seeds of success are waiting! Continue Shopping with TAFI.",
+          [
+            {
+              text: "Cancel",
+              onPress: () => navigation.navigate("Home"),
+              style: "cancel",
+            },
+            { text: "YES", onPress: () => BackHandler.exitApp() },
+          ]
+        );
         return true; // Prevent the default back action
       };
 
-      const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+      const backHandler = BackHandler.addEventListener(
+        "hardwareBackPress",
+        backAction
+      );
 
       return () => backHandler.remove();
     }, [navigation])
- );
+  );
 
   return (
     <>
@@ -227,8 +233,7 @@ const HomeScreen = ({ navigation }) => {
                   return <ProductCard item={item} index={index} />;
                 })}
             </View>
-            <View>
-            </View>
+            <View></View>
           </ScrollView>
         </SafeAreaView>
       )}
