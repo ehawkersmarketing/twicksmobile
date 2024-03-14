@@ -19,11 +19,15 @@ import { Feather } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/core";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
+import { useRoute } from "@react-navigation/native";
 
 const ShopScreen = () => {
+  const route = useRoute();
+  const selectedHomeCategory = route.params?.selectedHomeCategory;
+  // console.log("ksdjnvjsdn",selectedHomeCategory)
   const navigate = useNavigation();
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const [previousCategory, setPreviousCategory] = useState(null); // New state to keep track of the previously selected category
+  const [previousCategory, setPreviousCategory] = useState(null);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [open, setOpen] = useState(false);
   const [activeFilter, setActiveFilter] = useState({
@@ -57,8 +61,8 @@ const ShopScreen = () => {
     }
   }, [searchField]);
   const { data: categories } = useFetch("/api/allCategory");
-  const handleCategoryClick = (category) => {
-    if (selectedCategory === category) {
+  const handleCategoryClick = (category,selectedHomeCategory) => {
+    if (selectedCategory === category ) {
       setSelectedCategory(null);
       setPreviousCategory(null);
     } else {
@@ -232,23 +236,6 @@ const ShopScreen = () => {
                     }
                   )
                 ))}
-            </View>
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                flexWrap: "wrap",
-                backgroundColor: "#FAFAFABC",
-              }}
-            >
-              {searchField === "" &&
-                products &&
-                (selectedCategory
-                  ? filterProducts(selectedCategory.category)
-                  : products
-                ).map((item, index) => {
-                  return <ProductCard item={item} key={index} />;
-                })}
             </View>
           </ScrollView>
         </SafeAreaView>
