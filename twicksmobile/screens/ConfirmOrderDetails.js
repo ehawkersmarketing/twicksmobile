@@ -72,7 +72,7 @@ const ConfirmOrderDetails = ({ route }) => {
   useEffect(() => {
     if (cart) {
       let totalPrice = 0;
-      for (let i = 0; i < cart.products.length; i++) {
+      for (let i = 0; i < cart.products?.length; i++) {
         totalPrice +=cart.products[i]?.productId?.price * cart.products[i]?.units;
       }
       setTotal(totalPrice);
@@ -83,57 +83,96 @@ const ConfirmOrderDetails = ({ route }) => {
   const handleOrderFunction = async (event) => {
     event.preventDefault();
     try {
-      if (shippmentChargeValue === undefined) {
-        alert(
-          "Submit address details and calculate shipment before placing order"
-        );
-      } else {
-        const { data } = await axios.post(
-          "https://backend.twicks.in/api/putUserAddress",
-          {
-            userId: user?._id,
-            userName: formData.userName,
-            street: formData.Address,
-            landmark: formData.Address2,
-            email: formData.Email,
-            city: formData.City,
-            country: formData.Country,
-            state: formData.State,
-            zipCode: formData.PinCode,
-          }
-        );
-        if (data.success) {
-          const totalPayAmount = total + shippmentChargeValue;
-          const { data } = await axios.post(
-            "https://backend.twicks.in/api/pay/phonePePayment",
-            {
-              amount: totalPayAmount,
-              cartId: cart?._id,
-            }
-          );
-          if (data.success) {
-            url = data?.data;
-            handlePress(data.data);
-            navigation.navigate("OrderConfirmation");
-          }
-        } else {
-          console.log("phonepe")
-          Alert.alert("phonepe",data.message)
-        }
-      }
+       if (shippmentChargeValue === undefined) {
+         alert("Submit address details and calculate shipment before placing order");
+       } else {
+         const { data } = await axios.post(
+           "https://backend.twicks.in/api/putUserAddress",
+           {
+             userId: user?._id,
+             userName: formData.userName,
+             street: formData.Address,
+             landmark: formData.Address2,
+             email: formData.Email,
+             city: formData.City,
+             country: formData.Country,
+             state: formData.State,
+             zipCode: formData.PinCode,
+           }
+         );
+         if (data.success) {
+           const totalPayAmount = total + shippmentChargeValue;
+           const { data } = await axios.post(
+             "https://backend.twicks.in/api/pay/phonePePayment",
+             {
+               amount: totalPayAmount,
+               cartId: cart?._id,
+             }
+           );
+           if (data.success) {
+             url = data?.data; // Assuming this is the URL you want to open
+             handlePress(url); // Call handlePress with the URL
+             console.log(data?.data);
+             // navigation.navigate("OrderConfirmation");
+           }
+         } else {
+           console.log("phonepe");
+           Alert.alert("phonepe", data.message);
+         }
+       }
     } catch (error) {
-      console.error("Failed to submit form", error);
+       console.error("Failed to submit form", error);
     }
-  };
+   };
+   
 
   const handlePress = useCallback(async (data) => {
     const supported = await Linking.canOpenURL(data);
     if (supported) {
-      await Linking.openURL(data);
+      await Linking.openURL(data);  
     } else {
       Alert.alert(`Don't know how to open this URL: ${data}`);
     }
+    // openURL('https://mercury-t2.phonepe.com/transact/pg?token=YTEyMzc2ODZiMWYzYzhhNWEzMDAxNmU0NzcyYTFkZmM1NWIxYjdjOTcwYWI2YzI1YTFjYmMwNDE4MjJkMmM1ODliYWFiZWQ1NDUyNzJlOGNiODAyM2Y1M2M3YWVkMWEyZjA2YzRiODU6ZTg4ZDY5MWQ5NjNkYzE1MjQ2NmM3NmUxYmEwZTM2OTQ');
+
   }, []);
+
+//   useEffect(() => {
+//     // Handle deep links that opened the app
+//     Linking.getInitialURL().then((url) => {
+//       if (url) {
+//         // Parse the URL and navigate to the appropriate screen
+//         const { path, queryParams } = Linking.parse(url);
+//         if (path === 'orderConfirmation') {
+//           const { transactionId, cartId } = queryParams;
+//           // Navigate to the order confirmation screen with the transaction ID and cart ID
+//           console.log('Transaction ID:', transactionId);
+//           console.log('Cart ID:', cartId);
+//           // Implement your navigation logic here
+//         }
+//       }
+//     });
+
+//     // Handle deep links that were opened while the app was already running
+//     Linking.addEventListener('url', (event) => {
+//       const { path, queryParams } = Linking.parse(event.url);
+//       if (path === 'orderConfirmation') {
+//         const { transactionId, cartId } = queryParams;
+//         // Navigate to the order confirmation screen with the transaction ID and cart ID
+//         console.log('Transaction ID:', transactionId);
+//         console.log('Cart ID:', cartId);
+//         // Implement your navigation logic here
+//       }
+//     });
+
+//     return () => {
+//       // Clean up the event listener
+//       Linking.removeEventListener('url', handleUrl);
+//     };
+//  }, []);
+
+
+
 
   return (
     <>
@@ -302,9 +341,14 @@ const ConfirmOrderDetails = ({ route }) => {
               flex: 1,
             }}
           >
+    <WebView
+      source={{ uri: 'https://mercury-t2.phonepe.com/transact/pg?token=YTEyMzc2ODZiMWYzYzhhNWEzMDAxNmU0NzcyYTFkZmM1NWIxYjdjOTcwYWI2YzI1YTFjYmMwNDE4MjJkMmM1ODliYWFiZWQ1NDUyNzJlOGNiODAyM2Y1M2M3YWVkMWEyZjA2YzRiODU6ZTg4ZDY5MWQ5NjNkYzE1MjQ2NmM3NmUxYmEwZTM2OTQ' }}
+      style={{ marginTop: 20 }}
+    />
+
             <Text style={{ color: "white", fontSize: 20 }}>Place Order</Text>
-            {/* <OpenURLButton url={"https://google.com"}>Open Unsupported URL</OpenURLButton> */}
           </Pressable>
+      
         </View>
 
       </SafeAreaView>
@@ -314,6 +358,11 @@ const ConfirmOrderDetails = ({ route }) => {
 export default ConfirmOrderDetails;
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+ },
   table: {
     flex: 1,
   },
