@@ -37,7 +37,6 @@ const HomeScreen = ({ navigation }) => {
   const { data: products, setData: setProducts } = useFetch("/api/allProducts");
   const [searchField, setSearchField] = useState("");
   const [searchProducts, setSearchProducts] = useState([]);
-  // const currentRouteName = navigation.getcurrentRouteName();
 
   const search = async (text) => {
     if (text !== "") {
@@ -65,6 +64,11 @@ const HomeScreen = ({ navigation }) => {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  const selectedCategoryHandler = (item) => {
+    console.log(item?.category);
+    navigation.navigate("Shop", { selectedHomeCategory: item?.category });
+  };
+
   useEffect(() => {
     const checkToken = async () => {
       try {
@@ -83,6 +87,21 @@ const HomeScreen = ({ navigation }) => {
     checkToken();
   }, [navigation]);
 
+  const [user, setUser] = useState(null);
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const userString = await AsyncStorage.getItem("user");
+        const userData = JSON.parse(userString);
+        setUser(userData);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUser();
+  }, []);
+
   useFocusEffect(
     React.useCallback(() => {
       const backAction = () => {
@@ -98,7 +117,7 @@ const HomeScreen = ({ navigation }) => {
             { text: "YES", onPress: () => BackHandler.exitApp() },
           ]
         );
-        return true; // Prevent the default back action
+        return true;
       };
 
       const backHandler = BackHandler.addEventListener(
@@ -113,7 +132,7 @@ const HomeScreen = ({ navigation }) => {
   return (
     <>
       {isLoggedIn && (
-        <SafeAreaView style={styles.homemain}>
+        <SafeAreaView key={user?._id} style={styles.homemain}>
           <ScrollView>
             <View
               style={{
@@ -181,7 +200,7 @@ const HomeScreen = ({ navigation }) => {
                   searchProducts.length > 0 ? (
                     <>
                       {searchProducts.map((item, index) => (
-                        <ProductCard item={item} key={index} />
+                        <ProductCard item={item} key={item?._id} />
                       ))}
                     </>
                   ) : (
@@ -199,7 +218,13 @@ const HomeScreen = ({ navigation }) => {
               <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                 {categories &&
                   categories?.map((item, index) => {
-                    return <CategoryComponent item={item} key={index} />;
+                    return (
+                      <CategoryComponent
+                        item={item}
+                        key={item?._id}
+                        onPress={() => selectedCategoryHandler(item)}
+                      />
+                    );
                   })}
               </ScrollView>
             </View>
@@ -230,7 +255,7 @@ const HomeScreen = ({ navigation }) => {
             >
               {products &&
                 products?.map((item, index) => {
-                  return <ProductCard item={item} index={index} />;
+                  return <ProductCard item={item} key={item?._id} />;
                 })}
             </View>
             <View></View>
