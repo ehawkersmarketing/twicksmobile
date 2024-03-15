@@ -53,16 +53,18 @@ const SingleShopScreen = ({ route }) => {
   let { data: cart } = useFetch(`/api/getCartByUser/${user?._id}`);
   let [quantity, setQuantity] = useState(0);
   const [inCart, setInCart] = useState(false);
+
   useEffect(() => {
     if (cart) {
+      // Find the item in the cart and get its quantity
       const productInCart = cart.products.find(
-        (product) => product.productId?._id === productId
+        (product) => product.productId?._id === route.params.productId
       );
-      console.log("Product in cart:", productInCart);
-      setInCart(!!productInCart);
-      setQuantity(productInCart ? productInCart.units : 0);
+      if (productInCart) {
+        setQuantity(productInCart.units); // Update the quantity state
+      }
     }
-  }, [cart, productId]);
+  }, [cart, route.params.productId]);
 
   const {
     productId,
@@ -74,6 +76,7 @@ const SingleShopScreen = ({ route }) => {
     productReview,
     productRating,
     productQuantity,
+    productUnits,
   } = route.params;
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   useEffect(() => {
@@ -316,7 +319,7 @@ const SingleShopScreen = ({ route }) => {
                   </View>
                   <View>
                     <Text style={{ fontSize: 25, color: "black", padding: 14 }}>
-                      {quantity}
+                      {productUnits}
                     </Text>
                   </View>
                   <View>
@@ -431,10 +434,10 @@ const styles = StyleSheet.create({
   },
   rating: {
     flexDirection: "row",
-    gap:2
+    gap: 2,
   },
   review: {
     marginLeft: 10,
-    fontSize:14
+    fontSize: 14,
   },
 });

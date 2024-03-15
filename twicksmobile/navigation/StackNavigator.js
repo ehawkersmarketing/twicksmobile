@@ -32,43 +32,25 @@ import { FontAwesome } from "@expo/vector-icons";
 import { FontAwesome6 } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { useEffect } from 'react';
-import { Linking } from 'react-native';
+import { useEffect } from "react";
+import { Linking } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
-
 const StackNavigator = () => {
-
-    const Stack = createNativeStackNavigator();
+  const navigation = useNavigation;
+  const Stack = createNativeStackNavigator();
   const Tab = createBottomTabNavigator();
   const Top = createMaterialTopTabNavigator();
-
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-    // const navigation  = useNavigation()
-  useEffect(() => {
-    const checkToken = async () => {
-      try {
-        
-        const token = await AsyncStorage.getItem("auth_token");
-        if (token !== null) {
-          setIsLoggedIn(true);
-        } else {
-          console.log("logout")
-          setIsLoggedIn(false);
-          // navigation.navigate("Login");
-        }
-      } catch (error) {
-        console.error("Error checking token:", error);
-      }
-    };
-
-    checkToken();
-  }, []);
-  if(isLoggedIn == true){
-    console.log("good")
-  }else if(isLoggedIn == false){
-    console.log("bad")
-  }
+  let tokenValue;
+  AsyncStorage.getItem("auth_token")
+    .then((token) => {
+      console.log(token);
+      tokenValue = token;
+      // This will log the actual token value
+    })
+    .catch((error) => {
+      console.error("Error retrieving token: ", error);
+    });
 
   function TopTabs() {
     return (
@@ -113,9 +95,9 @@ const StackNavigator = () => {
             headerShown: false,
             tabBarIcon: ({ focused }) =>
               focused ? (
-                <FontAwesome6 name="legal" size={24} color="#237169" />
+                <FontAwesome name="file-text" size={24} color="#237169" />
               ) : (
-                <FontAwesome6 name="legal" size={24} color="black" />
+                <FontAwesome name="file-text" size={24} color="black" />
               ),
           }}
         />
@@ -183,6 +165,7 @@ const StackNavigator = () => {
   }
   return (
     <NavigationContainer>
+
        <Stack.Navigator>
 
        <Stack.Screen
@@ -190,20 +173,18 @@ const StackNavigator = () => {
           component={LoginScreen}
           options={{ headerShown: false }}
         />
-        
-        <Stack.Screen
-        name="Back"
-        component={BottomTabs}
-        options={{ headerShown: false }}
-      />
       
             <Stack.Screen
           name="Register"
           component={RegisterScreen}
           options={{ headerShown: false }}
         />
-        
-       
+
+        <Stack.Screen
+          name="Back"
+          component={BottomTabs}
+          options={{ headerShown: false }}
+        />
         <Stack.Screen
           name="Account"
           component={TopTabs}
