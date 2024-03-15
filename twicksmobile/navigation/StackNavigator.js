@@ -48,6 +48,7 @@ const StackNavigator = () => {
   useEffect(() => {
     const checkToken = async () => {
       try {
+        
         const token = await AsyncStorage.getItem("auth_token");
         if (token !== null) {
           setIsLoggedIn(true);

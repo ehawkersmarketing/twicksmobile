@@ -63,7 +63,7 @@ const OrderScreen = () => {
             >
               {fetchedOrders &&
                 fetchedOrders.map((item, index) => {
-                  return <OrderCard item={item} index={index} />;
+                  return <OrderCard item={item} key={index} />;
                 })}
             </ScrollView>
           ) : (
