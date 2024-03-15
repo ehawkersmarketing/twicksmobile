@@ -101,10 +101,10 @@ const CartCard = ({ item, index }) => {
               productImage: item?.productId?.image,
               productDetais: item?.productId?.description,
               productPrice: item?.productId?.price,
-              // productCategory:item?.productId?.category,
               productReview: item?.productId?.reviews,
               productRating: item?.productId?.rating,
               productQuantity: item?.productId?.quantity,
+              productUnits: item?.units, 
               index: index,
             })
           }
