@@ -105,24 +105,25 @@ const RegisterScreen = () => {
           }
         );
         if (data.success) {
+          console.log(formField.phone , formField.userName)
           const { data } = await axios.post(
             "https://backend.twicks.in/auth/signup",
             {
               phone: formField.phone,
               userName: formField.userName,
-              email: formField.email,
             }
           );
           if (data.success) {
+            console.log("register ")
             AsyncStorage.setItem("auth_token", token);
-            AsyncStorage.setItem("user_id", data.data._id);
+            AsyncStorage.setItem("user_id", data?.data._id);
 
             Alert.alert(
               "Success",
               "Successfully registered",
-              { cancelable: false }
+              // { cancelable: false }
             );
-            navigation.navigate("Home");
+            navigation.navigate("Back");
           } else {
             Alert.alert(
               "Error",
@@ -253,9 +254,9 @@ const RegisterScreen = () => {
                   <TextInput
                     style={styles.input}
                     onChangeText={(value) =>
-                      handleChangeFormField("name", value)
+                      handleChangeFormField("userName", value)
                     }
-                    value={formField.name}
+                    value={formField.userName}
                     placeholder="Enter your name"
                   />
                 </View>
