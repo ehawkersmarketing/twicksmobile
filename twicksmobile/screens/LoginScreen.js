@@ -214,7 +214,7 @@ const LoginScreen = () => {
 
   return (
     <>
-      {isLoggedIn == false ? (
+       
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
           <SafeAreaView style={styles.homemain}>
             <View
@@ -330,9 +330,7 @@ const LoginScreen = () => {
             </View>
           </SafeAreaView>
         </TouchableWithoutFeedback>
-      ) : (
-        <Pressable></Pressable>
-      )}
+     
     </>
   );
 };
