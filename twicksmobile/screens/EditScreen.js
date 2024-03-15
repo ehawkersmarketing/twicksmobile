@@ -25,7 +25,6 @@ const EditScreen = () => {
         console.error("Error fetching user data:", error);
       }
     };
-
     fetchUser();
   }, []);
 
@@ -40,17 +39,24 @@ const EditScreen = () => {
     } else if (inputHandler.userName === "") {
       Alert.alert("Enter the UserName");
     } else {
-      const { data } = await axios.post(
-        `https://backend.twicks.in/api/putUserAddress`,
-        {
-          userId: userData._id,
-          email: inputHandler.email,
-          userName: inputHandler.userName,
+      try {
+        const { data } = await axios.put(
+          `https://backend.twicks.in/auth/updateUserInfo/${userData?._id}`,
+          {
+            userId: userData?._id,
+            email: inputHandler?.email,
+            userName: inputHandler?.userName,
+          }
+        );
+        if (data.success) {
+          onLogOut();
         }
-      );
-      if (data.success) {
+      } catch (err) {
+        console.log("m hu don");
+        console.log(err);
       }
-      onLogOut();
+
+      
     }
   };
 
@@ -107,7 +113,7 @@ const EditScreen = () => {
             <TextInput
               onChangeText={(value) => onChangeInputHandler(value, "userName")}
               placeholder={userData.userName}
-              style={{ fontSize: 30 }}
+              style={{ fontSize: 30, color: "white" }}
               placeholderTextColor={"rgb(187, 182, 182);"}
             />
             <View style={styles.line}></View>
@@ -120,7 +126,7 @@ const EditScreen = () => {
             <TextInput
               onChangeText={(value) => onChangeInputHandler(value, "email")}
               placeholder={userData.email}
-              style={{ fontSize: 30 }}
+              style={{ fontSize: 30, color: "white" }}
               placeholderTextColor={"rgb(187, 182, 182);"}
             />
             <View style={styles.line}></View>

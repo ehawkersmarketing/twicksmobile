@@ -7,11 +7,13 @@ import {
   Pressable,
   Image,
   Button,
+  Alert,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
+import { useFetch } from "../hooks/api_hook";
 // import RNHTMLtoPDF from 'react-native-html-to-pdf';
 // import generateInvoiceHTML from './../component/invoice/InvoiceTemplete';
 
@@ -31,8 +33,6 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
     orderEmail,
     orderPhoneNo,
   } = route.params;
-  console.log(item?.user?.phone);
-  console.log(orderStatus);
 
   // const orderId = "65d992287644354ab1bc4137" ;
   // const { orderData } = route.params;
@@ -90,35 +90,63 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
     checkToken();
   }, [navigate]);
 
+
+  const merchantTransactionId = "TAFI163xf2v1zltqqn4hn"
+  const cartId= "65f1a8437eea5bf76aa5a80a"
+  let { data: trandata} = useFetch(`http://localhost:8080/api/pay/checkStatus?transactionId=${merchantTransactionId}&cartId=${cartId}`);
+console.log(trandata)
+
+  // const cancelOrderHandler = async () => {
+  //   try {
+  //     const data = await axios.post(
+  //       "https://backend.twicks.in/api/ship/cancelRequest",
+  //       {
+  //         orderId: orderId,
+  //       }
+  //     );
+  //     if (data.data.success) {
+  //       Alert.alert("order Cancelled successfully")
+
+  //     } else {
+  //       Alert.alert("Order Cancelled Successfully");
+
+  //       console.log("nahi hua");
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
   const cancelOrderHandler = async () => {
+    console.log("me aagya");
     try {
       const data = await axios.post(
         "https://backend.twicks.in/api/ship/cancelRequest",
         {
           orderId: orderId,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
       );
-      if (data.data.success) {
-        // alert.success("order Cancelled successfully", {
-        //   position: "bottom-right",
-        //   autoClose: 8000,
-        //   pauseOnHover: true,
-        //   draggable: true,
-        //   theme: "dark",
-        // });
-        console.log(data)
+      console.log("api called", data?.data.success);
+      if (data?.data?.success) {
+        navigation.navigate("Order");
       } else {
-        // alert.success("order Cancelled successfully", {
-        //   position: "bottom-right",
-        //   autoClose: 8000,
-        //   pauseOnHover: true,
-        //   draggable: true,
-        //   theme: "dark",
-        // });
-        console.log("nahi hua")
+        console.log("error", data.data.error);
       }
     } catch (error) {
-      console.log(error);
+      console.log("me hu catch error", error);
+      Alert.alert(error.message);
+      // toast.error(`${error.message}`, {
+      //   position: "bottom-right",
+      //   autoClose: 8000,
+      //   pauseOnHover: true,
+      //   draggable: true,
+      //   theme: "dark",
+      // });
     }
   };
 
@@ -139,7 +167,7 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
               </Pressable>
             </View>
             <View>
-              {orderStatus === "Packed" ? (
+              {orderStatus === "PROCESSING" || orderStatus === "Packed" ? (
                 <>
                   <Text
                     style={{
@@ -194,7 +222,8 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
                         padding: 10,
                         height: "100%",
                         justifyContent: "center",
-                      }} onPress={cancelOrderHandler}
+                      }}
+                      onPress={cancelOrderHandler}
                     >
                       <Text
                         style={{
@@ -202,7 +231,7 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
                           color: "#38944D",
                           fontSize: 23,
                           fontWeight: 600,
-                        }} 
+                        }}
                       >
                         Cancel
                       </Text>
@@ -241,7 +270,6 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
                       <View style={{ flexDirection: "row" }}>
                         <Text
                           style={{
-                            color: "white",
                             fontSize: 17,
                             color: "#BAD8D5",
                             fontWeight: "bold",
@@ -251,7 +279,6 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
                         </Text>
                         <Text
                           style={{
-                            color: "white",
                             fontSize: 17,
                             color: "#BAD8D5",
                           }}
@@ -262,21 +289,19 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
                       <View style={{ flexDirection: "row" }}>
                         <Text
                           style={{
-                            color: "white",
                             fontSize: 17,
                             color: "#BAD8D5",
                           }}
                         >
                           <Text style={{ fontWeight: "bold" }}>
                             Order Total :
-                          </Text> 
+                          </Text>
                           ₹ {orderAmount}/-
                         </Text>
                       </View>
                       <View style={{ flexDirection: "row" }}>
                         <Text
                           style={{
-                            color: "white",
                             fontSize: 17,
                             color: "#BAD8D5",
                             fontWeight: "bold",
@@ -286,7 +311,6 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
                         </Text>
                         <Text
                           style={{
-                            color: "white",
                             fontSize: 17,
                             color: "#BAD8D5",
                           }}
@@ -311,7 +335,6 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
                     <View style={{ flexDirection: "row" }}>
                       <Text
                         style={{
-                          color: "white",
                           fontSize: 17,
                           color: "#BAD8D5",
                           fontWeight: "bold",
@@ -321,7 +344,6 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
                       </Text>
                       <Text
                         style={{
-                          color: "white",
                           fontSize: 17,
                           color: "#BAD8D5",
                         }}
@@ -332,7 +354,6 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
                     <View style={{ flexDirection: "row" }}>
                       <Text
                         style={{
-                          color: "white",
                           fontSize: 17,
                           color: "#BAD8D5",
                           fontWeight: "bold",
@@ -342,7 +363,6 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
                       </Text>
                       <Text
                         style={{
-                          color: "white",
                           fontSize: 17,
                           color: "#BAD8D5",
                         }}
@@ -354,7 +374,6 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
                     <View style={{ flexDirection: "row" }}>
                       <Text
                         style={{
-                          color: "white",
                           fontSize: 17,
                           color: "#BAD8D5",
                           fontWeight: "bold",
@@ -364,7 +383,6 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
                       </Text>
                       <Text
                         style={{
-                          color: "white",
                           fontSize: 17,
                           color: "#BAD8D5",
                         }}
@@ -380,7 +398,7 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
                   </Text>
                   <View style={{ paddingVertical: 10 }}>
                     <Text
-                      style={{ color: "white", fontSize: 17, color: "#BAD8D5" }}
+                      style={{  fontSize: 17, color: "#BAD8D5" }}
                     >
                       {orderStreet} , {orderCity} , {orderState} ,{" "}
                       {orderCountry}
@@ -388,7 +406,6 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
                     <View style={{ flexDirection: "row" }}>
                       <Text
                         style={{
-                          color: "white",
                           fontSize: 17,
                           color: "#BAD8D5",
                           fontWeight: "bold",
@@ -398,7 +415,6 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
                       </Text>
                       <Text
                         style={{
-                          color: "white",
                           fontSize: 17,
                           color: "#BAD8D5",
                         }}

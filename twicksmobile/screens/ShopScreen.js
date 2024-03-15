@@ -7,6 +7,7 @@ import {
   TextInput,
   View,
   Text,
+  TouchableOpacity,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { useFetch } from "../hooks/api_hook";
@@ -22,7 +23,8 @@ import axios from "axios";
 const ShopScreen = () => {
   const navigate = useNavigation();
   const [selectedCategory, setSelectedCategory] = useState(null);
-
+  const [previousCategory, setPreviousCategory] = useState(null); // New state to keep track of the previously selected category
+  const [selectedCategories, setSelectedCategories] = useState([]);
   const [open, setOpen] = useState(false);
   const [activeFilter, setActiveFilter] = useState({
     filter: "",
@@ -31,6 +33,7 @@ const ShopScreen = () => {
   const [searchField, setSearchField] = useState("");
   const { data: products, setData: setProducts } = useFetch("/api/allProducts");
   const [searchProducts, setSearchProducts] = useState([]);
+  const [isTouchableVisible, setIsTouchableVisible] = useState(false);
 
   const search = async (text) => {
     if (text !== "") {
@@ -55,7 +58,17 @@ const ShopScreen = () => {
   }, [searchField]);
   const { data: categories } = useFetch("/api/allCategory");
   const handleCategoryClick = (category) => {
-    setSelectedCategory(category);
+    if (selectedCategory === category) {
+      setSelectedCategory(null);
+      setPreviousCategory(null);
+    } else {
+      if (previousCategory) {
+        setSelectedCategory(category);
+      } else {
+        setSelectedCategory(category);
+      }
+      setPreviousCategory(selectedCategory);
+    }
   };
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -76,6 +89,16 @@ const ShopScreen = () => {
 
     checkToken();
   }, [navigate]);
+  const filterProducts = (category) => {
+    return products.filter(
+      (product) => product?.category?.category === category
+    );
+  };
+
+  const noProductsAvailable =
+    !products ||
+    (selectedCategory &&
+      filterProducts(selectedCategory.category).length === 0);
 
   return (
     <>
@@ -86,7 +109,7 @@ const ShopScreen = () => {
               style={{
                 flex: 1,
                 flexDirection: "row",
-                backgroundColor: "#FAFAFA",
+                backgroundColor: "#FAFAFABC",
                 justifyContent: "space-between",
                 alignItems: "center",
                 height: 60,
@@ -106,7 +129,7 @@ const ShopScreen = () => {
                   name="person-outline"
                   size={24}
                   color="black"
-                  onPress={() => navigate.navigate("Pro")}
+                  onPress={() => navigate.navigate("Account")}
                 />
                 <AntDesign
                   name="shoppingcart"
@@ -116,7 +139,7 @@ const ShopScreen = () => {
                 />
               </Pressable>
             </View>
-            <View style={styles.searchmain}>
+            <View style={{ padding: 15, backgroundColor: "#FAFAFABC" }}>
               <View style={styles.searchpress}>
                 <TextInput
                   placeholder="Search"
@@ -135,20 +158,45 @@ const ShopScreen = () => {
                   }}
                 />
               </View>
-              {hasSearched ? (
-                searchProducts.length > 0 ? (
-                  <ScrollView>
-                    {searchProducts.map((item, index) => (
-                      <ProductCard item={item} key={index} />
-                    ))}
-                  </ScrollView>
-                ) : (
-                  <Text>No Results Found</Text>
-                )
-              ) : null}
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  flexWrap: "wrap",
+                  width: "100%",
+                  backgroundColor: "#FAFAFABC",
+                  justifyContent: "space-around",
+                }}
+              >
+                {hasSearched ? (
+                  searchProducts.length > 0 ? (
+                    <>
+                      {searchProducts.map((item, index) => (
+                        <ProductCard item={item} key={index} />
+                      ))}
+                    </>
+                  ) : (
+                    <View
+                      style={{
+                        flex: 1,
+                        paddingTop: "10%",
+                        backgroundColor: "FAFAFABC",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <Text style={{ fontSize: 20 }}>No Results Found</Text>
+                    </View>
+                  )
+                ) : null}
+              </View>
             </View>
 
-            <ScrollView horizontal showsHorizontalScrollIndicator>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator
+              style={{ backgroundColor: "#FAFAFABC", flex: 1 }}
+            >
               {searchField === "" &&
                 categories &&
                 categories?.map((item, index) => {
@@ -165,14 +213,50 @@ const ShopScreen = () => {
             </ScrollView>
             <View
               style={{
+                flex: 1,
                 flexDirection: "row",
                 alignItems: "center",
                 flexWrap: "wrap",
+                backgroundColor: "#FAFAFABC",
               }}
             >
               {searchField === "" &&
                 products &&
-                products?.map((item, index) => {
+                (noProductsAvailable ? (
+                  <View
+                    style={{
+                      flex: 1,
+                      paddingTop: "10%",
+
+                      backgroundColor: "FAFAFABC",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Text style={{ fontSize: 20 }}>No products available</Text>
+                  </View>
+                ) : (
+                  filterProducts(selectedCategory?.category).map(
+                    (item, index) => {
+                      return <ProductCard item={item} key={index} />;
+                    }
+                  )
+                ))}
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                flexWrap: "wrap",
+                backgroundColor: "#FAFAFABC",
+              }}
+            >
+              {searchField === "" &&
+                products &&
+                (selectedCategory
+                  ? filterProducts(selectedCategory.category)
+                  : products
+                ).map((item, index) => {
                   return <ProductCard item={item} key={index} />;
                 })}
             </View>
@@ -187,16 +271,15 @@ export default ShopScreen;
 
 const styles = StyleSheet.create({
   homemain: {
-    backgroundColor: "#FAFAFA",
+    backgroundColor: "#FAFAFABC",
   },
   header: {
     flex: 1,
     flexDirection: "row",
-    backgroundColor: "#FAFAFA",
+    backgroundColor: "#FAFAFABC",
     justifyContent: "space-between",
     alignItems: "center",
     height: 40,
-    // backgroundColor: "yellow",
   },
   headerlogo: {
     flexDirection: "row",
@@ -204,18 +287,15 @@ const styles = StyleSheet.create({
     width: 10,
     height: 130,
     marginLeft: 20,
-    // flex:1
   },
   headericons: {
     flexDirection: "row",
     marginRight: 20,
     gap: 10,
-    // flex:3
   },
   searchmain: {
-    backgroundColor: "#FAFAFA",
+    backgroundColor: "#FAFAFABC",
     padding: 10,
-    // flexDirection: "row",
     alignItems: "center",
   },
   searchpress: {
@@ -228,5 +308,13 @@ const styles = StyleSheet.create({
     height: 38,
     flex: 1,
     justifyContent: "space-between",
+    shadowOffset: {
+      width: 2,
+      height: 2,
+    },
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
 });

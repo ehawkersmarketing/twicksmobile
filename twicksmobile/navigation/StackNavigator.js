@@ -1,11 +1,11 @@
 import { StyleSheet } from "react-native";
-import React from "react";
+import React , {useState} from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 
 import { NavigationContainer } from "@react-navigation/native";
-
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import HomeScreen from "../screens/HomeScreen";
 import LoginScreen from "../screens/LoginScreen";
 import RegisterScreen from "../screens/RegisterScreen";
@@ -30,11 +30,45 @@ import { AntDesign } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { FontAwesome6 } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+import { useEffect } from 'react';
+import { Linking } from 'react-native';
+import { useNavigation } from "@react-navigation/native";
+
 
 const StackNavigator = () => {
-  const Stack = createNativeStackNavigator();
+
+    const Stack = createNativeStackNavigator();
   const Tab = createBottomTabNavigator();
   const Top = createMaterialTopTabNavigator();
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+    // const navigation  = useNavigation()
+  useEffect(() => {
+    const checkToken = async () => {
+      try {
+        
+        const token = await AsyncStorage.getItem("auth_token");
+        if (token !== null) {
+          setIsLoggedIn(true);
+        } else {
+          console.log("logout")
+          setIsLoggedIn(false);
+          // navigation.navigate("Login");
+        }
+      } catch (error) {
+        console.error("Error checking token:", error);
+      }
+    };
+
+    checkToken();
+  }, []);
+  if(isLoggedIn == true){
+    console.log("good")
+  }else if(isLoggedIn == false){
+    console.log("bad")
+  }
 
   function TopTabs() {
     return (
@@ -115,9 +149,17 @@ const StackNavigator = () => {
             headerShown: false,
             tabBarIcon: ({ focused }) =>
               focused ? (
-                <Entypo name="shop" size={24} color="#008E97" />
+                <MaterialCommunityIcons
+                  name="shopping"
+                  size={24}
+                  color="#008E97"
+                />
               ) : (
-                <Entypo name="shop" size={24} color="black" />
+                <MaterialCommunityIcons
+                  name="shopping-outline"
+                  size={24}
+                  color="black"
+                />
               ),
           }}
         />
@@ -130,9 +172,9 @@ const StackNavigator = () => {
             headerShown: false,
             tabBarIcon: ({ focused }) =>
               focused ? (
-                <Entypo name="home" size={24} color="#008E97" />
+                <AntDesign name="isv" size={24} color="#008E97" />
               ) : (
-                <AntDesign name="home" size={24} color="black" />
+                <AntDesign name="isv" size={24} color="black" />
               ),
           }}
         />
@@ -141,26 +183,31 @@ const StackNavigator = () => {
   }
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen
-          name="Login"
+       <Stack.Navigator>
+
+       <Stack.Screen
+         name="Login"
           component={LoginScreen}
           options={{ headerShown: false }}
         />
+        
         <Stack.Screen
+        name="Back"
+        component={BottomTabs}
+        options={{ headerShown: false }}
+      />
+      
+            <Stack.Screen
           name="Register"
           component={RegisterScreen}
           options={{ headerShown: false }}
         />
+        
+       
         <Stack.Screen
-          name="Back"
-          component={BottomTabs}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Pro"
+          name="Account"
           component={TopTabs}
-          options={{ headerShown: false }}
+          options={{ headerShown: true }}
         />
 
         <Stack.Screen

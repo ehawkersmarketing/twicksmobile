@@ -3,23 +3,28 @@ import {
   ScrollView,
   Image,
   Text,
+  Alert,
   View,
   SafeAreaView,
   ImageBackground,
   Pressable,
+  Button,
 } from "react-native";
+import { AntDesign } from "@expo/vector-icons";
 import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/core";
-
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { useFetch } from "../hooks/api_hook";
 import { Ionicons } from "@expo/vector-icons";
 import { Fontisto } from "@expo/vector-icons";
-const SingleShopScreen = ({ item, route, index }) => {
+import { FontAwesome } from "@expo/vector-icons";
+
+const SingleShopScreen = ({ route }) => {
   const navigation = useNavigation();
   const [total, setTotal] = useState(0);
   const [user, setUser] = useState(null);
+  const index = route.params?.index;
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -46,49 +51,19 @@ const SingleShopScreen = ({ item, route, index }) => {
     }
   }, [cart]);
   let { data: cart } = useFetch(`/api/getCartByUser/${user?._id}`);
-  const increaseValueHandler = async (index) => {
-    console.log(index);
-    try {
-      if (
-        cart.products[index].units ==
-        cart.products[index].productId.units.maxQuantity
-      ) {
-        Alert.alert("You have reached product max limit");
-      } else {
-        const { data } = await axios.put(
-          `https://backend.twicks.in/api/addToCart`,
-          {
-            userId: user._id,
-            productId: cart.products[index].productId._id,
-            units: 1,
-          }
-        );
-        if (data.success) {
-          navigation.navigate("Cart");
-          // window.location.reload();
-        } else {
-          console.log(data.message);
-        }
-      }
-    } catch (error) {
-      console.log("catch", error.message);
-    }
-  };
-  const decreaseValueHandler = async (index) => {
-    try {
-      const { data } = await axios.delete(
-        `https://backend.twicks.in/api/dropFromCart/${user._id}/${cart.products[index].productId._id}`
+  let [quantity, setQuantity] = useState(0);
+  const [inCart, setInCart] = useState(false);
+  useEffect(() => {
+    if (cart) {
+      const productInCart = cart.products.find(
+        (product) => product.productId?._id === productId
       );
-      if (data.success) {
-        console.log("success");
-        // window.location.reload();
-      } else {
-        Alert.alert(data.message);
-      }
-    } catch (error) {
-      Alert.alert(error.message);
+      console.log("Product in cart:", productInCart);
+      setInCart(!!productInCart);
+      setQuantity(productInCart ? productInCart.units : 0);
     }
-  };
+  }, [cart, productId]);
+
   const {
     productId,
     productName,
@@ -97,7 +72,8 @@ const SingleShopScreen = ({ item, route, index }) => {
     productCategory,
     productPrice,
     productReview,
-    productRating
+    productRating,
+    productQuantity,
   } = route.params;
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   useEffect(() => {
@@ -111,60 +87,141 @@ const SingleShopScreen = ({ item, route, index }) => {
           navigation.navigate("Login");
         }
       } catch (error) {
-        console.error("Error checking token:", error);
+        // console.error("Error checking token:", error);
       }
     };
 
     checkToken();
   }, [navigation]);
+
+  const [userData, setUserData] = useState({});
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const userString = await AsyncStorage.getItem("user");
+        const user = JSON.parse(userString);
+        setUserData(user);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUser();
+  }, []);
+  const decreaseValueHandler = async () => {
+    try {
+      const { data } = await axios.delete(
+        `https://backend.twicks.in/api/dropFromCart/${userData._id}/${productId}`
+      );
+      if (data.success) {
+        if (quantity != 1) {
+          setQuantity((prevQuantity) => prevQuantity - 1); // Correct
+        } else {
+          setInCart(false);
+        }
+      } else {
+        console.log("error while decreasing the cart ");
+      }
+    } catch (error) {
+      Alert("Failed to remove the cart", "Try Again Later");
+    }
+  };
+  const increaseValueHandler = async () => {
+    try {
+      if (cart?.products[index]?.units == productQuantity) {
+        alert("you react limit");
+      } else {
+        const { data } = await axios.put(
+          `https://backend.twicks.in/api/addToCart`,
+          {
+            userId: userData._id,
+            productId: productId,
+            units: 1,
+          }
+        );
+        if (data.success) {
+          setQuantity((prevQuantity) => prevQuantity + 1); // Correct
+        } else {
+          Alert("Quantity Does not Added");
+        }
+      }
+    } catch (error) {
+      console.log(error, "catuch rro while increasing product");
+    }
+  };
+
+  const onCartClick = async () => {
+    try {
+      if (userData._id) {
+        await axios.put("https://backend.twicks.in/api/addToCart", {
+          productId: productId,
+          userId: userData._id,
+          units: 1,
+        });
+        setInCart(true);
+        setQuantity(quantity + 1);
+      } else {
+        Alert("please login to add product in cart");
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   return (
     <>
       {isLoggedIn && (
         <SafeAreaView
           style={{
             flex: 1,
+            height: "100%",
             justifyContent: "center",
             alignItems: "center",
-            backgroundColor: "#F5FCFF",
+            backgroundColor: "White",
           }}
         >
-          <ScrollView style={{ backgroundColor: "#1E786F" ,width:"100%"}}>
-            <View style={{}}>
+          <ScrollView
+            style={{ backgroundColor: "white", width: "100%", height: "100%" }}
+          >
+            <View style={{ paddingBottom: 25, backgroundColor: "#28635D" }}>
               <Image
                 style={{
                   justifyContent: "center",
                   alignItems: "center",
                   height: 250,
-                  backgroundColor: "transparent",
                 }}
                 source={{ uri: productImage }}
               />
             </View>
-            <ImageBackground
-            style={{padding:10}}
-              source={require("../assets/categoryBack.png")}
-              
+            <View
+              style={{
+                height: "160%",
+                padding: 20,
+                // paddingBottom:150,
+                borderTopRightRadius: 20,
+                borderTopLeftRadius: 20,
+                backgroundColor: "white",
+                marginTop: -25,
+              }}
             >
               <View style={{ alignItems: "flex-start" }}>
-                <Text style={{ color: "#28635D", fontSize: 25 }}>
+                <Text style={{ color: "#28635D", fontSize: 20 }}>
                   {productCategory}
                 </Text>
-                <Text style={{ fontSize: 40 }}>{productName}</Text>
-                <View
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    paddingVertical: 10,
-                  }}
-                >
-                  <Fontisto
-                    name="star"
-                    size={15}
-                    color="#FFBB56"
-                    style={{ paddingRight: 10 }}
-                  />
-                  <Text>{productReview} ({productRating})</Text>
+                <Text style={{ fontSize: 30 }}>{productName}</Text>
+                <View style={styles.ratingAndReview}>
+                  <View style={styles.rating}>
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <FontAwesome
+                        key={i}
+                        name={i >= productRating ? "star" : "star"}
+                        size={17}
+                        color={i >= productRating ? "#ccc" : "#FFBB56"}
+                      />
+                    ))}
+                  </View>
+                  <Text style={styles.review}>{productReview} Reviews</Text>
                 </View>
               </View>
               <View style={{ justifyContent: "center", alignItems: "center" }}>
@@ -173,7 +230,7 @@ const SingleShopScreen = ({ item, route, index }) => {
               <View>
                 <Text
                   style={{
-                    fontSize: 25,
+                    fontSize: 20,
                     fontWeight: 600,
                     paddingBottom: 20,
                     paddingTop: "4%",
@@ -181,7 +238,7 @@ const SingleShopScreen = ({ item, route, index }) => {
                 >
                   Description
                 </Text>
-                <Text style={{ fontSize: 20 }}>{productDetais}</Text>
+                <Text style={{ fontSize: 17 }}>{productDetais}</Text>
               </View>
               <View
                 style={{
@@ -191,80 +248,166 @@ const SingleShopScreen = ({ item, route, index }) => {
                 }}
               >
                 <View>
-                  <Text style={{ fontSize: 25 }}>{productPrice}/-</Text>
+                  <Text style={{ fontSize: 20 }}>{productPrice}/-</Text>
                   <Text style={{ color: "gray" }}>Total Price</Text>
                 </View>
-                <View style={{ flexDirection: "row", alignItems: "center" }}>
-                  <Text
-                    onPress={() => decreaseValueHandler(index)}
-                    style={({ pressed }) => [
-                      {
-                        alignItems: "center",
-                        gap: 10,
-                        backgroundColor: pressed ? "#D8E8E7" : "#FFFFFF",
-                      },
-                    ]}
-                  >
-                    -
-                  </Text>
-                  <Text style={{ padding: 10 }}>{item?.units}</Text>
-                  <Text
-                    onPress={() => increaseValueHandler(index)}
-                    style={({ pressed }) => [
-                      {
-                        alignItems: "center",
-                        gap: 10,
-                        backgroundColor: pressed ? "#D8E8E7" : "#FFFFFF",
-                      },
-                    ]}
-                  >
-                    +
-                  </Text>
-                </View>
               </View>
-            </ImageBackground>
+            </View>
           </ScrollView>
-          <View
-            style={{
-              alignItems: "center",
-              justifyContent: "center",
-              flexDirection: "row",
-            }}
-          >
-            <Pressable
+
+          {inCart ? (
+            <View
               style={{
+                alignItems: "center",
+                justifyContent: "space-between",
+                flexDirection: "row",
                 backgroundColor: "white",
-                padding: 10,
-                borderWidth: 1,
-                borderRadius: 10,
-                justifyContent: "center",
-                alignItems: "center",
-                // marginHorizontal: 10,
-                marginTop: 10,
+                paddingHorizontal: 10,
+                gap: 10,
               }}
             >
-              <Ionicons name="bag-outline" size={24} color="black" />
-            </Pressable>
-            <Pressable
-              // onPress={() => addItemToCart(item)}
+              <Pressable
+                onPress={() => navigation.navigate("Cart")}
+                style={{
+                  backgroundColor: "white",
+                  padding: 14,
+                  borderWidth: 1,
+                  borderRadius: 10,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Ionicons name="bag-outline" size={24} color="black" />
+              </Pressable>
+              <Pressable
+                style={{
+                  padding: 1,
+                  borderRadius: 10,
+                  justifyContent: "space-between",
+                  alignItems: "flex-end",
+                  marginVertical: 12,
+                  flex: 1,
+                }}
+              >
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    gap: 30,
+                  }}
+                >
+                  <View>
+                    <Pressable
+                      onPress={() => decreaseValueHandler()}
+                      style={{
+                        backgroundColor: "#28635D",
+                        padding: 13,
+                        borderRadius: 10,
+                      }}
+                    >
+                      <AntDesign
+                        style={{ fontSize: 30, color: "white" }}
+                        name="minus"
+                        size={18}
+                        color="black"
+                      />
+                    </Pressable>
+                  </View>
+                  <View>
+                    <Text style={{ fontSize: 25, color: "black", padding: 14 }}>
+                      {quantity}
+                    </Text>
+                  </View>
+                  <View>
+                    <Pressable
+                      onPress={() => increaseValueHandler()}
+                      style={{
+                        backgroundColor: "#28635D",
+                        padding: 13,
+                        borderRadius: 10,
+                      }}
+                    >
+                      <AntDesign
+                        style={{ fontSize: 30, color: "white" }}
+                        name="plus"
+                        size={18}
+                        color="black"
+                      />
+                    </Pressable>
+                  </View>
+                </View>
+              </Pressable>
+            </View>
+          ) : (
+            <View
               style={{
-                backgroundColor: "#28635D",
-                padding: 14,
-                borderRadius: 10,
-                justifyContent: "center",
                 alignItems: "center",
-                marginHorizontal: 10,
-                marginTop: 10,
-                flex: 1,
+                justifyContent: "space-between",
+                flexDirection: "row",
+                backgroundColor: "white",
+                paddingHorizontal: 10,
+                gap: 10,
               }}
             >
-              {/* {addedToCart ? ( */}
-              <View>{/* <Text>Added to Cart</Text> */}</View>
-              {/* ) : ( */}
-              <Text style={{ color: "white", fontSize: 20 }}>Add to Cart</Text>
-              {/* )} */}
-            </Pressable>
-          </View>
+              <Pressable
+                onPress={() => navigation.navigate("Cart")}
+                style={{
+                  backgroundColor: "white",
+                  padding: 14,
+                  borderWidth: 1,
+                  borderRadius: 10,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Ionicons name="bag-outline" size={24} color="black" />
+              </Pressable>
+              <Pressable
+                style={{
+                  backgroundColor: "#28635D",
+                  padding: 1,
+                  borderRadius: 10,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginVertical: 12,
+                  flex: 1,
+                }}
+              >
+                <View
+                  style={{
+                    color: "white",
+                    marginBottom: 2,
+                    fontSize: 20,
+                  }}
+                >
+                  <View style={{ marginVertical: -5 }}>
+                    <Pressable
+                      style={{
+                        backgroundColor: "#28635D",
+                        padding: 12,
+                        borderRadius: 10,
+                        alignItems: "center",
+                        marginHorizontal: 10,
+                        marginVertical: 10,
+                        paddingBottom: 4,
+                        marginTop: 10,
+                        flexDirection: "row",
+                        gap: 10,
+                        bottom: 5,
+                        justifyContent: "center",
+                      }}
+                      onPress={() => onCartClick()}
+                    >
+                      <Text style={{ color: "white", fontSize: 20 }}>
+                        Add To Cart
+                      </Text>
+                    </Pressable>
+                  </View>
+                </View>
+              </Pressable>
+            </View>
+          )}
         </SafeAreaView>
       )}
     </>
@@ -279,5 +422,19 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: "gray",
     marginVertical: 10,
+  },
+  ratingAndReview: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 10,
+  },
+  rating: {
+    flexDirection: "row",
+    gap:2
+  },
+  review: {
+    marginLeft: 10,
+    fontSize:14
   },
 });

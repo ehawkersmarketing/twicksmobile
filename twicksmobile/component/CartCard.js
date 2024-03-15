@@ -9,7 +9,6 @@ const CartCard = ({ item, index }) => {
   const navigation = useNavigation();
   const [total, setTotal] = useState(0);
   const [user, setUser] = useState(null);
-
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -35,6 +34,12 @@ const CartCard = ({ item, index }) => {
     }
   }, [cart]);
   let { data: cart } = useFetch(`/api/getCartByUser/${user?._id}`);
+  const categories = cart?.products.map(
+    (product) => product?.productId?.category
+  );
+  console.log(item?.description);
+  console.log("hjhbjh", item?.productId?._id);
+
   const increaseValueHandler = async (index) => {
     try {
       if (
@@ -46,8 +51,8 @@ const CartCard = ({ item, index }) => {
         const { data } = await axios.put(
           `https://backend.twicks.in/api/addToCart`,
           {
-            userId: user._id,
-            productId: cart.products[index].productId._id,
+            userId: user?._id,
+            productId: cart.products[index].productId?._id,
             units: 1,
           }
         );
@@ -66,10 +71,9 @@ const CartCard = ({ item, index }) => {
   const decreaseValueHandler = async (index) => {
     try {
       const { data } = await axios.delete(
-        `https://backend.twicks.in/api/dropFromCart/${user._id}/${cart.products[index].productId._id}`
+        `https://backend.twicks.in/api/dropFromCart/${user._id}/${cart?.products[index]?.productId._id}`
       );
       if (data.success) {
-        console.log("success");
         // window.location.reload();
       } else {
         Alert.alert(data.message);
@@ -92,9 +96,16 @@ const CartCard = ({ item, index }) => {
         <Pressable
           onPress={() =>
             navigation.navigate("Product", {
-              cartId: item?._id,
-              cartName: item?.title,
-              cartPrice: item?.price,
+              productId: item?._id,
+              productName: item?.productId?.title,
+              productImage: item?.productId?.image,
+              productDetais: item?.productId?.description,
+              productPrice: item?.productId?.price,
+              // productCategory:item?.productId?.category,
+              productReview: item?.productId?.reviews,
+              productRating: item?.productId?.rating,
+              productQuantity: item?.productId?.quantity,
+              index: index,
             })
           }
           style={{
@@ -105,7 +116,7 @@ const CartCard = ({ item, index }) => {
             backgroundColor: "white",
             flexDirection: "row",
             justifyContent: "space-between",
-            shadowOffset:{
+            shadowOffset: {
               width: 2,
               height: 2,
             },
@@ -127,11 +138,11 @@ const CartCard = ({ item, index }) => {
           </View>
           <View style={{ width: "65%" }}>
             <Text style={{ fontWeight: "500", fontSize: 20 }}>
-              {item?.productId.title}
+              {item?.productId?.title}
             </Text>
 
             <Text style={{ fontWeight: "500", fontSize: 19, color: "#4F6E80" }}>
-            ₹ {item?.productId.price}/-
+              ₹ {item?.productId?.price}/-
             </Text>
             <View
               style={{

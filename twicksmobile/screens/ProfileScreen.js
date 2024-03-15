@@ -18,6 +18,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const ProfileScreen = () => {
   const navigate = useNavigation();
   const [userData, setUserData] = useState({});
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -25,7 +26,6 @@ const ProfileScreen = () => {
         const userString = await AsyncStorage.getItem("user");
         const user = JSON.parse(userString);
         setUserData(user);
-        console.log(user);
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
@@ -36,6 +36,8 @@ const ProfileScreen = () => {
 
   const onLogOut = async () => {
     try {
+      setIsLoggedIn(false)
+      console.log("console",setIsLoggedIn)
       Alert.alert(
         "Logout",
         "Please login again",
@@ -44,12 +46,12 @@ const ProfileScreen = () => {
       );
 
       await AsyncStorage.clear();
-      navigate.navigate("Login");
+      // navigate.navigate("Login");
     } catch (error) {
       console.error("Error logging out:", error);
     }
   };
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   useEffect(() => {
     const checkToken = async () => {
       try {
@@ -97,7 +99,7 @@ const ProfileScreen = () => {
                   >
                     <FontAwesome name="user-circle-o" size={24} color="white" />
                     <Text style={{ fontSize: 24, color: "white" }}>
-                      {userData.userName}
+                      {userData?.userName}
                     </Text>
                   </View>
                   <Pressable
@@ -118,13 +120,13 @@ const ProfileScreen = () => {
                   <View style={{ flexDirection: "row", gap: 10 }}>
                     <Feather name="phone" size={17} color="white" />
                     <Text style={{ fontSize: 17, color: "white" }}>
-                      {userData.phone}
+                      {userData?.phone}
                     </Text>
                   </View>
                   <View style={{ flexDirection: "row", gap: 10 }}>
                     <Entypo name="email" size={17} color="white" />
                     <Text style={{ fontSize: 17, color: "white" }}>
-                      {userData.email}
+                      {userData?.email}
                     </Text>
                   </View>
                 </View>

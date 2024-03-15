@@ -6,45 +6,35 @@ import {
   ScrollView,
   Pressable,
   TextInput,
+  BackHandler,
+  Alert,
   Image,
   Button,
+  Linking,
+  Platform,
 } from "react-native";
 import React, { useState, useEffect, useCallback, useContext } from "react";
 import { useFetch } from "../hooks/api_hook";
 import ProductCard from "../component/ProductCard";
-import HomeImage from "../component/HomeImage";
+import HomeCarousel from "../component/HomeCarousel";
 import CategoryComponent from "../component/CategoryComponent";
 import { Ionicons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
+import { CommonActions } from '@react-navigation/native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
+import { useRoute } from "@react-navigation/native";
+import { useNavigationState } from "@react-navigation/native";
+import { useFocusEffect } from "@react-navigation/native";
 
 const HomeScreen = ({ navigation }) => {
-
-  
-  useEffect(() => {
-     const unsubscribe = navigation.addListener('beforeRemove', (e) => {
-       // Prevent default behavior of leaving the screen
-       e.preventDefault();
-       // Optionally, navigate to the home screen
-      //  navigateToLoginIfNotLoggedIn();
-     });
- 
-     return unsubscribe;
-  }, [navigation, navigateToLoginIfNotLoggedIn]);
- 
-
-
-
-
-
   const [open, setOpen] = useState(false);
   const [activeFilter, setActiveFilter] = useState({
     filter: "",
   });
   const [hasSearched, setHasSearched] = useState(false);
-
+  const [isSelected, setIsSelected] = useState(false);
   const [openForSort, setOpenForSort] = useState(false);
   const { data: products, setData: setProducts } = useFetch("/api/allProducts");
   const [searchField, setSearchField] = useState("");
@@ -75,6 +65,12 @@ const HomeScreen = ({ navigation }) => {
   const { data: categories } = useFetch("/api/allCategory");
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const selectedCategoryHandler = (item) => {
+    console.log(item?.category);
+    navigation.navigate("Shop", { selectedHomeCategory: item?.category });
+  };
+
   useEffect(() => {
     const checkToken = async () => {
       try {
@@ -92,25 +88,82 @@ const HomeScreen = ({ navigation }) => {
 
     checkToken();
   }, [navigation]);
-  const navigateToLoginIfNotLoggedIn = () =>{
-   if(isLoggedIn){
-    console.log("true")
-   }else {
-    console.log("false")
-   }
-  } 
- 
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      console.log("navigated")
+      // Navigate back to the previous screen or a specific screen named "Back"
+      navigation.navigate('Home');
+    }
+ }, [isLoggedIn, navigation]);
+  
+  if(isLoggedIn == true){
+    console.log("good")
+  }else if(isLoggedIn == false){
+    console.log("bad")
+  }
+  const [user, setUser] = useState(null);
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const userString = await AsyncStorage.getItem("user");
+        const userData = JSON.parse(userString);
+        setUser(userData);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUser();
+  }, []);
+
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const backAction = () => {
+        Alert.alert(
+          "Leaving too soon?",
+          "Seeds of success are waiting! Continue Shopping with TAFI.",
+          [
+            {
+              text: "Cancel",
+              onPress: () => navigation.navigate("Home"),
+              style: "cancel",
+            },
+            { text: "YES", onPress: () => BackHandler.exitApp() },
+          ]
+        );
+        return true;
+      };
+      if(Platform.OS=='ios'){
+         console.log("ios here")
+      //    navigation.dispatch(
+      //     CommonActions.reset({
+      //       index: 0,
+      //       routes: [{ name: 'Home' }],
+      //     })
+      //  );
+      }
+
+      const backHandler = BackHandler.addEventListener(
+        "hardwareBackPress",
+        backAction
+      );
+
+      return () => backHandler.remove();
+    }, [navigation])
+  );
 
   return (
     <>
       {isLoggedIn && (
-        <SafeAreaView style={styles.homemain}>
+        <SafeAreaView key={user?._id} style={styles.homemain}>
           <ScrollView>
             <View
               style={{
                 flex: 1,
                 flexDirection: "row",
-                backgroundColor: "#FAFAFA",
+                backgroundColor: "#FAFAFABC",
                 justifyContent: "space-between",
                 alignItems: "center",
                 height: 60,
@@ -130,7 +183,7 @@ const HomeScreen = ({ navigation }) => {
                   name="person-outline"
                   size={24}
                   color="black"
-                  onPress={() => navigation.navigate("Pro")}
+                  onPress={() => navigation.navigate("Account")}
                 />
                 <AntDesign
                   name="shoppingcart"
@@ -140,7 +193,7 @@ const HomeScreen = ({ navigation }) => {
                 />
               </Pressable>
             </View>
-            <View style={styles.searchmain}>
+            <View style={{ padding: 15 }}>
               <View style={styles.searchpress}>
                 <TextInput
                   placeholder="Search"
@@ -159,18 +212,27 @@ const HomeScreen = ({ navigation }) => {
                   }}
                 />
               </View>
-
-              {hasSearched ? (
-                searchProducts.length > 0 ? (
-                  <ScrollView>
-                    {searchProducts.map((item, index) => (
-                      <ProductCard item={item} key={index} />
-                    ))}
-                  </ScrollView>
-                ) : (
-                  <Text>No Results Found</Text>
-                )
-              ) : null}
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  flexWrap: "wrap",
+                  width: "100%",
+                  justifyContent: "space-around",
+                }}
+              >
+                {hasSearched ? (
+                  searchProducts.length > 0 ? (
+                    <>
+                      {searchProducts.map((item, index) => (
+                        <ProductCard item={item} key={item?._id} />
+                      ))}
+                    </>
+                  ) : (
+                    <Text>No Results Found</Text>
+                  )
+                ) : null}
+              </View>
             </View>
             <View>
               <View style={styles.header}>
@@ -181,26 +243,30 @@ const HomeScreen = ({ navigation }) => {
               <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                 {categories &&
                   categories?.map((item, index) => {
-                    return <CategoryComponent item={item} key={index} />;
+                    return (
+                      <CategoryComponent
+                        item={item}
+                        key={item?._id}
+                        onPress={() => selectedCategoryHandler(item)}
+                      />
+                    );
                   })}
               </ScrollView>
             </View>
             <View>
               <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                <HomeImage />
+                <HomeCarousel />
               </ScrollView>
             </View>
             <View>
               <View style={styles.header}>
-                <Text style={{ fontSize: 20, paddingLeft: 15 }}>
-                  Featured Products
-                </Text>
-                <Button
-                  title="See All"
+                <Text style={{ fontSize: 20 }}>Featured Products</Text>
+                <Pressable
                   color="#1E786F"
                   onPress={() => navigation.navigate("Shop")}
-                  accessibilityLabel="Learn more about this purple button"
-                />
+                >
+                  <Text style={{ fontSize: 19 }}>View All</Text>
+                </Pressable>
               </View>
             </View>
             <View
@@ -214,9 +280,10 @@ const HomeScreen = ({ navigation }) => {
             >
               {products &&
                 products?.map((item, index) => {
-                  return <ProductCard item={item} key={index} />;
+                  return <ProductCard item={item} key={item?._id} />;
                 })}
             </View>
+            <View></View>
           </ScrollView>
         </SafeAreaView>
       )}
@@ -228,15 +295,16 @@ export default HomeScreen;
 
 const styles = StyleSheet.create({
   homemain: {
-    backgroundColor: "#FAFAFA",
+    backgroundColor: "#FAFAFABC",
   },
   header: {
     flex: 1,
     flexDirection: "row",
-    backgroundColor: "#FAFAFA",
+    backgroundColor: "#FAFAFABC",
     justifyContent: "space-between",
     alignItems: "center",
     height: 40,
+    paddingHorizontal: 15,
   },
   headerlogo: {
     flexDirection: "row",
@@ -251,9 +319,10 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   searchmain: {
-    backgroundColor: "#FAFAFA",
+    backgroundColor: "#FAFAFABC",
     padding: 10,
     alignItems: "center",
+    width: "100%",
   },
   searchpress: {
     flexDirection: "row",
@@ -265,5 +334,13 @@ const styles = StyleSheet.create({
     height: 38,
     flex: 1,
     justifyContent: "space-between",
+    shadowOffset: {
+      width: 2,
+      height: 2,
+    },
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
 });

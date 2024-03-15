@@ -1,4 +1,11 @@
-import { SafeAreaView, StyleSheet, ScrollView, Text, View } from "react-native";
+import {
+  SafeAreaView,
+  StyleSheet,
+  Pressable,
+  ScrollView,
+  Text,
+  View,
+} from "react-native";
 import React, { useState, useEffect } from "react";
 import OrderCard from "../component/OrderCard";
 import { useNavigation } from "@react-navigation/native";
@@ -10,7 +17,7 @@ const OrderScreen = () => {
   const [userData, setUserData] = useState({});
   const [orders, setOrders] = useState([]);
   const { data: fetchedOrders } = useFetch(
-    `/api/getAllOrderByUser/${userData._id}`
+    `/api/getAllOrderByUser/${userData?._id}`
   );
 
   useEffect(() => {
@@ -47,21 +54,51 @@ const OrderScreen = () => {
   }, [navigate]);
 
   return (
-    <>
+    <View key={userData?._id}>
       {isLoggedIn && (
         <SafeAreaView>
-          <ScrollView
-            key={userData?._id}
-            style={{ padding: 10, backgroundColor: "white", height: "100%" }}
-          >
-            {fetchedOrders &&
-              fetchedOrders.map((item, index) => {
-                return <OrderCard item={item} index={index} />;
-              })}
-          </ScrollView>
+          {fetchedOrders && fetchedOrders.length > 0 ? (
+            <ScrollView
+              style={{ padding: 10, backgroundColor: "white", height: "100%" }}
+            >
+              {fetchedOrders &&
+                fetchedOrders.map((item, index) => {
+                  return <OrderCard item={item} key={index} />;
+                })}
+            </ScrollView>
+          ) : (
+            <View
+              style={{
+                alignItems: "center",
+                justifyContent: "center",
+                paddingVertical: "50%",
+                gap: 70,
+              }}
+            >
+              <Text style={{ fontSize: 20 }}>
+                You don't have any order yet!!
+              </Text>
+              <Pressable
+                onPress={() => navigate.navigate("Back")}
+                style={{
+                  backgroundColor: "#28635D",
+                  padding: 14,
+                  borderRadius: 10,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginHorizontal: 10,
+                  marginTop: 10,
+                }}
+              >
+                <Text style={{ color: "white", fontSize: 20 }}>
+                  Continue Shopping
+                </Text>
+              </Pressable>
+            </View>
+          )}
         </SafeAreaView>
       )}
-    </>
+    </View>
   );
 };
 

@@ -11,7 +11,6 @@
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "1.17.11",
-    "@react-native-community/checkbox": "^0.5.17",
     "@react-native-community/masked-view": "^0.1.11",
     "@react-navigation/bottom-tabs": "^6.5.16",
     "@react-navigation/core": "^6.4.13",
@@ -33,13 +32,13 @@
     "react-native": "0.71.14",
     "react-native-check-box": "^2.1.7",
     "react-native-checkbox": "^2.0.0",
-    "react-native-gesture-handler": "~2.9.0",
     "react-native-html-to-pdf": "^0.12.0",
     "react-native-linear-gradient": "^2.8.3",
     "react-native-reanimated": "~2.14.4",
     "react-native-responsive-screen": "^1.4.2",
     "react-native-toast-message": "^2.2.0",
     "react-native-toast-notifications": "^3.4.0",
+    "react-native-webview": "^13.8.1",
     "react-redux": "^9.1.0"
   },
   "devDependencies": {

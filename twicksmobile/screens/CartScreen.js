@@ -21,7 +21,6 @@ const CartScreen = () => {
 
   useEffect(() => {
     if (user) {
-      console.log("yaha hu me ", user);
     } else {
     }
   }, []);
@@ -88,21 +87,6 @@ const CartScreen = () => {
                     <CartCard key={item._id} item={item} index={index} />
                   ))}
               </View>
-
-              <View style={{ flex: 1 }}>
-              <Button
-                  title="OrderConfirmation"
-                  onPress={() => navigation.navigate("OrderConfirmation")}
-                ></Button>
-                <Button
-                  title="Login"
-                  onPress={() => navigation.navigate("Login")}
-                ></Button>
-                <Button
-                  title="Register"
-                  onPress={() => navigation.navigate("Register")}
-                ></Button>
-              </View>
             </View>
           </ScrollView>
           <View
@@ -130,8 +114,8 @@ const CartScreen = () => {
                   flex: 1,
                 }}
               >
-                <Text style={{ color: "white", fontSize: 20 }}>
-                  Proceed To Checkout
+                <Text style={{ color: "white", fontSize: 18 }}>
+                   Checkout
                 </Text>
               </Pressable>
               <Pressable
@@ -147,7 +131,7 @@ const CartScreen = () => {
                   flex: 1,
                 }}
               >
-                <Text style={{ color: "white", fontSize: 20 }}>
+                <Text style={{ color: "white", fontSize: 18 }}>
                   Continue Shopping
                 </Text>
               </Pressable>
