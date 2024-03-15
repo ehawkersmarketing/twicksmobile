@@ -44,7 +44,7 @@ const StackNavigator = () => {
   const Top = createMaterialTopTabNavigator();
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const navigation  = useNavigation()
+    // const navigation  = useNavigation()
   useEffect(() => {
     const checkToken = async () => {
       try {
