@@ -87,6 +87,19 @@ const HomeScreen = ({ navigation }) => {
     checkToken();
   }, [navigation]);
 
+  useEffect(() => {
+    if (isLoggedIn) {
+      console.log("navigated")
+      // Navigate back to the previous screen or a specific screen named "Back"
+      navigation.navigate('Home');
+    }
+ }, [isLoggedIn, navigation]);
+  
+  if(isLoggedIn == true){
+    console.log("good")
+  }else if(isLoggedIn == false){
+    console.log("bad")
+  }
   const [user, setUser] = useState(null);
   useEffect(() => {
     const fetchUser = async () => {
@@ -101,6 +114,7 @@ const HomeScreen = ({ navigation }) => {
 
     fetchUser();
   }, []);
+
 
   useFocusEffect(
     React.useCallback(() => {
