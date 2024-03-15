@@ -8,6 +8,7 @@ import {
   SafeAreaView,
   ImageBackground,
   Pressable,
+  TextInput,
   Button,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
@@ -199,7 +200,7 @@ const SingleShopScreen = ({ route }) => {
             </View>
             <View
               style={{
-                height: "160%",
+                // height: "160%",
                 padding: 20,
                 // paddingBottom:150,
                 borderTopRightRadius: 20,
@@ -254,6 +255,45 @@ const SingleShopScreen = ({ route }) => {
                   <Text style={{ fontSize: 20 }}>{productPrice}/-</Text>
                   <Text style={{ color: "gray" }}>Total Price</Text>
                 </View>
+              </View>
+            </View>
+
+            <View style={{ height: 199, width: 400 }}>
+              <View style={{ borderColor: "grey", borderWidth: 0.2 }}></View>
+              <View style={{ display: "flex", gap: 7, flexDirection: "row" }}>
+                <Text style={{ fontSize: 20, paddingBottom: 10 }}>
+                  Add Review
+                </Text>
+                <View style={{ display: "flex", flexDirection: "row" }}>
+                  <FontAwesome name="star" size={17} color="#FFBB56" />
+                  <FontAwesome name="star" size={17} color="#FFBB56" />
+                  <FontAwesome name="star" size={17} color="#FFBB56" />
+                  <FontAwesome name="star" size={17} color="#FFBB56" />
+                  <FontAwesome name="star" size={17} color="#FFBB56" />
+                </View>
+              </View>
+
+              <View style={{display:"flex",width:100, flexDirection:"row" , gap:8 , justifyContent:"space-between",alignItems:""}}>
+              <TextInput
+                placeholder="add your review"
+                style={{
+                  padding: 10,
+                  borderRadius: 2,
+                  borderColor: "grey",
+                  borderWidth: 0.2,
+                  width:"100%"
+                }}
+              />
+              <Pressable
+                style={{
+                  padding: 5,
+                  backgroundColor: "#28635D",
+                  width: 50,
+                  borderRadius: 10,
+                }}
+              >
+                <Text style={{ color: "white" }}>send</Text>
+              </Pressable>
               </View>
             </View>
           </ScrollView>
