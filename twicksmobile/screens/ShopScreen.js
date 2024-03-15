@@ -35,7 +35,6 @@ const ShopScreen = ({ route }) => {
   const [isTouchableVisible, setIsTouchableVisible] = useState(false);
   // const { selectedHomeCategory } = route.params;
   // console.log("cdcdsc", selectedHomeCategory);
-  console.log("got",selectedCategory)
   function handleCategoryClick (category){
     if (selectedCategory === category) {
       setSelectedCategory(null);
@@ -60,8 +59,6 @@ const ShopScreen = ({ route }) => {
   //     }
   //   }
   // }, [selectedHomeCategory]);
-
-  console.log("sssss",selectedCategory);
 
   const search = async (text) => {
     if (text !== "") {

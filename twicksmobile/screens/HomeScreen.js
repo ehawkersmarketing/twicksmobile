@@ -13,7 +13,7 @@ import {
   Linking,
   Platform,
 } from "react-native";
-import React, { useState, useEffect, useCallback, useContext } from "react";
+import React, { useState, useEffect,useRef , useCallback, useContext } from "react";
 import { useFetch } from "../hooks/api_hook";
 import ProductCard from "../component/ProductCard";
 import HomeCarousel from "../component/HomeCarousel";
@@ -27,18 +27,25 @@ import axios from "axios";
 import { useRoute } from "@react-navigation/native";
 import { useNavigationState } from "@react-navigation/native";
 import { useFocusEffect } from "@react-navigation/native";
+// Add this line to create a ref
 
 const HomeScreen = ({ navigation }) => {
   const [open, setOpen] = useState(false);
   const [activeFilter, setActiveFilter] = useState({
     filter: "",
   });
+  const inputRef = useRef(null); 
   const [hasSearched, setHasSearched] = useState(false);
   const [isSelected, setIsSelected] = useState(false);
   const [openForSort, setOpenForSort] = useState(false);
   const { data: products, setData: setProducts } = useFetch("/api/allProducts");
   const [searchField, setSearchField] = useState("");
   const [searchProducts, setSearchProducts] = useState([]);
+  const resetSearch = () => {
+    setSearchField('');
+    setHasSearched(false);
+ };
+
 
   const search = async (text) => {
     if (text !== "") {
@@ -68,7 +75,8 @@ const HomeScreen = ({ navigation }) => {
 
   const selectedCategoryHandler = (item) => {
     console.log(item?.category);
-    navigation.navigate("Shop", { selectedHomeCategory: item?.category });
+    setSearchField(item?.category);
+    setHasSearched(true);
   };
 
   useEffect(() => {
@@ -91,17 +99,10 @@ const HomeScreen = ({ navigation }) => {
 
   useEffect(() => {
     if (isLoggedIn) {
-      console.log("navigated");
-      // Navigate back to the previous screen or a specific screen named "Back"
       navigation.navigate("Home");
     }
   }, [isLoggedIn, navigation]);
 
-  if (isLoggedIn == true) {
-    console.log("good");
-  } else if (isLoggedIn == false) {
-    console.log("bad");
-  }
   const [user, setUser] = useState(null);
   useEffect(() => {
     const fetchUser = async () => {
@@ -193,24 +194,25 @@ const HomeScreen = ({ navigation }) => {
               </Pressable>
             </View>
             <View style={{ padding: 15 }}>
-              <View style={styles.searchpress}>
-                <TextInput
-                  placeholder="Search"
-                  onChangeText={(text) => {
-                    setSearchField(text);
-                    if (text === "") {
-                      setHasSearched(false);
-                    } else {
-                      setHasSearched(true);
-                    }
-                  }}
-                  value={searchField}
-                  style={{
-                    marginLeft: 20,
-                    width: "100%",
-                  }}
-                />
-              </View>
+            <View style={styles.searchpress}>
+          <TextInput
+            ref={inputRef} // Add this line to attach the ref to the TextInput
+            placeholder="Search"
+            onChangeText={(text) => {
+              setSearchField(text);
+              if (text === "") {
+                setHasSearched(false);
+              } else {
+                setHasSearched(true);
+              }
+            }}
+            value={searchField}
+            style={{
+              marginLeft: 20,
+              width: "100%",
+            }}
+          />
+        </View>
               <View
                 style={{
                   flexDirection: "row",

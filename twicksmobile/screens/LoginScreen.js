@@ -198,16 +198,10 @@ const LoginScreen = () => {
 
   useEffect(() => {
     if (isLoggedIn) {
-      // console.log("navigated");      
       navigation.navigate("Back");
     }
   }, [isLoggedIn, navigation]);
 
-  if (isLoggedIn == true) {
-    // console.log("good");
-  } else if (isLoggedIn == false) {
-    // console.log("bad");
-  }
 
   return (
     <>

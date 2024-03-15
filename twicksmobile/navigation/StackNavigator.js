@@ -45,31 +45,6 @@ const StackNavigator = () => {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
     // const navigation  = useNavigation()
-  useEffect(() => {
-    const checkToken = async () => {
-      try {
-        
-        const token = await AsyncStorage.getItem("auth_token");
-        if (token !== null) {
-          setIsLoggedIn(true);
-        } else {
-          console.log("logout")
-          setIsLoggedIn(false);
-          // navigation.navigate("Login");
-        }
-      } catch (error) {
-        console.error("Error checking token:", error);
-      }
-    };
-
-    checkToken();
-  }, []);
-  if(isLoggedIn == true){
-    console.log("good")
-  }else if(isLoggedIn == false){
-    console.log("bad")
-  }
-
   function TopTabs() {
     return (
       <Top.Navigator>
