@@ -32,19 +32,15 @@ import { FontAwesome } from "@expo/vector-icons";
 import { FontAwesome6 } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { useEffect } from 'react';
-import { Linking } from 'react-native';
+import { useEffect } from "react";
+import { Linking } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
-
 const StackNavigator = () => {
-
-    const Stack = createNativeStackNavigator();
+  const navigation = useNavigation;
+  const Stack = createNativeStackNavigator();
   const Tab = createBottomTabNavigator();
   const Top = createMaterialTopTabNavigator();
-
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-    // const navigation  = useNavigation()
   function TopTabs() {
     return (
       <Top.Navigator>
@@ -88,9 +84,9 @@ const StackNavigator = () => {
             headerShown: false,
             tabBarIcon: ({ focused }) =>
               focused ? (
-                <FontAwesome6 name="legal" size={24} color="#237169" />
+                <FontAwesome name="file-text" size={24} color="#237169" />
               ) : (
-                <FontAwesome6 name="legal" size={24} color="black" />
+                <FontAwesome name="file-text" size={24} color="black" />
               ),
           }}
         />
@@ -158,6 +154,7 @@ const StackNavigator = () => {
   }
   return (
     <NavigationContainer>
+
        <Stack.Navigator>
 
        <Stack.Screen
@@ -165,20 +162,18 @@ const StackNavigator = () => {
           component={LoginScreen}
           options={{ headerShown: false }}
         />
-        
-        <Stack.Screen
-        name="Back"
-        component={BottomTabs}
-        options={{ headerShown: false }}
-      />
       
             <Stack.Screen
           name="Register"
           component={RegisterScreen}
           options={{ headerShown: false }}
         />
-        
-       
+
+        <Stack.Screen
+          name="Back"
+          component={BottomTabs}
+          options={{ headerShown: false }}
+        />
         <Stack.Screen
           name="Account"
           component={TopTabs}
