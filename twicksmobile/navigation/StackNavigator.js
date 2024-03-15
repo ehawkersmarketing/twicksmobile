@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import React from "react";
+import React , {useState} from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
@@ -51,6 +51,7 @@ const StackNavigator = () => {
     .catch((error) => {
       console.error("Error retrieving token: ", error);
     });
+
   function TopTabs() {
     return (
       <Top.Navigator>
@@ -164,13 +165,16 @@ const StackNavigator = () => {
   }
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen
-          name="Login"
+
+       <Stack.Navigator>
+
+       <Stack.Screen
+         name="Login"
           component={LoginScreen}
           options={{ headerShown: false }}
         />
-        <Stack.Screen
+      
+            <Stack.Screen
           name="Register"
           component={RegisterScreen}
           options={{ headerShown: false }}

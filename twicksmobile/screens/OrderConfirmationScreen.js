@@ -13,6 +13,7 @@ import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
+import { useFetch } from "../hooks/api_hook";
 // import RNHTMLtoPDF from 'react-native-html-to-pdf';
 // import generateInvoiceHTML from './../component/invoice/InvoiceTemplete';
 
@@ -88,6 +89,12 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
 
     checkToken();
   }, [navigate]);
+
+
+  const merchantTransactionId = "TAFI163xf2v1zltqqn4hn"
+  const cartId= "65f1a8437eea5bf76aa5a80a"
+  let { data: trandata} = useFetch(`http://localhost:8080/api/pay/checkStatus?transactionId=${merchantTransactionId}&cartId=${cartId}`);
+console.log(trandata)
 
   // const cancelOrderHandler = async () => {
   //   try {

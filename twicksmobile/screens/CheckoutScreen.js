@@ -94,7 +94,7 @@ const CheckoutScreen = () => {
   useEffect(() => {
     if (cart) {
       let totalPrice = 0;
-      for (let i = 0; i < cart.products.length; i++) {
+      for (let i = 0; i < cart.products?.length; i++) {
         totalPrice +=
           cart.products[i]?.productId?.price * cart.products[i]?.units;
       }
@@ -109,16 +109,6 @@ const CheckoutScreen = () => {
       );
 
       navigation.navigate("ConfirmDetails", { formData, shippmentChargeValue });
-      setFormData({
-        userName: "",
-        Contact: "",
-        Email: "",
-        Address: "",
-        City: "",
-        State: "",
-        PinCode: "",
-        Country: "",
-      }); // Reset form data after submission
     } else {
       // Handle form validation errors
     }
@@ -129,7 +119,7 @@ const CheckoutScreen = () => {
     let totalWeight = 0;
     let totalPrice = 0;
 
-    cart.products.forEach((product) => {
+    cart.products?.forEach((product) => {
       const weight = product?.productId?.weight;
       const price = product?.productId?.price;
       const units = product?.units;

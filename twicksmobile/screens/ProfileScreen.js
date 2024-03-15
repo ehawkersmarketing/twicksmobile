@@ -18,6 +18,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const ProfileScreen = () => {
   const navigate = useNavigation();
   const [userData, setUserData] = useState({});
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -35,6 +36,8 @@ const ProfileScreen = () => {
 
   const onLogOut = async () => {
     try {
+      setIsLoggedIn(false)
+      console.log("console",setIsLoggedIn)
       Alert.alert(
         "Logout",
         "Please login again",
@@ -48,7 +51,7 @@ const ProfileScreen = () => {
       console.error("Error logging out:", error);
     }
   };
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   useEffect(() => {
     const checkToken = async () => {
       try {
