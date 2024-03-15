@@ -109,16 +109,6 @@ const CheckoutScreen = () => {
       );
 
       navigation.navigate("ConfirmDetails", { formData, shippmentChargeValue });
-      setFormData({
-        userName: "",
-        Contact: "",
-        Email: "",
-        Address: "",
-        City: "",
-        State: "",
-        PinCode: "",
-        Country: "",
-      }); // Reset form data after submission
     } else {
       // Handle form validation errors
     }

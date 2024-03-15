@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import React from "react";
+import React , {useState} from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
@@ -34,25 +34,41 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { useEffect } from 'react';
 import { Linking } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation } from "@react-navigation/native";
 
 
 const StackNavigator = () => {
 
-  const navigation = useNavigation
-  const Stack = createNativeStackNavigator();
+    const Stack = createNativeStackNavigator();
   const Tab = createBottomTabNavigator();
   const Top = createMaterialTopTabNavigator();
-let tokenValue
-  AsyncStorage.getItem("auth_token")
- .then(token => {
-    console.log(token);
-    tokenValue = token;
-     // This will log the actual token value
- })
- .catch(error => {
-    console.error('Error retrieving token: ', error);
- });
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const navigation  = useNavigation()
+  useEffect(() => {
+    const checkToken = async () => {
+      try {
+        const token = await AsyncStorage.getItem("auth_token");
+        if (token !== null) {
+          setIsLoggedIn(true);
+        } else {
+          console.log("logout")
+          setIsLoggedIn(false);
+          navigation.navigate("Login");
+        }
+      } catch (error) {
+        console.error("Error checking token:", error);
+      }
+    };
+
+    checkToken();
+  }, []);
+  if(isLoggedIn == true){
+    console.log("good")
+  }else if(isLoggedIn == false){
+    console.log("bad")
+  }
+
   function TopTabs() {
     return (
       <Top.Navigator>
@@ -166,24 +182,24 @@ let tokenValue
   }
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-
-       <Stack.Screen
+      <Stack.Navigator>   
+      {isLoggedIn == false? <Stack.Screen
           name="Login"
           component={LoginScreen}
           options={{ headerShown: false }}
-        />
-              <Stack.Screen
+        />: <Stack.Screen
+        name="Back"
+        component={BottomTabs}
+        options={{ headerShown: false }}
+      />}
+      
+            <Stack.Screen
           name="Register"
           component={RegisterScreen}
           options={{ headerShown: false }}
         />
         
-        <Stack.Screen
-          name="Back"
-          component={BottomTabs}
-          options={{ headerShown: false }}
-        />
+       
         <Stack.Screen
           name="Account"
           component={TopTabs}
