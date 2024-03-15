@@ -55,7 +55,7 @@ const StackNavigator = () => {
         } else {
           console.log("logout")
           setIsLoggedIn(false);
-          navigation.navigate("Login");
+          // navigation.navigate("Login");
         }
       } catch (error) {
         console.error("Error checking token:", error);
@@ -183,16 +183,19 @@ const StackNavigator = () => {
   }
   return (
     <NavigationContainer>
-      <Stack.Navigator>   
-      {isLoggedIn == false? <Stack.Screen
-          name="Login"
+       <Stack.Navigator>
+
+       <Stack.Screen
+         name="Login"
           component={LoginScreen}
           options={{ headerShown: false }}
-        />: <Stack.Screen
+        />
+        
+        <Stack.Screen
         name="Back"
         component={BottomTabs}
         options={{ headerShown: false }}
-      />}
+      />
       
             <Stack.Screen
           name="Register"

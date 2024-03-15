@@ -11,6 +11,7 @@ import {
   Image,
   Button,
   Linking,
+  Platform,
 } from "react-native";
 import React, { useState, useEffect, useCallback, useContext } from "react";
 import { useFetch } from "../hooks/api_hook";
@@ -19,6 +20,7 @@ import HomeCarousel from "../component/HomeCarousel";
 import CategoryComponent from "../component/CategoryComponent";
 import { Ionicons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
+import { CommonActions } from '@react-navigation/native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
@@ -133,6 +135,15 @@ const HomeScreen = ({ navigation }) => {
         );
         return true;
       };
+      if(Platform.OS=='ios'){
+         console.log("ios here")
+      //    navigation.dispatch(
+      //     CommonActions.reset({
+      //       index: 0,
+      //       routes: [{ name: 'Home' }],
+      //     })
+      //  );
+      }
 
       const backHandler = BackHandler.addEventListener(
         "hardwareBackPress",
