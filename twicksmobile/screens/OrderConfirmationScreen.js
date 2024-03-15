@@ -263,7 +263,6 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
                       <View style={{ flexDirection: "row" }}>
                         <Text
                           style={{
-                            color: "white",
                             fontSize: 17,
                             color: "#BAD8D5",
                             fontWeight: "bold",
@@ -273,7 +272,6 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
                         </Text>
                         <Text
                           style={{
-                            color: "white",
                             fontSize: 17,
                             color: "#BAD8D5",
                           }}
@@ -284,7 +282,6 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
                       <View style={{ flexDirection: "row" }}>
                         <Text
                           style={{
-                            color: "white",
                             fontSize: 17,
                             color: "#BAD8D5",
                           }}
@@ -298,7 +295,6 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
                       <View style={{ flexDirection: "row" }}>
                         <Text
                           style={{
-                            color: "white",
                             fontSize: 17,
                             color: "#BAD8D5",
                             fontWeight: "bold",
@@ -308,7 +304,6 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
                         </Text>
                         <Text
                           style={{
-                            color: "white",
                             fontSize: 17,
                             color: "#BAD8D5",
                           }}
@@ -333,7 +328,6 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
                     <View style={{ flexDirection: "row" }}>
                       <Text
                         style={{
-                          color: "white",
                           fontSize: 17,
                           color: "#BAD8D5",
                           fontWeight: "bold",
@@ -343,7 +337,6 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
                       </Text>
                       <Text
                         style={{
-                          color: "white",
                           fontSize: 17,
                           color: "#BAD8D5",
                         }}
@@ -354,7 +347,6 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
                     <View style={{ flexDirection: "row" }}>
                       <Text
                         style={{
-                          color: "white",
                           fontSize: 17,
                           color: "#BAD8D5",
                           fontWeight: "bold",
@@ -364,7 +356,6 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
                       </Text>
                       <Text
                         style={{
-                          color: "white",
                           fontSize: 17,
                           color: "#BAD8D5",
                         }}
@@ -376,7 +367,6 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
                     <View style={{ flexDirection: "row" }}>
                       <Text
                         style={{
-                          color: "white",
                           fontSize: 17,
                           color: "#BAD8D5",
                           fontWeight: "bold",
@@ -386,7 +376,6 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
                       </Text>
                       <Text
                         style={{
-                          color: "white",
                           fontSize: 17,
                           color: "#BAD8D5",
                         }}
@@ -402,7 +391,7 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
                   </Text>
                   <View style={{ paddingVertical: 10 }}>
                     <Text
-                      style={{ color: "white", fontSize: 17, color: "#BAD8D5" }}
+                      style={{  fontSize: 17, color: "#BAD8D5" }}
                     >
                       {orderStreet} , {orderCity} , {orderState} ,{" "}
                       {orderCountry}
@@ -410,7 +399,6 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
                     <View style={{ flexDirection: "row" }}>
                       <Text
                         style={{
-                          color: "white",
                           fontSize: 17,
                           color: "#BAD8D5",
                           fontWeight: "bold",
@@ -420,7 +408,6 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
                       </Text>
                       <Text
                         style={{
-                          color: "white",
                           fontSize: 17,
                           color: "#BAD8D5",
                         }}
