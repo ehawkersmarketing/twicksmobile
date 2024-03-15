@@ -49,6 +49,7 @@ const CartScreen = () => {
       setTotal(totalPrice);
     }
   }, [cart]);
+  console.log(cart?.products);
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   useEffect(() => {
@@ -82,61 +83,94 @@ const CartScreen = () => {
           <ScrollView contentContainerStyle={styles.scrollViewContent}>
             <View style={{ flex: 1, padding: 10, alignItems: "flex-start" }}>
               <View style={{ width: "100%" }}>
-                {cart &&
+                {/* {console.log("fetch", cart?.products[0].units)} */}
+                {cart?.products != 0 ? (
                   cart?.products.map((item, index) => (
                     <CartCard key={item._id} item={item} index={index} />
-                  ))}
+                  ))
+                ) : (
+                  <View
+                    style={{
+                      alignItems: "center",
+                      justifyContent: "center",
+                      paddingVertical: "50%",
+                      gap: 70,
+                    }}
+                  >
+                    <Text style={{ fontSize: 20 }}>
+                      You don't have any products yet!!
+                    </Text>
+                    <Pressable
+                      onPress={() => navigation.navigate("Shop")}
+                      style={{
+                        backgroundColor: "#28635D",
+                        padding: 14,
+                        borderRadius: 10,
+                        justifyContent: "center",
+                        alignItems: "center",
+                        marginHorizontal: 10,
+                        marginTop: 10,
+                      }}
+                    >
+                      <Text style={{ color: "white", fontSize: 20 }}>
+                        Continue Shopping
+                      </Text>
+                    </Pressable>
+                  </View>
+                )}
               </View>
             </View>
           </ScrollView>
-          <View
-            style={{
-              position: "absolute",
-              bottom: 0,
-              width: "100%",
-              padding: 10,
-              backgroundColor: "#F5FCFF",
-            }}
-          >
-            <View style={styles.line}></View>
+          {cart?.products == 0 ? (
+            <View></View>
+          ) : (
+            <View
+              style={{
+                position: "absolute",
+                bottom: 0,
+                width: "100%",
+                padding: 10,
+                backgroundColor: "#F5FCFF",
+              }}
+            >
+              <View style={styles.line}></View>
 
-            <View style={{ flexDirection: "row" }}>
-              <Pressable
-                onPress={() => navigation.navigate("Checkout")}
-                style={{
-                  backgroundColor: "#28635D",
-                  padding: 14,
-                  borderRadius: 10,
-                  justifyContent: "center",
-                  alignItems: "center",
-                  marginHorizontal: 10,
-                  marginTop: 10,
-                  flex: 1,
-                }}
-              >
-                <Text style={{ color: "white", fontSize: 18 }}>
-                   Checkout
-                </Text>
-              </Pressable>
-              <Pressable
-                onPress={() => navigation.navigate("Back")}
-                style={{
-                  backgroundColor: "#28635D",
-                  padding: 14,
-                  borderRadius: 10,
-                  justifyContent: "center",
-                  alignItems: "center",
-                  marginHorizontal: 10,
-                  marginTop: 10,
-                  flex: 1,
-                }}
-              >
-                <Text style={{ color: "white", fontSize: 18 }}>
-                  Continue Shopping
-                </Text>
-              </Pressable>
+              <View style={{ flexDirection: "row" }}>
+                <Pressable
+                  onPress={() => navigation.navigate("Checkout")}
+                  style={{
+                    backgroundColor: "#28635D",
+                    padding: 14,
+                    borderRadius: 10,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    marginHorizontal: 10,
+                    marginTop: 10,
+                    flex: 1,
+                  }}
+                >
+                  <Text style={{ color: "white", fontSize: 18 }}>Checkout</Text>
+                </Pressable>
+                <Pressable
+                  onPress={() => navigation.navigate("Back")}
+                  style={{
+                    backgroundColor: "#28635D",
+                    padding: 14,
+                    borderRadius: 10,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    marginHorizontal: 10,
+                    marginTop: 10,
+                    flex: 1,
+                  }}
+                >
+                  <Text style={{ color: "white", fontSize: 18 }}>
+                    Continue Shopping
+                  </Text>
+                </Pressable>
+              </View>
             </View>
-          </View>
+          )}
         </SafeAreaView>
       )}
     </>

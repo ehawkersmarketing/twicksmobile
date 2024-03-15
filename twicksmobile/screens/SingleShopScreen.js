@@ -319,7 +319,7 @@ const SingleShopScreen = ({ route }) => {
                   </View>
                   <View>
                     <Text style={{ fontSize: 25, color: "black", padding: 14 }}>
-                      {productUnits}
+                      {quantity}
                     </Text>
                   </View>
                   <View>

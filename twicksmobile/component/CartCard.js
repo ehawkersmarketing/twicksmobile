@@ -9,6 +9,8 @@ const CartCard = ({ item, index }) => {
   const navigation = useNavigation();
   const [total, setTotal] = useState(0);
   const [user, setUser] = useState(null);
+  let [quantity, setQuantity] = useState(1);
+
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -22,7 +24,12 @@ const CartCard = ({ item, index }) => {
 
     fetchUser();
   }, []);
+  let { data: cart } = useFetch(`/api/getCartByUser/${user?._id}`);
 
+  useEffect(()=>{
+    setQuantity(cart?.products[index]?.units) 
+
+  },[cart])
   useEffect(() => {
     if (cart) {
       let totalPrice = 0;
@@ -33,12 +40,11 @@ const CartCard = ({ item, index }) => {
       setTotal(totalPrice);
     }
   }, [cart]);
-  let { data: cart } = useFetch(`/api/getCartByUser/${user?._id}`);
-  const categories = cart?.products.map(
+ 
+   
+ const categories = cart?.products.map(
     (product) => product?.productId?.category
   );
-  console.log(item?.description);
-  console.log("hjhbjh", item?.productId?._id);
 
   const increaseValueHandler = async (index) => {
     try {
@@ -58,6 +64,7 @@ const CartCard = ({ item, index }) => {
         );
         if (data.success) {
           navigation.navigate("Cart");
+          setQuantity((prevQuantity) => prevQuantity + 1); // Correct
           // window.location.reload();
         } else {
           console.log(data.message);
@@ -75,6 +82,8 @@ const CartCard = ({ item, index }) => {
       );
       if (data.success) {
         // window.location.reload();
+        setQuantity((prevQuantity) => prevQuantity - 1); // Correct
+
       } else {
         Alert.alert(data.message);
       }
@@ -84,103 +93,103 @@ const CartCard = ({ item, index }) => {
   };
   return (
     <>
-      <View
-        key={item?._id}
+{  quantity >0 &&   <View
+      key={item?._id}
+      style={{
+        width: "100%",
+        paddingVertical: 8,
+        flex: 1,
+        flexDirection: "row",
+      }}
+    >
+      <Pressable
+        onPress={() =>
+          navigation.navigate("Product", {
+            productId: item?._id,
+            productName: item?.productId?.title,
+            productImage: item?.productId?.image,
+            productDetais: item?.productId?.description,
+            productPrice: item?.productId?.price,
+            productReview: item?.productId?.reviews,
+            productRating: item?.productId?.rating,
+            productQuantity: item?.productId?.quantity,
+            productUnits: item?.units, 
+            index: index,
+          })
+        }
         style={{
+          borderColor: "#EBF6F5",
           width: "100%",
-          paddingVertical: 8,
-          flex: 1,
+          padding: 20,
+          borderRadius: 15,
+          backgroundColor: "white",
           flexDirection: "row",
+          justifyContent: "space-between",
+          shadowOffset: {
+            width: 2,
+            height: 2,
+          },
+          shadowColor: "#000",
+          shadowOpacity: 0.1,
+          shadowRadius: 3.84,
+          elevation: 1,
         }}
       >
-        <Pressable
-          onPress={() =>
-            navigation.navigate("Product", {
-              productId: item?._id,
-              productName: item?.productId?.title,
-              productImage: item?.productId?.image,
-              productDetais: item?.productId?.description,
-              productPrice: item?.productId?.price,
-              productReview: item?.productId?.reviews,
-              productRating: item?.productId?.rating,
-              productQuantity: item?.productId?.quantity,
-              productUnits: item?.units, 
-              index: index,
-            })
-          }
-          style={{
-            borderColor: "#EBF6F5",
-            width: "100%",
-            padding: 20,
-            borderRadius: 15,
-            backgroundColor: "white",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            shadowOffset: {
-              width: 2,
-              height: 2,
-            },
-            shadowColor: "#000",
-            shadowOpacity: 0.1,
-            shadowRadius: 3.84,
-            elevation: 1,
-          }}
-        >
-          <View style={{ width: "30%" }}>
-            <Image
-              style={{
-                width: "100%",
-                height: "100%",
-                resizeMode: "contain",
-              }}
-              source={{ uri: item?.productId?.image }}
-            />
-          </View>
-          <View style={{ width: "65%" }}>
-            <Text style={{ fontWeight: "500", fontSize: 20 }}>
-              {item?.productId?.title}
-            </Text>
+        <View style={{ width: "30%" }}>
+          <Image
+            style={{
+              width: "100%",
+              height: "100%",
+              resizeMode: "contain",
+            }}
+            source={{ uri: item?.productId?.image }}
+          />
+        </View>
+        <View style={{ width: "65%" }}>
+          <Text style={{ fontWeight: "500", fontSize: 20 }}>
+            {item?.productId?.title}
+          </Text>
 
-            <Text style={{ fontWeight: "500", fontSize: 19, color: "#4F6E80" }}>
-              ₹ {item?.productId?.price}/-
-            </Text>
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                gap: 15,
-                paddingTop: 10,
-              }}
+          <Text style={{ fontWeight: "500", fontSize: 19, color: "#4F6E80" }}>
+            ₹ {item?.productId?.price}/-
+          </Text>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 15,
+              paddingTop: 10,
+            }}
+          >
+            <Pressable
+              onPress={() => decreaseValueHandler(index)}
+              style={({ pressed }) => [
+                {
+                  alignItems: "center",
+                  backgroundColor: pressed ? "#D8E8E7" : "#FFFFFF",
+                },
+              ]}
             >
-              <Pressable
-                onPress={() => decreaseValueHandler(index)}
-                style={({ pressed }) => [
-                  {
-                    alignItems: "center",
-                    backgroundColor: pressed ? "#D8E8E7" : "#FFFFFF",
-                  },
-                ]}
-              >
-                <AntDesign name="minuscircleo" size={18} color="black" />
-              </Pressable>
+              <AntDesign name="minuscircleo" size={18} color="black" />
+            </Pressable>
 
-              <Text style={{ fontSize: 20 }}>{item?.units}</Text>
-              <Pressable
-                onPress={() => increaseValueHandler(index)}
-                style={({ pressed }) => [
-                  {
-                    flexDirection: "row",
-                    gap: 10,
-                    backgroundColor: pressed ? "#D8E8E7" : "#FFFFFF",
-                  },
-                ]}
-              >
-                <AntDesign name="pluscircleo" size={18} color="black" />
-              </Pressable>
-            </View>
+            <Text style={{ fontSize: 20 }}>{quantity}</Text>
+            <Pressable
+              onPress={() => increaseValueHandler(index)}
+              style={({ pressed }) => [
+                {
+                  flexDirection: "row",
+                  gap: 10,
+                  backgroundColor: pressed ? "#D8E8E7" : "#FFFFFF",
+                },
+              ]}
+            >
+              <AntDesign name="pluscircleo" size={18} color="black" />
+            </Pressable>
           </View>
-        </Pressable>
-      </View>
+        </View>
+      </Pressable>
+    </View>}
     </>
   );
 };
