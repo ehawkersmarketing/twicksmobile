@@ -37,6 +37,8 @@ const ProductCard = ({ item, index }) => {
     android: 17,
   });
 
+  // console.log("dfvefvsefv",item)
+
   return (
     <>
       {isLoggedIn && (
