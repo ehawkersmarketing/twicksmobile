@@ -41,17 +41,6 @@ const StackNavigator = () => {
   const Stack = createNativeStackNavigator();
   const Tab = createBottomTabNavigator();
   const Top = createMaterialTopTabNavigator();
-  let tokenValue;
-  AsyncStorage.getItem("auth_token")
-    .then((token) => {
-      console.log(token);
-      tokenValue = token;
-      // This will log the actual token value
-    })
-    .catch((error) => {
-      console.error("Error retrieving token: ", error);
-    });
-
   function TopTabs() {
     return (
       <Top.Navigator>

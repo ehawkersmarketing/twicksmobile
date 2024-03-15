@@ -29,7 +29,6 @@ const LoginScreen = () => {
   const { data: users } = useFetch("/auth/users");
   const [token, setToken] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
   useEffect(() => {
     const checkToken = async () => {
       try {
@@ -52,7 +51,7 @@ const LoginScreen = () => {
     if (name === "phone" || name === "otp" || name === "userName") {
       value = value.replace(/[^0-9]/g, "");
     }
-    console.log(name, value);
+    // console.log(name, value);
     setFormField({ ...formField, [name]: value });
   };
 
@@ -64,7 +63,7 @@ const LoginScreen = () => {
         phone: "",
         otp: "",
       });
-      console.log("navigate home");
+      // console.log("navigate /home");
     }
   }, [isLoggedIn]);
 
@@ -199,16 +198,10 @@ const LoginScreen = () => {
 
   useEffect(() => {
     if (isLoggedIn) {
-      console.log("navigated");      
       navigation.navigate("Back");
     }
   }, [isLoggedIn, navigation]);
 
-  if (isLoggedIn == true) {
-    console.log("good");
-  } else if (isLoggedIn == false) {
-    console.log("bad");
-  }
 
   return (
     <>

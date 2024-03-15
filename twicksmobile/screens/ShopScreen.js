@@ -20,11 +20,10 @@ import { useNavigation } from "@react-navigation/core";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 
-const ShopScreen = () => {
+const ShopScreen = ({ route }) => {
   const navigate = useNavigation();
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [previousCategory, setPreviousCategory] = useState(null); // New state to keep track of the previously selected category
-  const [selectedCategories, setSelectedCategories] = useState([]);
   const [open, setOpen] = useState(false);
   const [activeFilter, setActiveFilter] = useState({
     filter: "",
@@ -34,6 +33,32 @@ const ShopScreen = () => {
   const { data: products, setData: setProducts } = useFetch("/api/allProducts");
   const [searchProducts, setSearchProducts] = useState([]);
   const [isTouchableVisible, setIsTouchableVisible] = useState(false);
+  // const { selectedHomeCategory } = route.params;
+  // console.log("cdcdsc", selectedHomeCategory);
+  function handleCategoryClick (category){
+    if (selectedCategory === category) {
+      setSelectedCategory(null);
+      setPreviousCategory(null);
+    } else {
+      if (previousCategory) {
+        setSelectedCategory(category);
+      } else {
+        setSelectedCategory(category);
+      }
+      setPreviousCategory(selectedCategory);
+    }
+  };
+
+  // useEffect(() => {
+  //   if (selectedHomeCategory) {
+  //     const categoryToSelect = selectedHomeCategory;
+      
+  //     console.log("Selected category:", categoryToSelect);
+  //     if(selectedHomeCategory){
+  //       handleCategoryClick(categoryToSelect)
+  //     }
+  //   }
+  // }, [selectedHomeCategory]);
 
   const search = async (text) => {
     if (text !== "") {
@@ -57,19 +82,7 @@ const ShopScreen = () => {
     }
   }, [searchField]);
   const { data: categories } = useFetch("/api/allCategory");
-  const handleCategoryClick = (category) => {
-    if (selectedCategory === category) {
-      setSelectedCategory(null);
-      setPreviousCategory(null);
-    } else {
-      if (previousCategory) {
-        setSelectedCategory(category);
-      } else {
-        setSelectedCategory(category);
-      }
-      setPreviousCategory(selectedCategory);
-    }
-  };
+  
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   useEffect(() => {
@@ -194,12 +207,11 @@ const ShopScreen = () => {
 
             <ScrollView
               horizontal
-              showsHorizontalScrollIndicator
+              showsHorizontalScrollIndicator={false}
               style={{ backgroundColor: "#FAFAFABC", flex: 1 }}
             >
-              {searchField === "" &&
-                categories &&
-                categories?.map((item, index) => {
+              {categories &&
+                categories.map((item, index) => {
                   const isSelected = selectedCategory === item;
                   return (
                     <ShopCategory

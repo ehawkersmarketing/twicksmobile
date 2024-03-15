@@ -16,7 +16,6 @@ import {
 import axios from "axios";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { WebView } from 'react-native-webview';
 
 const ConfirmOrderDetails = ({ route }) => {
   const { formData, shippmentChargeValue } = route.params;
@@ -341,10 +340,10 @@ const ConfirmOrderDetails = ({ route }) => {
               flex: 1,
             }}
           >
-    <WebView
+    {/* <WebView
       source={{ uri: 'https://mercury-t2.phonepe.com/transact/pg?token=YTEyMzc2ODZiMWYzYzhhNWEzMDAxNmU0NzcyYTFkZmM1NWIxYjdjOTcwYWI2YzI1YTFjYmMwNDE4MjJkMmM1ODliYWFiZWQ1NDUyNzJlOGNiODAyM2Y1M2M3YWVkMWEyZjA2YzRiODU6ZTg4ZDY5MWQ5NjNkYzE1MjQ2NmM3NmUxYmEwZTM2OTQ' }}
       style={{ marginTop: 20 }}
-    />
+    /> */}
 
             <Text style={{ color: "white", fontSize: 20 }}>Place Order</Text>
           </Pressable>
