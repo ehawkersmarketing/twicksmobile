@@ -13,7 +13,6 @@ import {
   RefreshControl
 } from "react-native";
 import React, { useState, useEffect } from "react";
-import CheckBox from "@react-native-community/checkbox";
 import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/core";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -26,7 +25,6 @@ const LoginScreen = () => {
     phone: "",
     otp: "",
     userName: "",
-    checkbox: 0,
   });
   const { data: users } = useFetch("/auth/users");
   const [token, setToken] = useState(null);

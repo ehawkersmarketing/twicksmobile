@@ -27,7 +27,6 @@ const RegisterScreen = () => {
     phone: "",
     otp: "",
     userName: "",
-    checkbox: 0,
   });
   const { data: users } = useFetch("/auth/users");
   const [token, setToken] = useState(null);
