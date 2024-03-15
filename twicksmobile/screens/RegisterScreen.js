@@ -163,21 +163,6 @@ const RegisterScreen = () => {
         <SafeAreaView style={styles.homemain}>
           <View
             style={{
-              backgroundColor: "#FAFAFA",
-              alignItems: "center",
-              height: 60,
-              justifyContent: "center",
-            }}
-          >
-            <Pressable style={styles.headerlogo}>
-              <Image
-                style={{ width: 130, height: 48 }}
-                source={require("../assets/logo.png")}
-              />
-            </Pressable>
-          </View>
-          <View
-            style={{
               flex: 1,
               backgroundColor: "#20746C",
               justifyContent: "center",
