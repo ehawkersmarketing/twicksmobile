@@ -32,27 +32,25 @@ import { FontAwesome } from "@expo/vector-icons";
 import { FontAwesome6 } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { useEffect } from 'react';
-import { Linking } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-
+import { useEffect } from "react";
+import { Linking } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 const StackNavigator = () => {
-
-  const navigation = useNavigation
+  const navigation = useNavigation;
   const Stack = createNativeStackNavigator();
   const Tab = createBottomTabNavigator();
   const Top = createMaterialTopTabNavigator();
-let tokenValue
+  let tokenValue;
   AsyncStorage.getItem("auth_token")
- .then(token => {
-    console.log(token);
-    tokenValue = token;
-     // This will log the actual token value
- })
- .catch(error => {
-    console.error('Error retrieving token: ', error);
- });
+    .then((token) => {
+      console.log(token);
+      tokenValue = token;
+      // This will log the actual token value
+    })
+    .catch((error) => {
+      console.error("Error retrieving token: ", error);
+    });
   function TopTabs() {
     return (
       <Top.Navigator>
@@ -96,9 +94,9 @@ let tokenValue
             headerShown: false,
             tabBarIcon: ({ focused }) =>
               focused ? (
-                <FontAwesome6 name="legal" size={24} color="#237169" />
+                <FontAwesome name="file-text" size={24} color="#237169" />
               ) : (
-                <FontAwesome6 name="legal" size={24} color="black" />
+                <FontAwesome name="file-text" size={24} color="black" />
               ),
           }}
         />
@@ -167,18 +165,17 @@ let tokenValue
   return (
     <NavigationContainer>
       <Stack.Navigator>
-
-       <Stack.Screen
+        <Stack.Screen
           name="Login"
           component={LoginScreen}
           options={{ headerShown: false }}
         />
-              <Stack.Screen
+        <Stack.Screen
           name="Register"
           component={RegisterScreen}
           options={{ headerShown: false }}
         />
-        
+
         <Stack.Screen
           name="Back"
           component={BottomTabs}
