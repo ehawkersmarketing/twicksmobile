@@ -56,7 +56,7 @@ const SingleShopScreen = ({ route }) => {
   useEffect(() => {
     if (cart) {
       const productInCart = cart.products.find(
-        (product) => product.productId._id === productId
+        (product) => product.productId?._id === productId
       );
       console.log("Product in cart:", productInCart);
       setInCart(!!productInCart);

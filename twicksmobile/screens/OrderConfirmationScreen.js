@@ -270,7 +270,6 @@ console.log(trandata)
                       <View style={{ flexDirection: "row" }}>
                         <Text
                           style={{
-                            color: "white",
                             fontSize: 17,
                             color: "#BAD8D5",
                             fontWeight: "bold",
@@ -280,7 +279,6 @@ console.log(trandata)
                         </Text>
                         <Text
                           style={{
-                            color: "white",
                             fontSize: 17,
                             color: "#BAD8D5",
                           }}
@@ -291,7 +289,6 @@ console.log(trandata)
                       <View style={{ flexDirection: "row" }}>
                         <Text
                           style={{
-                            color: "white",
                             fontSize: 17,
                             color: "#BAD8D5",
                           }}
@@ -305,7 +302,6 @@ console.log(trandata)
                       <View style={{ flexDirection: "row" }}>
                         <Text
                           style={{
-                            color: "white",
                             fontSize: 17,
                             color: "#BAD8D5",
                             fontWeight: "bold",
@@ -315,7 +311,6 @@ console.log(trandata)
                         </Text>
                         <Text
                           style={{
-                            color: "white",
                             fontSize: 17,
                             color: "#BAD8D5",
                           }}
@@ -340,7 +335,6 @@ console.log(trandata)
                     <View style={{ flexDirection: "row" }}>
                       <Text
                         style={{
-                          color: "white",
                           fontSize: 17,
                           color: "#BAD8D5",
                           fontWeight: "bold",
@@ -350,7 +344,6 @@ console.log(trandata)
                       </Text>
                       <Text
                         style={{
-                          color: "white",
                           fontSize: 17,
                           color: "#BAD8D5",
                         }}
@@ -361,7 +354,6 @@ console.log(trandata)
                     <View style={{ flexDirection: "row" }}>
                       <Text
                         style={{
-                          color: "white",
                           fontSize: 17,
                           color: "#BAD8D5",
                           fontWeight: "bold",
@@ -371,7 +363,6 @@ console.log(trandata)
                       </Text>
                       <Text
                         style={{
-                          color: "white",
                           fontSize: 17,
                           color: "#BAD8D5",
                         }}
@@ -383,7 +374,6 @@ console.log(trandata)
                     <View style={{ flexDirection: "row" }}>
                       <Text
                         style={{
-                          color: "white",
                           fontSize: 17,
                           color: "#BAD8D5",
                           fontWeight: "bold",
@@ -393,7 +383,6 @@ console.log(trandata)
                       </Text>
                       <Text
                         style={{
-                          color: "white",
                           fontSize: 17,
                           color: "#BAD8D5",
                         }}
@@ -409,7 +398,7 @@ console.log(trandata)
                   </Text>
                   <View style={{ paddingVertical: 10 }}>
                     <Text
-                      style={{ color: "white", fontSize: 17, color: "#BAD8D5" }}
+                      style={{  fontSize: 17, color: "#BAD8D5" }}
                     >
                       {orderStreet} , {orderCity} , {orderState} ,{" "}
                       {orderCountry}
@@ -417,7 +406,6 @@ console.log(trandata)
                     <View style={{ flexDirection: "row" }}>
                       <Text
                         style={{
-                          color: "white",
                           fontSize: 17,
                           color: "#BAD8D5",
                           fontWeight: "bold",
@@ -427,7 +415,6 @@ console.log(trandata)
                       </Text>
                       <Text
                         style={{
-                          color: "white",
                           fontSize: 17,
                           color: "#BAD8D5",
                         }}
