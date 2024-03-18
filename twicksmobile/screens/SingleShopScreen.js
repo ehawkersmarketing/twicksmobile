@@ -6,25 +6,53 @@ import {
   Alert,
   View,
   SafeAreaView,
+  RefreshControl,
   ImageBackground,
   Pressable,
+  TextInput,
   Button,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
+import { Entypo } from "@expo/vector-icons";
 import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/core";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { useFetch } from "../hooks/api_hook";
 import { Ionicons } from "@expo/vector-icons";
-import { Fontisto } from "@expo/vector-icons";
-import { FontAwesome } from "@expo/vector-icons";
-
+import Icon from "react-native-vector-icons/FontAwesome";
+import { FontAwesome6 } from "@expo/vector-icons";
 const SingleShopScreen = ({ route }) => {
   const navigation = useNavigation();
   const [total, setTotal] = useState(0);
   const [user, setUser] = useState(null);
   const index = route.params?.index;
+  let { data: cart } = useFetch(`/api/getCartByUser/${user?._id}`);
+  let [quantity, setQuantity] = useState(0);
+  const [inCart, setInCart] = useState(false);
+  const [rated, setRated] = useState(0);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userData, setUserData] = useState({});
+
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  const [inputHandler, setInputHandler] = useState({
+    reviewContent: " ",
+    rating: " ",
+  });
+  const {
+    productId,
+    productName,
+    productDetais,
+    productImage,
+    productCategory,
+    productPrice,
+    productReview,
+    productRating,
+    productQuantity,
+    productUnits,
+  } = route.params;
+  const { data: reviews = [], setData: setReviews } = useFetch(`/api/getReviewById/${productId}`)
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -50,35 +78,62 @@ const SingleShopScreen = ({ route }) => {
       setTotal(totalPrice);
     }
   }, [cart]);
-  let { data: cart } = useFetch(`/api/getCartByUser/${user?._id}`);
-  let [quantity, setQuantity] = useState(0);
-  const [inCart, setInCart] = useState(false);
+
+  // const fetchReviews = async (req, res) => {
+  //   try {
+  //     console.log("good");
+  //     const response = await axios.get(
+  //       `https://backend.twicks.in/api/getReviewById/${productId}`
+  //     );
+  //     console.log("ckd");
+  //     console.log(response.data.data.reviews);
+  //     if (response.data.data.reviews) {
+  //       setReviews(response.data.data.reviews);
+  //     } else {
+  //       console.error("No reviews found in the response.");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching got reviews:", error.message);
+  //   }
+  // };
+  
+   const ReviewAddHandler = async (e) => {
+    e.preventDefault();
+    if (!user) {
+       alert("You can't Add review until you are logged in");
+    } else {
+       const { reviewContent, rating } = inputHandler;
+       try {
+         const { data } = await axios.post("https://backend.twicks.in/api/addReview", {
+           reviewContent: reviewContent,
+           rating: rating, // Ensure you're using the correct variable name
+           productId: productId,
+           userId: userData?._id,
+         });
+         if (data.success) {
+           setInputHandler({
+             ...inputHandler,
+             reviewContent: "", // Clear the input
+             rating: "", // Clear the rating
+           });
+           reloadScreen()         }
+       } catch (error) {
+         console.error("Error adding review:", error);
+       }
+    }
+   };
 
   useEffect(() => {
     if (cart) {
-      // Find the item in the cart and get its quantity
       const productInCart = cart.products.find(
         (product) => product.productId?._id === route.params.productId
       );
       if (productInCart) {
-        setQuantity(productInCart.units); // Update the quantity state
+        setQuantity(productInCart.units);
       }
     }
   }, [cart, route.params.productId]);
 
-  const {
-    productId,
-    productName,
-    productDetais,
-    productImage,
-    productCategory,
-    productPrice,
-    productReview,
-    productRating,
-    productQuantity,
-    productUnits,
-  } = route.params;
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   useEffect(() => {
     const checkToken = async () => {
       try {
@@ -97,7 +152,9 @@ const SingleShopScreen = ({ route }) => {
     checkToken();
   }, [navigation]);
 
-  const [userData, setUserData] = useState({});
+  const onChangeInputHandler = (text) => {
+    setInputHandler((prevState) => ({ ...prevState, reviewContent: text }));
+  };
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -112,6 +169,7 @@ const SingleShopScreen = ({ route }) => {
 
     fetchUser();
   }, []);
+
   const decreaseValueHandler = async () => {
     try {
       const { data } = await axios.delete(
@@ -130,6 +188,7 @@ const SingleShopScreen = ({ route }) => {
       Alert("Failed to remove the cart", "Try Again Later");
     }
   };
+
   const increaseValueHandler = async () => {
     try {
       if (cart?.products[index]?.units == productQuantity) {
@@ -185,6 +244,8 @@ const SingleShopScreen = ({ route }) => {
           }}
         >
           <ScrollView
+
+
             style={{ backgroundColor: "white", width: "100%", height: "100%" }}
           >
             <View style={{ paddingBottom: 25, backgroundColor: "#28635D" }}>
@@ -199,7 +260,7 @@ const SingleShopScreen = ({ route }) => {
             </View>
             <View
               style={{
-                height: "160%",
+                // height: "160%",
                 padding: 20,
                 // paddingBottom:150,
                 borderTopRightRadius: 20,
@@ -216,12 +277,21 @@ const SingleShopScreen = ({ route }) => {
                 <View style={styles.ratingAndReview}>
                   <View style={styles.rating}>
                     {Array.from({ length: 5 }).map((_, i) => (
-                      <FontAwesome
-                        key={i}
-                        name={i >= productRating ? "star" : "star"}
-                        size={17}
-                        color={i >= productRating ? "#ccc" : "#FFBB56"}
-                      />
+                      <Text key={i}>
+                        {i < productRating ? (
+                          <View>
+                            <Entypo name="star" size={17} color="#FFBB56" />
+                          </View>
+                        ) : (
+                          <View style={{ paddingTop: "-5" }}>
+                            <Entypo
+                              name="star-outlined"
+                              size={17}
+                              color="#FFBB56"
+                            />
+                          </View>
+                        )}
+                      </Text>
                     ))}
                   </View>
                   <Text style={styles.review}>{productReview} Reviews</Text>
@@ -256,6 +326,142 @@ const SingleShopScreen = ({ route }) => {
                 </View>
               </View>
             </View>
+
+            <View
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                paddingHorizontal: 20,
+              }}
+            >
+              <View style={styles.line}></View>
+            </View>
+            <View
+              style={{ width: "100%", paddingTop: "2%", paddingHorizontal: 10 }}
+            >
+              <View
+                style={{
+                  display: "flex",
+                  gap: 1,
+                  flexDirection: "row",
+                  paddingHorizontal: 10,
+                }}
+              >
+                <Text style={{ fontSize: 20, paddingBottom: 10 }}>
+                  Add Review
+                </Text>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    paddingHorizontal: 3,
+                    paddingTop: 7,
+                  }}
+                >
+
+                  <Text style={{flexDirection:"row"}}>
+                  {Array.from({ length: 5 }).map((_, i) => (
+                      <Icon
+                        key={i}
+                        name={i < rated ? "star" : "star-o"}
+                        size={17}
+                        color={i < rated ? "#FFBB56" : "#FFBB56"}
+                        onPress={() => setRated(i + 1)}
+                      />
+                    ))}
+                  </Text>
+                </View>
+              </View>
+
+              <View
+                style={{
+                  flex: 1,
+                  flexDirection: "row",
+                  gap: 8,
+                  justifyContent: "space-between",
+                  alignItems: "",
+                  paddingHorizontal: 10,
+                  // height:10
+                }}
+              >
+                <TextInput
+                  placeholder="add your review"
+                  onChangeText={onChangeInputHandler}
+                  value={inputHandler.reviewContent}
+                  name="reviewContent"
+                  style={{
+                    padding: 10,
+                    borderRadius: 2,
+                    borderColor: "grey",
+                    borderWidth: 0.2,
+                    flex: 4,
+                  }}
+                />
+                <Pressable
+                  onPress={ReviewAddHandler}
+                  style={{
+                    padding: 5,
+                    backgroundColor: "#28635D",
+                    flex: 1,
+                    borderRadius: 10,
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: "white",
+                      textAlign: "center",
+                      paddingTop: 9,
+                    }}
+                  >
+                    Save
+                  </Text>
+                </Pressable>
+              </View>
+            </View>
+
+            {reviews?.reviews?.map((item) => {
+              return (
+                <View style={{ paddingVertical: 10, paddingHorizontal: 20 }}>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      gap: 4,
+                      paddingVertical: 10,
+                    }}
+                  >
+                    <FontAwesome6 name="circle-user" size={17} color="black" />
+                    <View>
+                      <Text style={{ textAlign: "center", paddingTop: 2 }}>
+                        {item.userId.userName}
+                      </Text>
+                    </View>
+                  </View>
+                  <View style={{ flexDirection: "row" }}>
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <Text key={i}>
+                        {i < item.rating ? (
+                          <View>
+                            <Entypo name="star" size={17} color="#FFBB56" />
+                          </View>
+                        ) : (
+                          <View style={{ paddingTop: "-5" }}>
+                            <Entypo
+                              name="star-outlined"
+                              size={17}
+                              color="#FFBB56"
+                            />
+                          </View>
+                        )}
+                      </Text>
+                    ))}
+                  </View>
+
+                  <View>
+                    <Text style={{ fontSize: 15 }}>{item.review}</Text>
+                  </View>
+                </View>
+              );
+            })}
+
           </ScrollView>
 
           {inCart ? (
@@ -280,7 +486,7 @@ const SingleShopScreen = ({ route }) => {
                   alignItems: "center",
                 }}
               >
-                <Ionicons name="bag-outline" size={24} color="black" />
+                <Ionicons name="bag-outline" size={17} color="black" />
               </Pressable>
               <Pressable
                 style={{
@@ -364,7 +570,7 @@ const SingleShopScreen = ({ route }) => {
                   alignItems: "center",
                 }}
               >
-                <Ionicons name="bag-outline" size={24} color="black" />
+                <Ionicons name="bag-outline" size={17} color="black" />
               </Pressable>
               <Pressable
                 style={{
