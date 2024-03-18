@@ -9,19 +9,21 @@ import {
   Button,
   Alert,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation,useFocusEffect  } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useFetch } from "../hooks/api_hook";
-import { openBrowserAsync } from "expo-web-browser";
 import * as WebBrowser from 'expo-web-browser';
+import { openBrowserAsync } from "expo-web-browser";
 
-// import RNHTMLtoPDF from 'react-native-html-to-pdf';
-// import generateInvoiceHTML from './../component/invoice/InvoiceTemplete';
-
-const OrderConfirmationScreen = ({ item, route, index }) => {
+const OrderConfirmationScreen2 = ({ route }) => {
   const navigation = useNavigation();
+  const [latestOrder, setLatestOrder] = useState(null);
+  const [orders, setOrders] = useState([]);
+  const [userData, setUserData] = useState({});
+  const [user, setUser] = useState(null);
+  const { data: paisa } = useFetch(`/api/getLatestTransaction/${userData?._id}`);
   const [isBrowserOpen, setIsBrowserOpen] = useState(false);
   const openBrowser = async () => {
     if (!isBrowserOpen) {
@@ -37,56 +39,49 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
       }
     }
   };
-
-  const {
-    orderId,
-    orderAmount,
-    orderCreatedAt,
-    orderStatus,
-    orderName,
-    orderStreet,
-    orderCity,
-    orderState,
-    orderCountry,
-    orderZipCode,
-    orderEmail,
-    orderPhoneNo,
-  } = route.params;
-
-  const navigate = useNavigation();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   useEffect(() => {
-    const checkToken = async () => {
+    const fetchUser = async () => {
       try {
-        const token = await AsyncStorage.getItem("auth_token");
-        if (token !== null) {
-          setIsLoggedIn(true);
-        } else {
-          setIsLoggedIn(false);
-          navigate.navigate("Login");
-        }
+        const userString = await AsyncStorage.getItem("user");
+        const user = JSON.parse(userString);
+        setUserData(user);
       } catch (error) {
-        console.error("Error checking token:", error);
+        console.error("Error fetching user data:", error);
       }
     };
+    fetchUser();
+  }, []);
+  console.log(userData?._id)
+  const [transaction, setTransaction] = useState(null);
+ 
+  useEffect(() => {
+     const fetchData = async () => {
+       const { data: order } = useFetch(`/api/getLatestTransaction/${userData?._id}`);
+       setTransaction(data);
+       console.log("hello");
+       console.log(order?.transaction);
+     };
+     
+ 
+     fetchData();
+  }, [userData?._id]);  
+  console.log("hbhbhb",transaction);
 
-    checkToken();
-  }, [navigate]);
+  useEffect(() => {
+    if (transaction) {
+      console.log(transaction);
+    }
+ }, [transaction]);
+   
+  const navigate = useNavigation();
 
-
-
-  const merchantTransactionId = "TAFI163xf2v1zltqqn4hn"
-  const cartId= "65f1a8437eea5bf76aa5a80a"
-  let { data: trandata} = useFetch(`http://localhost:8080/api/pay/checkStatus?transactionId=${merchantTransactionId}&cartId=${cartId}`);
-
-
-  
   const cancelOrderHandler = async () => {
+    console.log("me aagya");
     try {
       const data = await axios.post(
         "https://backend.twicks.in/api/ship/cancelRequest",
         {
-          orderId: orderId,
+          orderId: paisa?.orderId?._id,
         },
         {
           headers: {
@@ -94,21 +89,21 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
           },
         }
       );
+      console.log("api called", data?.data.success);
       if (data?.data?.success) {
+        Alert.alert("Order Canceled Successfully")
         navigation.navigate("Order");
       } else {
         console.log("error", data.data.error);
       }
     } catch (error) {
-      console.log(" catch error", error);
+      console.log("me hu catch error", error);
       Alert.alert(error.message);
     }
   };
 
-  return (
-    <>
-      {isLoggedIn && (
-        <SafeAreaView style={styles.homemain}>
+    return (
+      <SafeAreaView style={styles.homemain}>
           <ScrollView>
             <View style={styles.header}>
               <Pressable
@@ -122,7 +117,7 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
               </Pressable>
             </View>
             <View>
-              {orderStatus === "PROCESSING" || orderStatus === "Packed" ? (
+              {paisa?.orderId?.orderStatus === "PROCESSING" || paisa?.orderId?.orderStatus === "Packed" || paisa?.orderId?.orderStatus === null ? (
                 <>
                   <Text
                     style={{
@@ -147,7 +142,8 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
                     }}
                   >
                     <Pressable
-                      onPress={openBrowser}
+                                          onPress={openBrowser}
+
                       style={{
                         backgroundColor: "white",
                         borderRadius: 6,
@@ -239,7 +235,7 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
                             color: "#BAD8D5",
                           }}
                         >
-                          {orderId}
+                          {paisa?.orderId?._id}
                         </Text>
                       </View>
                       <View style={{ flexDirection: "row" }}>
@@ -252,7 +248,7 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
                           <Text style={{ fontWeight: "bold" }}>
                             Order Total :
                           </Text>
-                          ₹ {orderAmount}/-
+                          ₹ {paisa?.orderId?.amount}/-
                         </Text>
                       </View>
                       <View style={{ flexDirection: "row" }}>
@@ -271,7 +267,7 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
                             color: "#BAD8D5",
                           }}
                         >
-                          {orderCreatedAt}
+                          {paisa?.orderId?.createdAt}
                         </Text>
                       </View>
                     </View>
@@ -304,7 +300,7 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
                           color: "#BAD8D5",
                         }}
                       >
-                        {orderName}
+                        {userData?.userName}
                       </Text>
                     </View>
                     <View style={{ flexDirection: "row" }}>
@@ -323,11 +319,12 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
                           color: "#BAD8D5",
                         }}
                       >
-                        {orderStreet} , {orderCity} , {orderState} ,{" "}
-                        {orderCountry}
+                        {paisa?.orderId?.userAddress?.street} , {paisa?.orderId?.userAddress?.city}{" "}
+                        , {paisa?.orderId?.userAddress?.state} ,{" "}
+                        {paisa?.orderId?.userAddress?.country}
                       </Text>
                     </View>
-                    <View style={{ flexDirection: "row" }}>
+                    {/* <View style={{ flexDirection: "row" }}>
                       <Text
                         style={{
                           fontSize: 17,
@@ -343,9 +340,9 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
                           color: "#BAD8D5",
                         }}
                       >
-                        {orderPhoneNo}
+                        {latestOrder?.user?.phone}
                       </Text>
-                    </View>
+                    </View> */}
                   </View>
                 </View>
                 <View style={{ padding: 10 }}>
@@ -354,8 +351,9 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
                   </Text>
                   <View style={{ paddingVertical: 10 }}>
                     <Text style={{ fontSize: 17, color: "#BAD8D5" }}>
-                      {orderStreet} , {orderCity} , {orderState} ,{" "}
-                      {orderCountry}
+                    {paisa?.orderId?.userAddress?.street} , {paisa?.orderId?.userAddress?.city}{" "}
+                        , {paisa?.orderId?.userAddress?.state} ,{" "}
+                        {paisa?.orderId?.userAddress?.country}
                     </Text>
                     <View style={{ flexDirection: "row" }}>
                       <Text
@@ -373,7 +371,7 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
                           color: "#BAD8D5",
                         }}
                       >
-                        {orderZipCode}
+                        {paisa?.orderId?.userAddress?.zipCode}
                       </Text>
                     </View>
                   </View>
@@ -382,12 +380,10 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
             </View>
           </ScrollView>
         </SafeAreaView>
-      )}
-    </>
-  );
+    );
 };
 
-export default OrderConfirmationScreen;
+export default OrderConfirmationScreen2;
 
 const styles = StyleSheet.create({
   homemain: {

@@ -79,18 +79,12 @@ const RegisterScreen = () => {
           }
         }
       } else {
-        Alert.alert(
-          "Error",
-          "Please enter a valid phone number",
-          { cancelable: false }
-        );
+        Alert.alert("Error", "Please enter a valid phone number", {
+          cancelable: false,
+        });
       }
     } catch (error) {
-      Alert.alert(
-        "Error",
-        error.response.data.message,
-        { cancelable: false }
-      );
+      Alert.alert("Error", error.response.data.message, { cancelable: false });
     }
   };
 
@@ -105,6 +99,7 @@ const RegisterScreen = () => {
           }
         );
         if (data.success) {
+
           const { data } = await axios.post(
             "https://backend.twicks.in/auth/signup",
             {
@@ -113,42 +108,27 @@ const RegisterScreen = () => {
             }
           );
           if (data.success) {
+
             AsyncStorage.setItem("auth_token", token);
             AsyncStorage.setItem("user_id", data?.data._id);
 
             Alert.alert(
               "Success",
               "Successfully registered",
-              // { cancelable: false }
+            { cancelable: false }
             );
             navigation.navigate("Back");
           } else {
-            Alert.alert(
-              "Error",
-              data.message,
-              { cancelable: false }
-            );
+            Alert.alert("Error", data.message, { cancelable: false });
           }
         } else {
-          Alert.alert(
-            "Error",
-            data.message,
-            { cancelable: false }
-          );
+          Alert.alert("Error", data.message, { cancelable: false });
         }
       } else {
-        Alert.alert(
-          "Error",
-          "Please enter a valid OTP",
-          { cancelable: false }
-        );
+        Alert.alert("Error", "Please enter a valid OTP", { cancelable: false });
       }
     } catch (error) {
-      Alert.alert(
-        "Error",
-        error.response.data.error,
-        { cancelable: false }
-      );
+      Alert.alert("Error", error.response.data.error, { cancelable: false });
     }
   };
 
@@ -204,6 +184,7 @@ const RegisterScreen = () => {
                     }
                     value={formField.phone}
                     placeholder="Enter your phone number"
+                    placeholderTextColor="gray"
                     keyboardType="phone-pad"
                     maxLength={10}
                   />
@@ -229,6 +210,7 @@ const RegisterScreen = () => {
                   onChangeText={(value) => handleChangeFormField("otp", value)}
                   value={formField.otp}
                   placeholder="Enter OTP"
+                  placeholderTextColor="gray"
                   keyboardType="numeric"
                 />
               </View>
@@ -241,6 +223,7 @@ const RegisterScreen = () => {
                     }
                     value={formField.userName}
                     placeholder="Enter your name"
+                    placeholderTextColor="gray"
                   />
                 </View>
               </View>

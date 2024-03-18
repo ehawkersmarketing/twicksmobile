@@ -41,7 +41,6 @@ const ShopScreen = ({ route }) => {
     }
   };
 
-
   const search = async (text) => {
     if (text !== "") {
       try {
@@ -138,6 +137,7 @@ const ShopScreen = ({ route }) => {
               <View style={styles.searchpress}>
                 <TextInput
                   placeholder="Search"
+                  placeholderTextColor="gray"
                   onChangeText={(text) => {
                     setSearchField(text);
                     if (text === "") {

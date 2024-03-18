@@ -12,7 +12,7 @@ import {
   Linking,
 } from "react-native";
 import axios from "axios";
-
+import { openBrowserAsync } from "expo-web-browser";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ConfirmOrderDetails = ({ route }) => {
@@ -41,7 +41,8 @@ const ConfirmOrderDetails = ({ route }) => {
     if (cart) {
       let totalPrice = 0;
       for (let i = 0; i < cart.products?.length; i++) {
-        totalPrice +=cart.products[i]?.productId?.price * cart.products[i]?.units;
+        totalPrice +=
+          cart.products[i]?.productId?.price * cart.products[i]?.units;
       }
       setTotal(totalPrice);
     }
@@ -86,14 +87,15 @@ const ConfirmOrderDetails = ({ route }) => {
          }
        }
     } catch (error) {
-       console.error("Failed to submit form", error);
+      console.error("Failed to submit form", error);
     }
    };
    
+
   const handlePress = useCallback(async (data) => {
     const supported = await Linking.canOpenURL(data);
     if (supported) {
-      await Linking.openURL(data);  
+      await Linking.openURL(data);
     } else {
       Alert.alert(`Don't know how to open this URL: ${data}`);
     }
@@ -266,16 +268,10 @@ const ConfirmOrderDetails = ({ route }) => {
               flex: 1,
             }}
           >
-    {/* <WebView
-      source={{ uri: 'https://mercury-t2.phonepe.com/transact/pg?token=YTEyMzc2ODZiMWYzYzhhNWEzMDAxNmU0NzcyYTFkZmM1NWIxYjdjOTcwYWI2YzI1YTFjYmMwNDE4MjJkMmM1ODliYWFiZWQ1NDUyNzJlOGNiODAyM2Y1M2M3YWVkMWEyZjA2YzRiODU6ZTg4ZDY5MWQ5NjNkYzE1MjQ2NmM3NmUxYmEwZTM2OTQ' }}
-      style={{ marginTop: 20 }}
-    /> */}
 
             <Text style={{ color: "white", fontSize: 20 }}>Place Order</Text>
           </Pressable>
-      
         </View>
-
       </SafeAreaView>
     </>
   );
@@ -285,9 +281,9 @@ export default ConfirmOrderDetails;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
- },
+    justifyContent: "center",
+    alignItems: "center",
+  },
   table: {
     flex: 1,
   },

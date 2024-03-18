@@ -16,6 +16,7 @@ import { useNavigation } from "@react-navigation/core";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFetch } from "../hooks/api_hook";
 import axios from "axios";
+import { Linking } from "react-native";
 
 const LoginScreen = () => {
   const navigation = useNavigation();
@@ -27,8 +28,7 @@ const LoginScreen = () => {
   const { data: users } = useFetch("/auth/users");
   const [token, setToken] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
+useEffect(() => {
     const checkToken = async () => {
       try {
         const token = await AsyncStorage.getItem("auth_token");
@@ -45,6 +45,7 @@ const LoginScreen = () => {
 
     checkToken();
   }, [navigation]);
+
 
   const handleChangeFormField = (name, value) => {
     if (name === "phone" || name === "otp" || name === "userName") {
@@ -154,6 +155,7 @@ const LoginScreen = () => {
             otp: "",
           });
           setIsLoggedIn(true);
+
         } else {
           Alert.alert(
             "Error",
@@ -182,6 +184,7 @@ const LoginScreen = () => {
 
   useEffect(() => {
     if (isLoggedIn) {
+      console.log("navigated");      
       navigation.navigate("Back");
     }
   }, [isLoggedIn, navigation]);
@@ -235,6 +238,8 @@ const LoginScreen = () => {
                     }
                     value={formField.phone}
                     placeholder="Enter your phone number"
+                    placeholderTextColor="gray"
+
                     keyboardType="phone-pad"
                     maxLength={10}
                   />
@@ -260,6 +265,9 @@ const LoginScreen = () => {
                   onChangeText={(value) => handleChangeFormField("otp", value)}
                   value={formField.otp}
                   placeholder="Enter OTP"
+
+                  placeholderTextColor="gray"
+
                   keyboardType="numeric"
                 />
               </View>
