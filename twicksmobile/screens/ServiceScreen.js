@@ -71,7 +71,7 @@ const ServiceScreen = () => {
   return (
     <>
       {isLoggedIn && (
-        <SafeAreaView  style={{backgroundColor:"#FAFAFABC",height:"100%"}}>
+        <SafeAreaView style={{ backgroundColor: "#FAFAFABC", height: "100%" }}>
           <ScrollView>
             <View>
               <View
@@ -108,10 +108,13 @@ const ServiceScreen = () => {
                   />
                 </Pressable>
               </View>
-              <View style={{padding:15,gap:10,backgroundColor:"#FAFAFABC"}}>
+              <View
+                style={{ padding: 15, gap: 10, backgroundColor: "#FAFAFABC" }}
+              >
                 <View style={styles.searchpress}>
                   <TextInput
                     placeholder="Search"
+                    placeholderTextColor="gray"
                     onChangeText={(text) => {
                       setSearchField(text);
                       if (text === "") {
@@ -209,7 +212,8 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     height: 38,
     flex: 1,
-    justifyContent: "space-between",shadowOffset:{
+    justifyContent: "space-between",
+    shadowOffset: {
       width: 2,
       height: 2,
     },

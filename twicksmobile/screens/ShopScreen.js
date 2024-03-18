@@ -156,6 +156,7 @@ const ShopScreen = ({ route }) => {
               <View style={styles.searchpress}>
                 <TextInput
                   placeholder="Search"
+                  placeholderTextColor="gray"
                   onChangeText={(text) => {
                     setSearchField(text);
                     if (text === "") {
