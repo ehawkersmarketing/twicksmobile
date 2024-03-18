@@ -159,6 +159,7 @@ const HomeScreen = ({ navigation }) => {
       {isLoggedIn && (
         <SafeAreaView key={user?._id} style={styles.homemain}>
           <ScrollView>
+
             <View
               style={{
                 flex: 1,
@@ -196,8 +197,9 @@ const HomeScreen = ({ navigation }) => {
             <View style={{ padding: 15 }}>
             <View style={styles.searchpress}>
           <TextInput
-            ref={inputRef} // Add this line to attach the ref to the TextInput
+            ref={inputRef} 
             placeholder="Search"
+            placeholderTextColor="gray"
             onChangeText={(text) => {
               setSearchField(text);
               if (text === "") {

@@ -14,45 +14,59 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useFetch } from "../hooks/api_hook";
-import { openBrowserAsync } from "expo-web-browser";
-import * as WebBrowser from 'expo-web-browser';
 
-// import RNHTMLtoPDF from 'react-native-html-to-pdf';
-// import generateInvoiceHTML from './../component/invoice/InvoiceTemplete';
-
-const OrderConfirmationScreen = ({ item, route, index }) => {
+const OrderConfirmationScreen2 = ({ route }) => {
   const navigation = useNavigation();
-  const [isBrowserOpen, setIsBrowserOpen] = useState(false);
-  const openBrowser = async () => {
-    if (!isBrowserOpen) {
-      setIsBrowserOpen(true);
+
+  // const { cartId } = route.params; // Assuming you pass the cartId from the previous screen
+  const [latestOrder, setLatestOrder] = useState(null);
+
+  const [orders, setOrders] = useState([]);
+  const [userData, setUserData] = useState({});
+
+  useEffect(() => {
+    const fetchUser = async () => {
       try {
-        await WebBrowser.openBrowserAsync(
-          `https://twicks.in/invoice/${orderId}`
-        );
+        const userString = await AsyncStorage.getItem("user");
+        const user = JSON.parse(userString);
+        setUserData(user);
       } catch (error) {
-        console.error("Error opening browser:", error);
-      } finally {
-        setIsBrowserOpen(false);
+        console.error("Error fetching user data:", error);
       }
+    };
+
+    fetchUser();
+  }, []);
+
+  useEffect(() => {
+    if (userData?._id) {
+      const fetchOrders = async () => {
+        try {
+          const { data: orders } = await axios.get(
+            `https://backend.twicks.in/api/getAllOrderByUser/${userData?._id}`
+          );
+          console.log(orders?.data[orders]);
+          const data = orders?.data[orders?.data.length - 1];
+          //  console.log("ghjdfbfjhcdb",orders?.data)
+          console.log("dkcbjsdbc", data);
+          if (orders && orders.length > 0) {
+            const latestOrder = console.log(
+              "First Order ID:",
+              sortedOrders[sortedOrders.length - 1]._id
+            );
+            setOrders([latestOrder]);
+            console.log("efcjdfdn", latestOrder);
+          }
+        } catch (error) {
+          console.error("Error fetching orders:", error);
+        }
+      };
+
+      fetchOrders();
     }
-  };
+  }, [userData._id]);
 
-  const {
-    orderId,
-    orderAmount,
-    orderCreatedAt,
-    orderStatus,
-    orderName,
-    orderStreet,
-    orderCity,
-    orderState,
-    orderCountry,
-    orderZipCode,
-    orderEmail,
-    orderPhoneNo,
-  } = route.params;
-
+  // console.log(setOrders,"kjbcjwdbc")
   const navigate = useNavigation();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   useEffect(() => {
@@ -72,12 +86,6 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
 
     checkToken();
   }, [navigate]);
-
-  const merchantTransactionId = "TAFI163xf2v1zltqqn4hn";
-  const cartId = "65f1a8437eea5bf76aa5a80a";
-  let { data: trandata } = useFetch(
-    `http://localhost:8080/api/pay/checkStatus?transactionId=${merchantTransactionId}&cartId=${cartId}`
-  );
 
   const cancelOrderHandler = async () => {
     console.log("me aagya");
@@ -105,11 +113,39 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
     }
   };
 
+  // useEffect(() => {
+  //    const intervalId = setInterval(async () => {
+  //      try {
+  //        const response = await axios.get('https://backend.twicks.in/api/getLatestOrder');
+  //        const latestOrder = response.data;
+  //        if (latestOrder && latestOrder.cartId === cartId) {
+  //          setLatestOrder(latestOrder);
+  //          clearInterval(intervalId); // Stop polling once the correct order is found
+  //        }
+  //      } catch (error) {
+  //        console.error('Failed to fetch latest order', error);
+  //      }
+  //    }, 5000); // Poll every 5 seconds
+
+  //    return () => clearInterval(intervalId); // Clean up on component unmount
+  // }, [cartId]);
+
+  if (!latestOrder) {
+    return (
+      <Pressable onPress={() => navigation.navigate("Back")}>
+        <Text style={{fontSize:20}}>Hii</Text>
+      </Pressable>
+    );
+  }
+
   return (
     <>
+      <Pressable onPress={() => navigation.navigate("Back")}>
+        <Text>Hii</Text>
+      </Pressable>
       {isLoggedIn && (
         <SafeAreaView style={styles.homemain}>
-          <ScrollView>
+          {/* <ScrollView>
             <View style={styles.header}>
               <Pressable
                 onPress={() => navigation.navigate("Home")}
@@ -147,7 +183,6 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
                     }}
                   >
                     <Pressable
-                      onPress={openBrowser}
                       style={{
                         backgroundColor: "white",
                         borderRadius: 6,
@@ -239,7 +274,7 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
                             color: "#BAD8D5",
                           }}
                         >
-                          {orderId}
+                          {data?._id}
                         </Text>
                       </View>
                       <View style={{ flexDirection: "row" }}>
@@ -252,7 +287,7 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
                           <Text style={{ fontWeight: "bold" }}>
                             Order Total :
                           </Text>
-                          ₹ {orderAmount}/-
+                          ₹ {data?.amount}/-
                         </Text>
                       </View>
                       <View style={{ flexDirection: "row" }}>
@@ -271,7 +306,7 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
                             color: "#BAD8D5",
                           }}
                         >
-                          {orderCreatedAt}
+                          {data?.createdAt}
                         </Text>
                       </View>
                     </View>
@@ -304,7 +339,7 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
                           color: "#BAD8D5",
                         }}
                       >
-                        {orderName}
+                        {data?.userName}
                       </Text>
                     </View>
                     <View style={{ flexDirection: "row" }}>
@@ -380,14 +415,14 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
                 </View>
               </View>
             </View>
-          </ScrollView>
+          </ScrollView> */}
         </SafeAreaView>
       )}
     </>
   );
 };
 
-export default OrderConfirmationScreen;
+export default OrderConfirmationScreen2;
 
 const styles = StyleSheet.create({
   homemain: {

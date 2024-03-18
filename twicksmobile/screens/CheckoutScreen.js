@@ -96,7 +96,7 @@ const CheckoutScreen = () => {
       let totalPrice = 0;
       for (let i = 0; i < cart.products?.length; i++) {
         totalPrice +=
-          cart.products[i]?.productId?.price * cart.products[i]?.units;
+          cart?.products[i]?.productId?.price * cart?.products[i]?.units;
       }
       setTotal(totalPrice);
     }
@@ -119,7 +119,7 @@ const CheckoutScreen = () => {
     let totalWeight = 0;
     let totalPrice = 0;
 
-    cart.products?.forEach((product) => {
+    cart?.products?.forEach((product) => {
       const weight = product?.productId?.weight;
       const price = product?.productId?.price;
       const units = product?.units;
@@ -167,51 +167,58 @@ const CheckoutScreen = () => {
               <Text style={{ fontSize: 14, padding: 5 }}>Name</Text>
               <TextInput
                 placeholder={user?.userName}
+                placeholderTextColor="gray"
                 style={[styles.input, errors.userName ? styles.inputError : {}]}
                 onChangeText={(value) => handleInputChange("userName", value)}
               />
               <Text style={{ fontSize: 14, padding: 5 }}>Mobile</Text>
               <TextInput
                 placeholder={user?.phone}
+                placeholderTextColor="gray"
                 style={[styles.input, errors.Contact ? styles.inputError : {}]}
                 onChangeText={(value) => handleInputChange("Contact", value)}
               />
               <Text style={{ fontSize: 14, padding: 5 }}>Email Address</Text>
               <TextInput
                 placeholder="Email Address"
+                placeholderTextColor="gray"
                 style={[styles.input, errors.Email ? styles.inputError : {}]}
                 onChangeText={(value) => handleInputChange("Email", value)}
               />
               <Text style={{ fontSize: 14, padding: 5 }}>Address Line</Text>
               <TextInput
                 placeholder="Address Line"
+                placeholderTextColor="gray"
                 style={[styles.input, errors.Address ? styles.inputError : {}]}
                 onChangeText={(value) => handleInputChange("Address", value)}
               />
               <Text style={{ fontSize: 14, padding: 5 }}>Town / City</Text>
               <TextInput
                 placeholder="Town / City"
+                placeholderTextColor="gray"
                 style={[styles.input, errors.City ? styles.inputError : {}]}
                 onChangeText={(value) => handleInputChange("City", value)}
               />
               <Text style={{ fontSize: 14, padding: 5 }}>State</Text>
               <TextInput
                 placeholder="State"
+                placeholderTextColor="gray"
                 style={[styles.input, errors.State ? styles.inputError : {}]}
                 onChangeText={(value) => handleInputChange("State", value)}
               />
               <Text style={{ fontSize: 14, padding: 5 }}>Pincode</Text>
               <TextInput
                 placeholder="Pincode"
+                placeholderTextColor="gray"
                 style={[styles.input, errors.PinCode ? styles.inputError : {}]}
                 onChangeText={(value) => handleInputChange("PinCode", value)}
                 maxLength={6}
                 keyboardType="numeric"
               />
-
               <Text style={{ fontSize: 14, padding: 5 }}>Country / Region</Text>
               <TextInput
                 placeholder="Country / Region"
+                placeholderTextColor="gray"
                 style={[styles.input, errors.Country ? styles.inputError : {}]}
                 onChangeText={(value) => handleInputChange("Country", value)}
               />
@@ -262,7 +269,7 @@ const styles = StyleSheet.create({
     paddingBottom: 100,
   },
   inputError: {
-    borderColor: "red", // Border color when input is empty
+    borderColor: "red",
   },
   input: {
     padding: 10,
