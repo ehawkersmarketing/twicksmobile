@@ -73,14 +73,15 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
     checkToken();
   }, [navigate]);
 
-  const merchantTransactionId = "TAFI163xf2v1zltqqn4hn";
-  const cartId = "65f1a8437eea5bf76aa5a80a";
-  let { data: trandata } = useFetch(
-    `http://localhost:8080/api/pay/checkStatus?transactionId=${merchantTransactionId}&cartId=${cartId}`
-  );
 
+
+  const merchantTransactionId = "TAFI163xf2v1zltqqn4hn"
+  const cartId= "65f1a8437eea5bf76aa5a80a"
+  let { data: trandata} = useFetch(`http://localhost:8080/api/pay/checkStatus?transactionId=${merchantTransactionId}&cartId=${cartId}`);
+
+
+  
   const cancelOrderHandler = async () => {
-    console.log("me aagya");
     try {
       const data = await axios.post(
         "https://backend.twicks.in/api/ship/cancelRequest",
@@ -93,14 +94,13 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
           },
         }
       );
-      console.log("api called", data?.data.success);
       if (data?.data?.success) {
         navigation.navigate("Order");
       } else {
         console.log("error", data.data.error);
       }
     } catch (error) {
-      console.log("me hu catch error", error);
+      console.log(" catch error", error);
       Alert.alert(error.message);
     }
   };

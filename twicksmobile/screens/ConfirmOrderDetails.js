@@ -4,11 +4,9 @@ import { useFetch } from "../hooks/api_hook";
 import {
   Pressable,
   SafeAreaView,
-  TextInput,
   ScrollView,
   StyleSheet,
   Text,
-  Image,
   View,
   Alert,
   Linking,
@@ -18,38 +16,13 @@ import { openBrowserAsync } from "expo-web-browser";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ConfirmOrderDetails = ({ route }) => {
+
   const { formData, shippmentChargeValue } = route.params;
   const navigation = useNavigation();
   const [total, setTotal] = useState(0);
   const [user, setUser] = useState(null);
+  let { data: cart } = useFetch(`/api/getCartByUser/${user?._id}`);
 
-  const handleShouldStartLoadWithRequest = (request) => {
-    // Check if the URL matches your app's deep link pattern
-    if (request.url.startsWith("https://twicks.in/orderConfirmationPage/")) {
-      // Prevent the WebView from navigating to the web
-      return false;
-    }
-    // Allow other navigations
-    return true;
-  };
-
-  const handleNavigationStateChange = (navState) => {
-    if (navState.url.startsWith("https://twicks.in/orderConfirmationPage/")) {
-      // Extract any necessary data from the URL
-      const orderConfirmationData = navState.url.split(
-        "twicks.in//OrderConfirmation"
-      )[1];
-
-      // Navigate to the order confirmation page within your app
-      navigation.navigate("OrderConfirmation", { data: orderConfirmationData });
-    }
-  };
-
-  useEffect(() => {
-    if (user) {
-    } else {
-    }
-  }, []);
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -64,8 +37,6 @@ const ConfirmOrderDetails = ({ route }) => {
     fetchUser();
   }, []);
 
-  let { data: cart } = useFetch(`/api/getCartByUser/${user?._id}`);
-  console.log(cart);
   useEffect(() => {
     if (cart) {
       let totalPrice = 0;
@@ -81,49 +52,45 @@ const ConfirmOrderDetails = ({ route }) => {
   const handleOrderFunction = async (event) => {
     event.preventDefault();
     try {
-      if (shippmentChargeValue === undefined) {
-        alert(
-          "Submit address details and calculate shipment before placing order"
-        );
-      } else {
-        const { data } = await axios.post(
-          "https://backend.twicks.in/api/putUserAddress",
-          {
-            userId: user?._id,
-            userName: formData.userName,
-            street: formData.Address,
-            landmark: formData.Address2,
-            email: formData.Email,
-            city: formData.City,
-            country: formData.Country,
-            state: formData.State,
-            zipCode: formData.PinCode,
-          }
-        );
-        if (data.success) {
-          const totalPayAmount = total + shippmentChargeValue;
-          const { data } = await axios.post(
-            "https://backend.twicks.in/api/pay/phonePePayment",
-            {
-              amount: totalPayAmount,
-              cartId: cart?._id,
-            }
-          );
-          console.log(data,"vhgvh");
-
-          if (data?.success) {
-            url = data?.data; 
-            openBrowserAsync(url);
-            navigation.navigate("OrderConfirmation2", { cartId: cart?._id });
-          }
-        } else {
-          Alert.alert("phonepe", data.message);
-        }
-      }
+       if (shippmentChargeValue === undefined) {
+         alert("Submit address details and calculate shipment before placing order");
+       } else {
+         const { data } = await axios.post(
+           "https://backend.twicks.in/api/putUserAddress",
+           {
+             userId: user?._id,
+             userName: formData.userName,
+             street: formData.Address,
+             landmark: formData.Address2,
+             email: formData.Email,
+             city: formData.City,
+             country: formData.Country,
+             state: formData.State,
+             zipCode: formData.PinCode,
+           }
+         );
+         if (data.success) {
+           const totalPayAmount = total + shippmentChargeValue;
+           const { data } = await axios.post(
+             "https://backend.twicks.in/api/pay/phonePePayment",
+             {
+               amount: totalPayAmount,
+               cartId: cart?._id,
+             }
+           );
+           if (data.success) {
+             url = data?.data; 
+             handlePress(url); 
+           }
+         } else {
+           Alert.alert("phonepe", data.message);
+         }
+       }
     } catch (error) {
       console.error("Failed to submit form", error);
     }
-  };
+   };
+   
 
   const handlePress = useCallback(async (data) => {
     const supported = await Linking.canOpenURL(data);
@@ -132,46 +99,11 @@ const ConfirmOrderDetails = ({ route }) => {
     } else {
       Alert.alert(`Don't know how to open this URL: ${data}`);
     }
-    // openURL('https://mercury-t2.phonepe.com/transact/pg?token=YTEyMzc2ODZiMWYzYzhhNWEzMDAxNmU0NzcyYTFkZmM1NWIxYjdjOTcwYWI2YzI1YTFjYmMwNDE4MjJkMmM1ODliYWFiZWQ1NDUyNzJlOGNiODAyM2Y1M2M3YWVkMWEyZjA2YzRiODU6ZTg4ZDY5MWQ5NjNkYzE1MjQ2NmM3NmUxYmEwZTM2OTQ');
   }, []);
-
-  //   useEffect(() => {
-  //     // Handle deep links that opened the app
-  //     Linking.getInitialURL().then((url) => {
-  //       if (url) {
-  //         // Parse the URL and navigate to the appropriate screen
-  //         const { path, queryParams } = Linking.parse(url);
-  //         if (path === 'orderConfirmation') {
-  //           const { transactionId, cartId } = queryParams;
-  //           // Navigate to the order confirmation screen with the transaction ID and cart ID
-  //           console.log('Transaction ID:', transactionId);
-  //           console.log('Cart ID:', cartId);
-  //           // Implement your navigation logic here
-  //         }
-  //       }
-  //     });
-
-  //     // Handle deep links that were opened while the app was already running
-  //     Linking.addEventListener('url', (event) => {
-  //       const { path, queryParams } = Linking.parse(event.url);
-  //       if (path === 'orderConfirmation') {
-  //         const { transactionId, cartId } = queryParams;
-  //         // Navigate to the order confirmation screen with the transaction ID and cart ID
-  //         console.log('Transaction ID:', transactionId);
-  //         console.log('Cart ID:', cartId);
-  //         // Implement your navigation logic here
-  //       }
-  //     });
-
-  //     return () => {
-  //       // Clean up the event listener
-  //       Linking.removeEventListener('url', handleUrl);
-  //     };
-  //  }, []);
 
   return (
     <>
-      <SafeAreaView
+      <SafeAreaView 
         style={{
           flex: 1,
           backgroundColor: "#F5FCFF",

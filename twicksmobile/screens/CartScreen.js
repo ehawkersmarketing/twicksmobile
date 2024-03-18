@@ -1,10 +1,8 @@
 import {
   Pressable,
-  Button,
   ScrollView,
   StyleSheet,
   Text,
-  Alert,
   View,
   SafeAreaView,
 } from "react-native";
@@ -18,12 +16,9 @@ const CartScreen = () => {
   const navigation = useNavigation();
   const [total, setTotal] = useState(0);
   const [user, setUser] = useState(null);
+  let { data: cart } = useFetch(`/api/getCartByUser/${user?._id}`);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  useEffect(() => {
-    if (user) {
-    } else {
-    }
-  }, []);
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -34,11 +29,9 @@ const CartScreen = () => {
         console.error("Error fetching user data:", error);
       }
     };
-
     fetchUser();
   }, []);
 
-  let { data: cart } = useFetch(`/api/getCartByUser/${user?._id}`);
   useEffect(() => {
     if (cart) {
       let totalPrice = 0;
@@ -49,9 +42,7 @@ const CartScreen = () => {
       setTotal(totalPrice);
     }
   }, [cart]);
-  console.log(cart?.products);
 
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   useEffect(() => {
     const checkToken = async () => {
       try {
@@ -69,6 +60,7 @@ const CartScreen = () => {
 
     checkToken();
   }, [navigation]);
+
   return (
     <>
       {isLoggedIn && (
@@ -120,6 +112,7 @@ const CartScreen = () => {
               </View>
             </View>
           </ScrollView>
+
           {cart?.products == 0 ? (
             <View></View>
           ) : (

@@ -1,8 +1,10 @@
 import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
 import React, { useState, useEffect, useCallback, useContext } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/core";
 
 const TermAndCondition = () => {
+  const navigation = useNavigation()
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   useEffect(() => {
     const checkToken = async () => {

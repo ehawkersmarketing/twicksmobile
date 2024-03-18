@@ -37,7 +37,6 @@ const ProfileScreen = () => {
   const onLogOut = async () => {
     try {
       setIsLoggedIn(false)
-      console.log("console",setIsLoggedIn)
       Alert.alert(
         "Logout",
         "Please login again",

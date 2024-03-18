@@ -55,7 +55,6 @@ const SingleShopScreen = ({ route }) => {
   const { data: reviews = [], setData: setReviews } = useFetch(
     `/api/getReviewById/${productId}`
   );
-  // console.log("the reviews found are",reviews)
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -71,8 +70,6 @@ const SingleShopScreen = ({ route }) => {
   }, []);
 
   useEffect(() => {
-    // console.log("Updated reviews:", reviews);
-    console.log(refreshing);
   }, [reviews]);
 
   const onRefresh = React.useCallback(() => {
@@ -90,12 +87,9 @@ const SingleShopScreen = ({ route }) => {
     }
   }, [cart]);
   const safeReviews = reviews?.reviews || [];
-  console.log("spici",safeReviews)
 const averageRating =safeReviews.length > 0
     ? Math.round(safeReviews.reduce((sum, review) => sum + review.rating, 0) / safeReviews.length)
     : 0;
-    console.log(averageRating)
-    console.log(productReview)
 
   // const fetchReviews = async () => {
   //   try {
@@ -382,19 +376,19 @@ const averageRating =safeReviews.length > 0
                   gap: 1,
                   flexDirection: "row",
                   paddingHorizontal: 10,
+                  alignItems:"center"
                 }}
               >
-                <Text style={{ fontSize: 20, paddingBottom: 10 }}>
+                <Text style={{ fontSize: 20 }}>
                   Add Review
                 </Text>
                 <View
                   style={{
                     flexDirection: "row",
                     paddingHorizontal: 3,
-                    paddingTop: 7,
                   }}
                 >
-                  <Text style={{ flexDirection: "row" }}>
+                  <Text style={{ flexDirection: "row" , gap:5 }}>
                     {Array.from({ length: 5 }).map((_, i) => (
                       <Icon
                         key={i}
@@ -416,7 +410,7 @@ const averageRating =safeReviews.length > 0
                   justifyContent: "space-between",
                   alignItems: "",
                   paddingHorizontal: 10,
-                  // height:10
+                  height:"3%"
                 }}
               >
                 <TextInput
@@ -445,7 +439,7 @@ const averageRating =safeReviews.length > 0
                     style={{
                       color: "white",
                       textAlign: "center",
-                      paddingTop: 9,
+                      paddingVertical: "auto",
                     }}
                   >
                     Save

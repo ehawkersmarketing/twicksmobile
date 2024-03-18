@@ -71,7 +71,7 @@ const CartCard = ({ item, index }) => {
         }
       }
     } catch (error) {
-      console.log("catch", error.message);
+      console.log("Error in increasing the product Quantity" , error.message);
     }
   };
 

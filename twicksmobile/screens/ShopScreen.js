@@ -15,7 +15,6 @@ import ShopCategory from "../component/ShopCategory";
 import ProductCard from "../component/ProductCard";
 import { AntDesign } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
-import { Feather } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/core";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
@@ -23,18 +22,11 @@ import axios from "axios";
 const ShopScreen = ({ route }) => {
   const navigate = useNavigation();
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const [previousCategory, setPreviousCategory] = useState(null); // New state to keep track of the previously selected category
-  const [open, setOpen] = useState(false);
-  const [activeFilter, setActiveFilter] = useState({
-    filter: "",
-  });
+  const [previousCategory, setPreviousCategory] = useState(null); 
   const [hasSearched, setHasSearched] = useState(false);
   const [searchField, setSearchField] = useState("");
   const { data: products, setData: setProducts } = useFetch("/api/allProducts");
   const [searchProducts, setSearchProducts] = useState([]);
-  const [isTouchableVisible, setIsTouchableVisible] = useState(false);
-  // const { selectedHomeCategory } = route.params;
-  // console.log("cdcdsc", selectedHomeCategory);
   function handleCategoryClick (category){
     if (selectedCategory === category) {
       setSelectedCategory(null);
@@ -48,18 +40,6 @@ const ShopScreen = ({ route }) => {
       setPreviousCategory(selectedCategory);
     }
   };
-
-  console.log(products)
-  // useEffect(() => {
-  //   if (selectedHomeCategory) {
-  //     const categoryToSelect = selectedHomeCategory;
-      
-  //     console.log("Selected category:", categoryToSelect);
-  //     if(selectedHomeCategory){
-  //       handleCategoryClick(categoryToSelect)
-  //     }
-  //   }
-  // }, [selectedHomeCategory]);
 
   const search = async (text) => {
     if (text !== "") {

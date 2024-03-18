@@ -72,7 +72,6 @@ export const postRequestWithAuth = async (url, body) => {
     }
 
     try {
-        console.log(body);
         const { data } = await axios.post(baseUrl + url, body, {
             headers: header
         });

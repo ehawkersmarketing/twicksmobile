@@ -2,7 +2,6 @@ import {
   SafeAreaView,
   Pressable,
   Image,
-  ScrollView,
   StyleSheet,
   Text,
   View,
@@ -10,7 +9,6 @@ import {
   Alert,
   TouchableWithoutFeedback,
   Keyboard,
-  RefreshControl,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
@@ -30,51 +28,31 @@ const LoginScreen = () => {
   const { data: users } = useFetch("/auth/users");
   const [token, setToken] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  useEffect( () => {
-    async function checkTokenAndNavigate() {
+useEffect(() => {
+    const checkToken = async () => {
       try {
         const token = await AsyncStorage.getItem("auth_token");
         if (token !== null) {
-          // Check if the incoming URL contains 'order-confirmation'
-          const url = await Linking.getInitialURL();
-          if (url && url.includes("order-confirmation-2")) {
-            // Navigate to OrderConfirmation screen
-           navigation.navigate("OrderConfirmation2");
-          
-          } else {
-            // Navigate to Back screen
-            navigation.navigate("Back");
-          }
+          setIsLoggedIn(true);
+          navigation.navigate("Back");
         } else {
-          // If not logged in, stay on the LoginScreen
+          setIsLoggedIn(false);
         }
       } catch (error) {
-        console.error("Error checking token and navigating:", error);
+        console.error("Error checking token:", error);
       }
     };
 
-    checkTokenAndNavigate();
+    checkToken();
   }, [navigation]);
+
 
   const handleChangeFormField = (name, value) => {
     if (name === "phone" || name === "otp" || name === "userName") {
       value = value.replace(/[^0-9]/g, "");
     }
-    // console.log(name, value);
     setFormField({ ...formField, [name]: value });
   };
-
-  useEffect( () => {
-    if (isLoggedIn) {
-      // Perform any actions needed to "reload" the screen
-      // For example, resetting form fields
-      setFormField({
-        phone: "",
-        otp: "",
-      });
-      // console.log("navigate /home");
-    }
-  }, [isLoggedIn]);
 
   const onSendOtp = async () => {
     try {
@@ -166,19 +144,18 @@ const LoginScreen = () => {
               {
                 text: "OK",
                 onPress: () => {
-                  console.log("okkkkk");
+                  navigation.navigate("Back");
                 },
               },
             ],
             { cancelable: false }
           );
-          // Update the state to clear the form fields
           setFormField({
             phone: "",
             otp: "",
           });
           setIsLoggedIn(true);
-          navigation.navigate("Back");
+
         } else {
           Alert.alert(
             "Error",
@@ -211,12 +188,6 @@ const LoginScreen = () => {
       navigation.navigate("Back");
     }
   }, [isLoggedIn, navigation]);
-
-  if (isLoggedIn == true) {
-    console.log("good");
-  } else if (isLoggedIn == false) {
-    console.log("bad");
-  }
 
   return (
     <>
@@ -268,6 +239,7 @@ const LoginScreen = () => {
                     value={formField.phone}
                     placeholder="Enter your phone number"
                     placeholderTextColor="gray"
+
                     keyboardType="phone-pad"
                     maxLength={10}
                   />
@@ -293,7 +265,9 @@ const LoginScreen = () => {
                   onChangeText={(value) => handleChangeFormField("otp", value)}
                   value={formField.otp}
                   placeholder="Enter OTP"
+
                   placeholderTextColor="gray"
+
                   keyboardType="numeric"
                 />
               </View>
