@@ -111,13 +111,12 @@ const ConfirmOrderDetails = ({ route }) => {
           );
           console.log(data,"vhgvh");
 
-          if (data.success) {
-            url = data?.data; // Assuming this is the URL you want to open
+          if (data?.success) {
+            url = data?.data; 
             openBrowserAsync(url);
             navigation.navigate("OrderConfirmation2", { cartId: cart?._id });
           }
         } else {
-          console.log("phonepe");
           Alert.alert("phonepe", data.message);
         }
       }

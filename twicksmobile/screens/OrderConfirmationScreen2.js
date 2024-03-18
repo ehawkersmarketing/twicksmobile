@@ -9,21 +9,36 @@ import {
   Button,
   Alert,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation,useFocusEffect  } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useFetch } from "../hooks/api_hook";
+import * as WebBrowser from 'expo-web-browser';
+import { openBrowserAsync } from "expo-web-browser";
 
 const OrderConfirmationScreen2 = ({ route }) => {
   const navigation = useNavigation();
-
-  // const { cartId } = route.params; // Assuming you pass the cartId from the previous screen
   const [latestOrder, setLatestOrder] = useState(null);
-
   const [orders, setOrders] = useState([]);
   const [userData, setUserData] = useState({});
-
+  const [user, setUser] = useState(null);
+  const { data: paisa } = useFetch(`/api/getLatestTransaction/${userData?._id}`);
+  const [isBrowserOpen, setIsBrowserOpen] = useState(false);
+  const openBrowser = async () => {
+    if (!isBrowserOpen) {
+      setIsBrowserOpen(true);
+      try {
+        await WebBrowser.openBrowserAsync(
+          `https://twicks.in/invoice/${orderId}`
+        );
+      } catch (error) {
+        console.error("Error opening browser:", error);
+      } finally {
+        setIsBrowserOpen(false);
+      }
+    }
+  };
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -34,58 +49,31 @@ const OrderConfirmationScreen2 = ({ route }) => {
         console.error("Error fetching user data:", error);
       }
     };
-
     fetchUser();
   }, []);
+  console.log(userData?._id)
+  const [transaction, setTransaction] = useState(null);
+ 
+  useEffect(() => {
+     const fetchData = async () => {
+       const { data: order } = useFetch(`/api/getLatestTransaction/${userData?._id}`);
+       setTransaction(data);
+       console.log("hello");
+       console.log(order?.transaction);
+     };
+     
+ 
+     fetchData();
+  }, [userData?._id]);  
+  console.log("hbhbhb",transaction);
 
   useEffect(() => {
-    if (userData?._id) {
-      const fetchOrders = async () => {
-        try {
-          const { data: orders } = await axios.get(
-            `https://backend.twicks.in/api/getAllOrderByUser/${userData?._id}`
-          );
-          console.log(orders?.data[orders]);
-          const data = orders?.data[orders?.data.length - 1];
-          //  console.log("ghjdfbfjhcdb",orders?.data)
-          console.log("dkcbjsdbc", data);
-          if (orders && orders.length > 0) {
-            const latestOrder = console.log(
-              "First Order ID:",
-              sortedOrders[sortedOrders.length - 1]._id
-            );
-            setOrders([latestOrder]);
-            console.log("efcjdfdn", latestOrder);
-          }
-        } catch (error) {
-          console.error("Error fetching orders:", error);
-        }
-      };
-
-      fetchOrders();
+    if (transaction) {
+      console.log(transaction);
     }
-  }, [userData._id]);
-
-  // console.log(setOrders,"kjbcjwdbc")
+ }, [transaction]);
+   
   const navigate = useNavigation();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  useEffect(() => {
-    const checkToken = async () => {
-      try {
-        const token = await AsyncStorage.getItem("auth_token");
-        if (token !== null) {
-          setIsLoggedIn(true);
-        } else {
-          setIsLoggedIn(false);
-          navigate.navigate("Login");
-        }
-      } catch (error) {
-        console.error("Error checking token:", error);
-      }
-    };
-
-    checkToken();
-  }, [navigate]);
 
   const cancelOrderHandler = async () => {
     console.log("me aagya");
@@ -93,7 +81,7 @@ const OrderConfirmationScreen2 = ({ route }) => {
       const data = await axios.post(
         "https://backend.twicks.in/api/ship/cancelRequest",
         {
-          orderId: orderId,
+          orderId: paisa?.orderId?._id,
         },
         {
           headers: {
@@ -103,6 +91,7 @@ const OrderConfirmationScreen2 = ({ route }) => {
       );
       console.log("api called", data?.data.success);
       if (data?.data?.success) {
+        Alert.alert("Order Canceled Successfully")
         navigation.navigate("Order");
       } else {
         console.log("error", data.data.error);
@@ -113,39 +102,9 @@ const OrderConfirmationScreen2 = ({ route }) => {
     }
   };
 
-  // useEffect(() => {
-  //    const intervalId = setInterval(async () => {
-  //      try {
-  //        const response = await axios.get('https://backend.twicks.in/api/getLatestOrder');
-  //        const latestOrder = response.data;
-  //        if (latestOrder && latestOrder.cartId === cartId) {
-  //          setLatestOrder(latestOrder);
-  //          clearInterval(intervalId); // Stop polling once the correct order is found
-  //        }
-  //      } catch (error) {
-  //        console.error('Failed to fetch latest order', error);
-  //      }
-  //    }, 5000); // Poll every 5 seconds
-
-  //    return () => clearInterval(intervalId); // Clean up on component unmount
-  // }, [cartId]);
-
-  if (!latestOrder) {
     return (
-      <Pressable onPress={() => navigation.navigate("Back")}>
-        <Text style={{fontSize:20}}>Hii</Text>
-      </Pressable>
-    );
-  }
-
-  return (
-    <>
-      <Pressable onPress={() => navigation.navigate("Back")}>
-        <Text>Hii</Text>
-      </Pressable>
-      {isLoggedIn && (
-        <SafeAreaView style={styles.homemain}>
-          {/* <ScrollView>
+      <SafeAreaView style={styles.homemain}>
+          <ScrollView>
             <View style={styles.header}>
               <Pressable
                 onPress={() => navigation.navigate("Home")}
@@ -158,7 +117,7 @@ const OrderConfirmationScreen2 = ({ route }) => {
               </Pressable>
             </View>
             <View>
-              {orderStatus === "PROCESSING" || orderStatus === "Packed" ? (
+              {paisa?.orderId?.orderStatus === "PROCESSING" || paisa?.orderId?.orderStatus === "Packed" || paisa?.orderId?.orderStatus === null ? (
                 <>
                   <Text
                     style={{
@@ -183,6 +142,8 @@ const OrderConfirmationScreen2 = ({ route }) => {
                     }}
                   >
                     <Pressable
+                                          onPress={openBrowser}
+
                       style={{
                         backgroundColor: "white",
                         borderRadius: 6,
@@ -274,7 +235,7 @@ const OrderConfirmationScreen2 = ({ route }) => {
                             color: "#BAD8D5",
                           }}
                         >
-                          {data?._id}
+                          {paisa?.orderId?._id}
                         </Text>
                       </View>
                       <View style={{ flexDirection: "row" }}>
@@ -287,7 +248,7 @@ const OrderConfirmationScreen2 = ({ route }) => {
                           <Text style={{ fontWeight: "bold" }}>
                             Order Total :
                           </Text>
-                          ₹ {data?.amount}/-
+                          ₹ {paisa?.orderId?.amount}/-
                         </Text>
                       </View>
                       <View style={{ flexDirection: "row" }}>
@@ -306,7 +267,7 @@ const OrderConfirmationScreen2 = ({ route }) => {
                             color: "#BAD8D5",
                           }}
                         >
-                          {data?.createdAt}
+                          {paisa?.orderId?.createdAt}
                         </Text>
                       </View>
                     </View>
@@ -339,7 +300,7 @@ const OrderConfirmationScreen2 = ({ route }) => {
                           color: "#BAD8D5",
                         }}
                       >
-                        {data?.userName}
+                        {userData?.userName}
                       </Text>
                     </View>
                     <View style={{ flexDirection: "row" }}>
@@ -358,11 +319,12 @@ const OrderConfirmationScreen2 = ({ route }) => {
                           color: "#BAD8D5",
                         }}
                       >
-                        {orderStreet} , {orderCity} , {orderState} ,{" "}
-                        {orderCountry}
+                        {paisa?.orderId?.userAddress?.street} , {paisa?.orderId?.userAddress?.city}{" "}
+                        , {paisa?.orderId?.userAddress?.state} ,{" "}
+                        {paisa?.orderId?.userAddress?.country}
                       </Text>
                     </View>
-                    <View style={{ flexDirection: "row" }}>
+                    {/* <View style={{ flexDirection: "row" }}>
                       <Text
                         style={{
                           fontSize: 17,
@@ -378,9 +340,9 @@ const OrderConfirmationScreen2 = ({ route }) => {
                           color: "#BAD8D5",
                         }}
                       >
-                        {orderPhoneNo}
+                        {latestOrder?.user?.phone}
                       </Text>
-                    </View>
+                    </View> */}
                   </View>
                 </View>
                 <View style={{ padding: 10 }}>
@@ -389,8 +351,9 @@ const OrderConfirmationScreen2 = ({ route }) => {
                   </Text>
                   <View style={{ paddingVertical: 10 }}>
                     <Text style={{ fontSize: 17, color: "#BAD8D5" }}>
-                      {orderStreet} , {orderCity} , {orderState} ,{" "}
-                      {orderCountry}
+                    {paisa?.orderId?.userAddress?.street} , {paisa?.orderId?.userAddress?.city}{" "}
+                        , {paisa?.orderId?.userAddress?.state} ,{" "}
+                        {paisa?.orderId?.userAddress?.country}
                     </Text>
                     <View style={{ flexDirection: "row" }}>
                       <Text
@@ -408,18 +371,16 @@ const OrderConfirmationScreen2 = ({ route }) => {
                           color: "#BAD8D5",
                         }}
                       >
-                        {orderZipCode}
+                        {paisa?.orderId?.userAddress?.zipCode}
                       </Text>
                     </View>
                   </View>
                 </View>
               </View>
             </View>
-          </ScrollView> */}
+          </ScrollView>
         </SafeAreaView>
-      )}
-    </>
-  );
+    );
 };
 
 export default OrderConfirmationScreen2;

@@ -83,7 +83,6 @@ const CartScreen = () => {
           <ScrollView contentContainerStyle={styles.scrollViewContent}>
             <View style={{ flex: 1, padding: 10, alignItems: "flex-start" }}>
               <View style={{ width: "100%" }}>
-                {/* {console.log("fetch", cart?.products[0].units)} */}
                 {cart?.products != 0 ? (
                   cart?.products.map((item, index) => (
                     <CartCard key={item._id} item={item} index={index} />

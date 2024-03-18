@@ -49,6 +49,7 @@ const ShopScreen = ({ route }) => {
     }
   };
 
+  console.log(products)
   // useEffect(() => {
   //   if (selectedHomeCategory) {
   //     const categoryToSelect = selectedHomeCategory;
