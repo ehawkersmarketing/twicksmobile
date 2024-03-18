@@ -206,20 +206,17 @@ const LoginScreen = () => {
   };
 
   useEffect(() => {
-    const handleNavigation = async () => {
-       if (isLoggedIn) {
-         const url = await Linking.getInitialURL();
-         if (url && url.includes("order-confirmation-2")) {
-           navigation.navigate("OrderConfirmation2");
-         } else {
-           navigation.navigate("Back");
-         }
-       }
-    };
-   
-    handleNavigation();
-   }, [isLoggedIn, navigation]);
-   
+    if (isLoggedIn) {
+      console.log("navigated");      
+      navigation.navigate("Back");
+    }
+  }, [isLoggedIn, navigation]);
+
+  if (isLoggedIn == true) {
+    console.log("good");
+  } else if (isLoggedIn == false) {
+    console.log("bad");
+  }
 
   return (
     <>
