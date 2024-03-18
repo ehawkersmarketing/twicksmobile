@@ -52,8 +52,7 @@ const EditScreen = () => {
           onLogOut();
         }
       } catch (err) {
-        console.log("m hu don");
-        console.log(err);
+        console.log("Error while updating the user details",err);
       }
 
       

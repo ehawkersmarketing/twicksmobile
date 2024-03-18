@@ -13,7 +13,13 @@ import {
   Linking,
   Platform,
 } from "react-native";
-import React, { useState, useEffect,useRef , useCallback, useContext } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  useContext,
+} from "react";
 import { useFetch } from "../hooks/api_hook";
 import ProductCard from "../component/ProductCard";
 import HomeCarousel from "../component/HomeCarousel";
@@ -34,18 +40,14 @@ const HomeScreen = ({ navigation }) => {
   const [activeFilter, setActiveFilter] = useState({
     filter: "",
   });
-  const inputRef = useRef(null); 
+  const inputRef = useRef(null);
   const [hasSearched, setHasSearched] = useState(false);
-  const [isSelected, setIsSelected] = useState(false);
-  const [openForSort, setOpenForSort] = useState(false);
   const { data: products, setData: setProducts } = useFetch("/api/allProducts");
   const [searchField, setSearchField] = useState("");
   const [searchProducts, setSearchProducts] = useState([]);
-  const resetSearch = () => {
-    setSearchField('');
-    setHasSearched(false);
- };
-
+  const [user, setUser] = useState(null);
+  const { data: categories } = useFetch("/api/allCategory");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const search = async (text) => {
     if (text !== "") {
@@ -69,12 +71,7 @@ const HomeScreen = ({ navigation }) => {
     }
   }, [searchField]);
 
-  const { data: categories } = useFetch("/api/allCategory");
-
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
   const selectedCategoryHandler = (item) => {
-    console.log(item?.category);
     setSearchField(item?.category);
     setHasSearched(true);
   };
@@ -103,7 +100,6 @@ const HomeScreen = ({ navigation }) => {
     }
   }, [isLoggedIn, navigation]);
 
-  const [user, setUser] = useState(null);
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -135,16 +131,6 @@ const HomeScreen = ({ navigation }) => {
         );
         return true;
       };
-      if (Platform.OS == "ios") {
-        console.log("ios here");
-        //    navigation.dispatch(
-        //     CommonActions.reset({
-        //       index: 0,
-        //       routes: [{ name: 'Home' }],
-        //     })
-        //  );
-      }
-
       const backHandler = BackHandler.addEventListener(
         "hardwareBackPress",
         backAction
@@ -194,25 +180,25 @@ const HomeScreen = ({ navigation }) => {
               </Pressable>
             </View>
             <View style={{ padding: 15 }}>
-            <View style={styles.searchpress}>
-          <TextInput
-            ref={inputRef} // Add this line to attach the ref to the TextInput
-            placeholder="Search"
-            onChangeText={(text) => {
-              setSearchField(text);
-              if (text === "") {
-                setHasSearched(false);
-              } else {
-                setHasSearched(true);
-              }
-            }}
-            value={searchField}
-            style={{
-              marginLeft: 20,
-              width: "100%",
-            }}
-          />
-        </View>
+              <View style={styles.searchpress}>
+                <TextInput
+                  ref={inputRef}
+                  placeholder="Search"
+                  onChangeText={(text) => {
+                    setSearchField(text);
+                    if (text === "") {
+                      setHasSearched(false);
+                    } else {
+                      setHasSearched(true);
+                    }
+                  }}
+                  value={searchField}
+                  style={{
+                    marginLeft: 20,
+                    width: "100%",
+                  }}
+                />
+              </View>
               <View
                 style={{
                   flexDirection: "row",

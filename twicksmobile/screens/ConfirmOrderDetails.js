@@ -4,11 +4,9 @@ import { useFetch } from "../hooks/api_hook";
 import {
   Pressable,
   SafeAreaView,
-  TextInput,
   ScrollView,
   StyleSheet,
   Text,
-  Image,
   View,
   Alert,
   Linking,
@@ -18,40 +16,13 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ConfirmOrderDetails = ({ route }) => {
+
   const { formData, shippmentChargeValue } = route.params;
   const navigation = useNavigation();
   const [total, setTotal] = useState(0);
   const [user, setUser] = useState(null);
+  let { data: cart } = useFetch(`/api/getCartByUser/${user?._id}`);
 
-
-  const handleShouldStartLoadWithRequest = (request) => {
-    // Check if the URL matches your app's deep link pattern
-    if (request.url.startsWith('https://twicks.in/orderConfirmationPage/')) {
-      // Prevent the WebView from navigating to the web
-      return false;
-    }
-    // Allow other navigations
-    return true;
- };
-
- const handleNavigationStateChange = (navState) => {
-  if (navState.url.startsWith('https://twicks.in/orderConfirmationPage/')) {
-    // Extract any necessary data from the URL
-    const orderConfirmationData = navState.url.split('twicks.in//OrderConfirmation')[1];
-
-    // Navigate to the order confirmation page within your app
-    navigation.navigate('OrderConfirmation', { data: orderConfirmationData });
-  }
-};
-
-
-
-
-  useEffect(() => {
-    if (user) {
-    } else {
-    }
-  }, []);
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -66,8 +37,6 @@ const ConfirmOrderDetails = ({ route }) => {
     fetchUser();
   }, []);
 
-  let { data: cart } = useFetch(`/api/getCartByUser/${user?._id}`);
-  console.log(cart);
   useEffect(() => {
     if (cart) {
       let totalPrice = 0;
@@ -109,13 +78,10 @@ const ConfirmOrderDetails = ({ route }) => {
              }
            );
            if (data.success) {
-             url = data?.data; // Assuming this is the URL you want to open
-             handlePress(url); // Call handlePress with the URL
-             console.log(data?.data);
-             // navigation.navigate("OrderConfirmation");
+             url = data?.data; 
+             handlePress(url); 
            }
          } else {
-           console.log("phonepe");
            Alert.alert("phonepe", data.message);
          }
        }
@@ -124,7 +90,6 @@ const ConfirmOrderDetails = ({ route }) => {
     }
    };
    
-
   const handlePress = useCallback(async (data) => {
     const supported = await Linking.canOpenURL(data);
     if (supported) {
@@ -132,50 +97,11 @@ const ConfirmOrderDetails = ({ route }) => {
     } else {
       Alert.alert(`Don't know how to open this URL: ${data}`);
     }
-    // openURL('https://mercury-t2.phonepe.com/transact/pg?token=YTEyMzc2ODZiMWYzYzhhNWEzMDAxNmU0NzcyYTFkZmM1NWIxYjdjOTcwYWI2YzI1YTFjYmMwNDE4MjJkMmM1ODliYWFiZWQ1NDUyNzJlOGNiODAyM2Y1M2M3YWVkMWEyZjA2YzRiODU6ZTg4ZDY5MWQ5NjNkYzE1MjQ2NmM3NmUxYmEwZTM2OTQ');
-
   }, []);
-
-//   useEffect(() => {
-//     // Handle deep links that opened the app
-//     Linking.getInitialURL().then((url) => {
-//       if (url) {
-//         // Parse the URL and navigate to the appropriate screen
-//         const { path, queryParams } = Linking.parse(url);
-//         if (path === 'orderConfirmation') {
-//           const { transactionId, cartId } = queryParams;
-//           // Navigate to the order confirmation screen with the transaction ID and cart ID
-//           console.log('Transaction ID:', transactionId);
-//           console.log('Cart ID:', cartId);
-//           // Implement your navigation logic here
-//         }
-//       }
-//     });
-
-//     // Handle deep links that were opened while the app was already running
-//     Linking.addEventListener('url', (event) => {
-//       const { path, queryParams } = Linking.parse(event.url);
-//       if (path === 'orderConfirmation') {
-//         const { transactionId, cartId } = queryParams;
-//         // Navigate to the order confirmation screen with the transaction ID and cart ID
-//         console.log('Transaction ID:', transactionId);
-//         console.log('Cart ID:', cartId);
-//         // Implement your navigation logic here
-//       }
-//     });
-
-//     return () => {
-//       // Clean up the event listener
-//       Linking.removeEventListener('url', handleUrl);
-//     };
-//  }, []);
-
-
-
 
   return (
     <>
-      <SafeAreaView
+      <SafeAreaView 
         style={{
           flex: 1,
           backgroundColor: "#F5FCFF",

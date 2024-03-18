@@ -105,7 +105,6 @@ const RegisterScreen = () => {
           }
         );
         if (data.success) {
-          console.log(formField.phone , formField.userName)
           const { data } = await axios.post(
             "https://backend.twicks.in/auth/signup",
             {
@@ -114,7 +113,6 @@ const RegisterScreen = () => {
             }
           );
           if (data.success) {
-            console.log("register ")
             AsyncStorage.setItem("auth_token", token);
             AsyncStorage.setItem("user_id", data?.data._id);
 

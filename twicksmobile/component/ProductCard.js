@@ -8,15 +8,19 @@ import {
   Platform,
 } from "react-native";
 import React, { useState, useEffect } from "react";
-import { useFetch } from "../hooks/api_hook";
-import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Entypo } from "@expo/vector-icons";
 
-
 const ProductCard = ({ item, index }) => {
+
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigation = useNavigation();
+  const fontSize = Platform.select({
+    ios: 20,
+    android: 17,
+  });
+
   useEffect(() => {
     const checkToken = async () => {
       try {
@@ -34,21 +38,6 @@ const ProductCard = ({ item, index }) => {
 
     checkToken();
   }, [navigation]);
- console.log("item=====",item)
-//   const safeReviews = reviews?.reviews || [];
-//   console.log("spici",safeReviews)
-// const averageRating =safeReviews.length > 0
-//     ? Math.round(safeReviews.reduce((sum, review) => sum + review.rating, 0) / safeReviews.length)
-//     : 0;
-//     console.log(averageRating)
-    // console.log(productReview)
-  const navigation = useNavigation();
-  const fontSize = Platform.select({
-    ios: 20,
-    android: 17,
-  });
-
-  // console.log("dfvefvsefv",item)
 
   return (
     <>

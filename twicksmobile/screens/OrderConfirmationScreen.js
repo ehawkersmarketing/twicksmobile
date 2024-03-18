@@ -94,31 +94,10 @@ const OrderConfirmationScreen = ({ item, route, index }) => {
   const merchantTransactionId = "TAFI163xf2v1zltqqn4hn"
   const cartId= "65f1a8437eea5bf76aa5a80a"
   let { data: trandata} = useFetch(`http://localhost:8080/api/pay/checkStatus?transactionId=${merchantTransactionId}&cartId=${cartId}`);
-console.log(trandata)
 
-  // const cancelOrderHandler = async () => {
-  //   try {
-  //     const data = await axios.post(
-  //       "https://backend.twicks.in/api/ship/cancelRequest",
-  //       {
-  //         orderId: orderId,
-  //       }
-  //     );
-  //     if (data.data.success) {
-  //       Alert.alert("order Cancelled successfully")
 
-  //     } else {
-  //       Alert.alert("Order Cancelled Successfully");
-
-  //       console.log("nahi hua");
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
+  
   const cancelOrderHandler = async () => {
-    console.log("me aagya");
     try {
       const data = await axios.post(
         "https://backend.twicks.in/api/ship/cancelRequest",
@@ -131,22 +110,14 @@ console.log(trandata)
           },
         }
       );
-      console.log("api called", data?.data.success);
       if (data?.data?.success) {
         navigation.navigate("Order");
       } else {
         console.log("error", data.data.error);
       }
     } catch (error) {
-      console.log("me hu catch error", error);
+      console.log(" catch error", error);
       Alert.alert(error.message);
-      // toast.error(`${error.message}`, {
-      //   position: "bottom-right",
-      //   autoClose: 8000,
-      //   pauseOnHover: true,
-      //   draggable: true,
-      //   theme: "dark",
-      // });
     }
   };
 
