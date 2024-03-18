@@ -29,7 +29,7 @@ const EditScreen = () => {
   }, []);
 
   const [inputHandler, setInputHandler] = useState({
-    id: userData._id,
+    id: userData?._id,
     userName: "",
     email: "",
   });

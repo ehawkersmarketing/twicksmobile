@@ -33,9 +33,7 @@ const SingleShopScreen = ({ route }) => {
   const [rated, setRated] = useState(0);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userData, setUserData] = useState({});
-
-  const [refreshKey, setRefreshKey] = useState(0);
-
+  const [trigger, setTrigger] = useState(false);
   const [inputHandler, setInputHandler] = useState({
     reviewContent: " ",
     rating: " ",
@@ -52,8 +50,12 @@ const SingleShopScreen = ({ route }) => {
     productQuantity,
     productUnits,
   } = route.params;
-  const { data: reviews = [], setData: setReviews } = useFetch(`/api/getReviewById/${productId}`)
+  const [refreshing, setRefreshing] = useState(false);
 
+  const { data: reviews = [], setData: setReviews } = useFetch(
+    `/api/getReviewById/${productId}`
+  );
+  // console.log("the reviews found are",reviews)
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -69,6 +71,15 @@ const SingleShopScreen = ({ route }) => {
   }, []);
 
   useEffect(() => {
+    // console.log("Updated reviews:", reviews);
+    console.log(refreshing);
+  }, [reviews]);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+  }, []);
+
+  useEffect(() => {
     if (cart) {
       let totalPrice = 0;
       for (let i = 0; i < cart.products.length; i++) {
@@ -78,50 +89,70 @@ const SingleShopScreen = ({ route }) => {
       setTotal(totalPrice);
     }
   }, [cart]);
+  const safeReviews = reviews?.reviews || [];
+  console.log("spici",safeReviews)
+const averageRating =safeReviews.length > 0
+    ? Math.round(safeReviews.reduce((sum, review) => sum + review.rating, 0) / safeReviews.length)
+    : 0;
+    console.log(averageRating)
+    console.log(productReview)
 
-  // const fetchReviews = async (req, res) => {
+  // const fetchReviews = async () => {
   //   try {
-  //     console.log("good");
+  //     setRefreshing(true);
   //     const response = await axios.get(
   //       `https://backend.twicks.in/api/getReviewById/${productId}`
   //     );
-  //     console.log("ckd");
-  //     console.log(response.data.data.reviews);
-  //     if (response.data.data.reviews) {
-  //       setReviews(response.data.data.reviews);
+  //     console.log(response.data.data);
+  //     if (response.data && response.data.data.reviews) {
+  //       const formattedReviews = response.data.data.reviews.map((review) => ({
+  //         ...review,
+  //         // Assuming userId is an object with a userName property
+  //         userId: review.userId.userName, // Adjust this line based on the actual structure of userId
+  //       }));
+  //       console.log(formattedReviews);
+  //       setReviews(formattedReviews);
+  //       console.log(reviews);
   //     } else {
   //       console.error("No reviews found in the response.");
   //     }
   //   } catch (error) {
-  //     console.error("Error fetching got reviews:", error.message);
+  //     console.error("Error fetching reviews:", error.message);
+  //   } finally {
+  //     setRefreshing(false);
   //   }
   // };
-  
-   const ReviewAddHandler = async (e) => {
+
+  const ReviewAddHandler = async (e) => {
     e.preventDefault();
     if (!user) {
-       alert("You can't Add review until you are logged in");
+      alert("You can't Add review until you are logged in");
     } else {
-       const { reviewContent, rating } = inputHandler;
-       try {
-         const { data } = await axios.post("https://backend.twicks.in/api/addReview", {
-           reviewContent: reviewContent,
-           rating: rating, // Ensure you're using the correct variable name
-           productId: productId,
-           userId: userData?._id,
-         });
-         if (data.success) {
-           setInputHandler({
-             ...inputHandler,
-             reviewContent: "", // Clear the input
-             rating: "", // Clear the rating
-           });
-           reloadScreen()         }
-       } catch (error) {
-         console.error("Error adding review:", error);
-       }
+      const { reviewContent, rating } = inputHandler;
+      try {
+        const { data } = await axios.post(
+          "https://backend.twicks.in/api/addReview",
+          {
+            reviewContent: reviewContent,
+            rating: rated,
+            productId: productId,
+            userId: userData?._id,
+          }
+        );
+        if (data.success) {
+          setInputHandler({
+            ...inputHandler,
+            reviewContent: "",
+            rating: "",
+          });
+          // await fetchReviews(); // Await the completion of fetchReviews
+          navigation.navigate("Back");
+        }
+      } catch (error) {
+        console.error("Error adding review:", error);
+      }
     }
-   };
+  };
 
   useEffect(() => {
     if (cart) {
@@ -244,8 +275,13 @@ const SingleShopScreen = ({ route }) => {
           }}
         >
           <ScrollView
-
-
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+                tintColor="#28635D" // Customize the color of the refresh indicator
+              />
+            }
             style={{ backgroundColor: "white", width: "100%", height: "100%" }}
           >
             <View style={{ paddingBottom: 25, backgroundColor: "#28635D" }}>
@@ -278,7 +314,7 @@ const SingleShopScreen = ({ route }) => {
                   <View style={styles.rating}>
                     {Array.from({ length: 5 }).map((_, i) => (
                       <Text key={i}>
-                        {i < productRating ? (
+                        {i < averageRating ? (
                           <View>
                             <Entypo name="star" size={17} color="#FFBB56" />
                           </View>
@@ -294,6 +330,7 @@ const SingleShopScreen = ({ route }) => {
                       </Text>
                     ))}
                   </View>
+
                   <Text style={styles.review}>{productReview} Reviews</Text>
                 </View>
               </View>
@@ -357,9 +394,8 @@ const SingleShopScreen = ({ route }) => {
                     paddingTop: 7,
                   }}
                 >
-
-                  <Text style={{flexDirection:"row"}}>
-                  {Array.from({ length: 5 }).map((_, i) => (
+                  <Text style={{ flexDirection: "row" }}>
+                    {Array.from({ length: 5 }).map((_, i) => (
                       <Icon
                         key={i}
                         name={i < rated ? "star" : "star-o"}
@@ -418,9 +454,12 @@ const SingleShopScreen = ({ route }) => {
               </View>
             </View>
 
-            {reviews?.reviews?.map((item) => {
+            {reviews?.reviews?.map((item, index) => {
               return (
-                <View style={{ paddingVertical: 10, paddingHorizontal: 20 }}>
+                <View
+                  key={index}
+                  style={{ paddingVertical: 10, paddingHorizontal: 20 }}
+                >
                   <View
                     style={{
                       flexDirection: "row",
@@ -461,7 +500,6 @@ const SingleShopScreen = ({ route }) => {
                 </View>
               );
             })}
-
           </ScrollView>
 
           {inCart ? (
