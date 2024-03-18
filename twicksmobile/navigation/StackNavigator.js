@@ -1,9 +1,8 @@
 import { StyleSheet } from "react-native";
-import React , {useState} from "react";
+import React, { useState } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-
 import { NavigationContainer } from "@react-navigation/native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import HomeScreen from "../screens/HomeScreen";
@@ -24,7 +23,7 @@ import LegalScreen from "../screens/LegalScreen";
 import EditScreen from "../screens/EditScreen";
 import OrderScreen from "../screens/OrderScreen";
 import ConfirmOrderDetails from "../screens/ConfirmOrderDetails";
-
+import OrderConfirmationScreen2 from "../screens/OrderConfirmationScreen2";
 import { Entypo } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
@@ -36,22 +35,36 @@ import { useEffect } from "react";
 import { Linking } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
+const linking = {
+  prefixes: ["exp://192.168.1.11:8081/"],
+  config: {
+    screens: {
+      ConfirmDetails: "confirm-details",
+      Login: "login",
+      Register: "register",
+      Account: "account",
+      Profile: "profile",
+      ReturnAndRefund: "return-and-refund",
+      Cart: "cart",
+      Product: "product",
+      OrderConfirmation: "order-confirmation",
+      OrderConfirmation2: "order-confirmation-2",
+      Checkout: "checkout",
+      PrivacyPolicy: "privacy-policy",
+      SingleService: "single-service",
+      TermAndCondition: "term-and-condition",
+      Legal: "legal",
+      Edit: "edit",
+      Order: "order",
+    },
+  },
+};
+
 const StackNavigator = () => {
   const navigation = useNavigation;
   const Stack = createNativeStackNavigator();
   const Tab = createBottomTabNavigator();
   const Top = createMaterialTopTabNavigator();
-  let tokenValue;
-  AsyncStorage.getItem("auth_token")
-    .then((token) => {
-      console.log(token);
-      tokenValue = token;
-      // This will log the actual token value
-    })
-    .catch((error) => {
-      console.error("Error retrieving token: ", error);
-    });
-
   function TopTabs() {
     return (
       <Top.Navigator>
@@ -164,17 +177,15 @@ const StackNavigator = () => {
     );
   }
   return (
-    <NavigationContainer>
-
-       <Stack.Navigator>
-
-       <Stack.Screen
-         name="Login"
+    <NavigationContainer linking={linking}>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Login"
           component={LoginScreen}
           options={{ headerShown: false }}
         />
-      
-            <Stack.Screen
+
+        <Stack.Screen
           name="Register"
           component={RegisterScreen}
           options={{ headerShown: false }}
@@ -191,11 +202,6 @@ const StackNavigator = () => {
           options={{ headerShown: true }}
         />
 
-        <Stack.Screen
-          name="Profile"
-          component={ProfileScreen}
-          options={{ headerShown: true }}
-        />
         <Stack.Screen
           name="ReturnAndRefund"
           component={ReturnAndRefundScreen}
@@ -216,6 +222,11 @@ const StackNavigator = () => {
           name="OrderConfirmation"
           component={OrderConfirmationScreen}
           options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="OrderConfirmation2"
+          component={OrderConfirmationScreen2}
+          options={{ headerShown: true }}
         />
         <Stack.Screen
           name="Checkout"

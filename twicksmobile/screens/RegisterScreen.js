@@ -79,18 +79,12 @@ const RegisterScreen = () => {
           }
         }
       } else {
-        Alert.alert(
-          "Error",
-          "Please enter a valid phone number",
-          { cancelable: false }
-        );
+        Alert.alert("Error", "Please enter a valid phone number", {
+          cancelable: false,
+        });
       }
     } catch (error) {
-      Alert.alert(
-        "Error",
-        error.response.data.message,
-        { cancelable: false }
-      );
+      Alert.alert("Error", error.response.data.message, { cancelable: false });
     }
   };
 
@@ -105,51 +99,36 @@ const RegisterScreen = () => {
           }
         );
         if (data.success) {
+          console.log(formField.phone, formField.userName);
           const { data } = await axios.post(
             "https://backend.twicks.in/auth/signup",
             {
               phone: formField.phone,
               userName: formField.userName,
-              email: formField.email,
             }
           );
           if (data.success) {
+            console.log("register ");
             AsyncStorage.setItem("auth_token", token);
-            AsyncStorage.setItem("user_id", data.data._id);
+            AsyncStorage.setItem("user_id", data?.data._id);
 
             Alert.alert(
               "Success",
-              "Successfully registered",
-              { cancelable: false }
+              "Successfully registered"
+              // { cancelable: false }
             );
-            navigation.navigate("Home");
+            navigation.navigate("Back");
           } else {
-            Alert.alert(
-              "Error",
-              data.message,
-              { cancelable: false }
-            );
+            Alert.alert("Error", data.message, { cancelable: false });
           }
         } else {
-          Alert.alert(
-            "Error",
-            data.message,
-            { cancelable: false }
-          );
+          Alert.alert("Error", data.message, { cancelable: false });
         }
       } else {
-        Alert.alert(
-          "Error",
-          "Please enter a valid OTP",
-          { cancelable: false }
-        );
+        Alert.alert("Error", "Please enter a valid OTP", { cancelable: false });
       }
     } catch (error) {
-      Alert.alert(
-        "Error",
-        error.response.data.error,
-        { cancelable: false }
-      );
+      Alert.alert("Error", error.response.data.error, { cancelable: false });
     }
   };
 
@@ -160,21 +139,6 @@ const RegisterScreen = () => {
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <SafeAreaView style={styles.homemain}>
-          <View
-            style={{
-              backgroundColor: "#FAFAFA",
-              alignItems: "center",
-              height: 60,
-              justifyContent: "center",
-            }}
-          >
-            <Pressable style={styles.headerlogo}>
-              <Image
-                style={{ width: 130, height: 48 }}
-                source={require("../assets/logo.png")}
-              />
-            </Pressable>
-          </View>
           <View
             style={{
               flex: 1,
@@ -220,6 +184,7 @@ const RegisterScreen = () => {
                     }
                     value={formField.phone}
                     placeholder="Enter your phone number"
+                    placeholderTextColor="gray"
                     keyboardType="phone-pad"
                     maxLength={10}
                   />
@@ -245,6 +210,7 @@ const RegisterScreen = () => {
                   onChangeText={(value) => handleChangeFormField("otp", value)}
                   value={formField.otp}
                   placeholder="Enter OTP"
+                  placeholderTextColor="gray"
                   keyboardType="numeric"
                 />
               </View>
@@ -253,10 +219,11 @@ const RegisterScreen = () => {
                   <TextInput
                     style={styles.input}
                     onChangeText={(value) =>
-                      handleChangeFormField("name", value)
+                      handleChangeFormField("userName", value)
                     }
-                    value={formField.name}
+                    value={formField.userName}
                     placeholder="Enter your name"
+                    placeholderTextColor="gray"
                   />
                 </View>
               </View>

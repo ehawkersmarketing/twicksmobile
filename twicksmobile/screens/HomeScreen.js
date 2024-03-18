@@ -13,32 +13,39 @@ import {
   Linking,
   Platform,
 } from "react-native";
-import React, { useState, useEffect, useCallback, useContext } from "react";
+import React, { useState, useEffect,useRef , useCallback, useContext } from "react";
 import { useFetch } from "../hooks/api_hook";
 import ProductCard from "../component/ProductCard";
 import HomeCarousel from "../component/HomeCarousel";
 import CategoryComponent from "../component/CategoryComponent";
 import { Ionicons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
-import { CommonActions } from '@react-navigation/native';
+import { CommonActions } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import { useRoute } from "@react-navigation/native";
 import { useNavigationState } from "@react-navigation/native";
 import { useFocusEffect } from "@react-navigation/native";
+// Add this line to create a ref
 
 const HomeScreen = ({ navigation }) => {
   const [open, setOpen] = useState(false);
   const [activeFilter, setActiveFilter] = useState({
     filter: "",
   });
+  const inputRef = useRef(null); 
   const [hasSearched, setHasSearched] = useState(false);
   const [isSelected, setIsSelected] = useState(false);
   const [openForSort, setOpenForSort] = useState(false);
   const { data: products, setData: setProducts } = useFetch("/api/allProducts");
   const [searchField, setSearchField] = useState("");
   const [searchProducts, setSearchProducts] = useState([]);
+  const resetSearch = () => {
+    setSearchField('');
+    setHasSearched(false);
+ };
+
 
   const search = async (text) => {
     if (text !== "") {
@@ -68,7 +75,8 @@ const HomeScreen = ({ navigation }) => {
 
   const selectedCategoryHandler = (item) => {
     console.log(item?.category);
-    navigation.navigate("Shop", { selectedHomeCategory: item?.category });
+    setSearchField(item?.category);
+    setHasSearched(true);
   };
 
   useEffect(() => {
@@ -91,17 +99,10 @@ const HomeScreen = ({ navigation }) => {
 
   useEffect(() => {
     if (isLoggedIn) {
-      console.log("navigated")
-      // Navigate back to the previous screen or a specific screen named "Back"
-      navigation.navigate('Home');
+      navigation.navigate("Home");
     }
- }, [isLoggedIn, navigation]);
-  
-  if(isLoggedIn == true){
-    console.log("good")
-  }else if(isLoggedIn == false){
-    console.log("bad")
-  }
+  }, [isLoggedIn, navigation]);
+
   const [user, setUser] = useState(null);
   useEffect(() => {
     const fetchUser = async () => {
@@ -116,7 +117,6 @@ const HomeScreen = ({ navigation }) => {
 
     fetchUser();
   }, []);
-
 
   useFocusEffect(
     React.useCallback(() => {
@@ -135,14 +135,14 @@ const HomeScreen = ({ navigation }) => {
         );
         return true;
       };
-      if(Platform.OS=='ios'){
-         console.log("ios here")
-      //    navigation.dispatch(
-      //     CommonActions.reset({
-      //       index: 0,
-      //       routes: [{ name: 'Home' }],
-      //     })
-      //  );
+      if (Platform.OS == "ios") {
+        console.log("ios here");
+        //    navigation.dispatch(
+        //     CommonActions.reset({
+        //       index: 0,
+        //       routes: [{ name: 'Home' }],
+        //     })
+        //  );
       }
 
       const backHandler = BackHandler.addEventListener(
@@ -159,6 +159,7 @@ const HomeScreen = ({ navigation }) => {
       {isLoggedIn && (
         <SafeAreaView key={user?._id} style={styles.homemain}>
           <ScrollView>
+
             <View
               style={{
                 flex: 1,
@@ -194,24 +195,26 @@ const HomeScreen = ({ navigation }) => {
               </Pressable>
             </View>
             <View style={{ padding: 15 }}>
-              <View style={styles.searchpress}>
-                <TextInput
-                  placeholder="Search"
-                  onChangeText={(text) => {
-                    setSearchField(text);
-                    if (text === "") {
-                      setHasSearched(false);
-                    } else {
-                      setHasSearched(true);
-                    }
-                  }}
-                  value={searchField}
-                  style={{
-                    marginLeft: 20,
-                    width: "100%",
-                  }}
-                />
-              </View>
+            <View style={styles.searchpress}>
+          <TextInput
+            ref={inputRef} 
+            placeholder="Search"
+            placeholderTextColor="gray"
+            onChangeText={(text) => {
+              setSearchField(text);
+              if (text === "") {
+                setHasSearched(false);
+              } else {
+                setHasSearched(true);
+              }
+            }}
+            value={searchField}
+            style={{
+              marginLeft: 20,
+              width: "100%",
+            }}
+          />
+        </View>
               <View
                 style={{
                   flexDirection: "row",
@@ -229,7 +232,23 @@ const HomeScreen = ({ navigation }) => {
                       ))}
                     </>
                   ) : (
-                    <Text>No Results Found</Text>
+                    <View
+                      style={{
+                        flex: 1,
+                        paddingTop: "10%",
+                        backgroundColor: "FAFAFABC",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <Text
+                        style={{
+                          fontSize: 20,
+                        }}
+                      >
+                        No Results Found
+                      </Text>
+                    </View>
                   )
                 ) : null}
               </View>

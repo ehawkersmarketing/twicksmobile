@@ -24,7 +24,8 @@
         "foregroundImage": "./assets/logo.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "in.twicks.www"
+      "package":"in.twicks"
+      
     },
     "web": {
       "favicon": "./assets/logo.png"
