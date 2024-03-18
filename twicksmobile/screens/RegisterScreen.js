@@ -111,12 +111,14 @@ const RegisterScreen = () => {
             console.log("register ");
             AsyncStorage.setItem("auth_token", token);
             AsyncStorage.setItem("user_id", data?.data._id);
+            AsyncStorage.setItem("user_id", data?.data._id);
 
             Alert.alert(
               "Success",
               "Successfully registered"
               // { cancelable: false }
             );
+            navigation.navigate("Back");
             navigation.navigate("Back");
           } else {
             Alert.alert("Error", data.message, { cancelable: false });

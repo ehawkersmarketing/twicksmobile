@@ -30,8 +30,8 @@ const LoginScreen = () => {
   const { data: users } = useFetch("/auth/users");
   const [token, setToken] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  useEffect(() => {
-    const checkTokenAndNavigate = async () => {
+  useEffect( () => {
+    async function checkTokenAndNavigate() {
       try {
         const token = await AsyncStorage.getItem("auth_token");
         if (token !== null) {
@@ -39,7 +39,8 @@ const LoginScreen = () => {
           const url = await Linking.getInitialURL();
           if (url && url.includes("order-confirmation-2")) {
             // Navigate to OrderConfirmation screen
-            navigation.navigate("OrderConfirmation2");
+           navigation.navigate("OrderConfirmation2");
+          
           } else {
             // Navigate to Back screen
             navigation.navigate("Back");
@@ -63,7 +64,7 @@ const LoginScreen = () => {
     setFormField({ ...formField, [name]: value });
   };
 
-  useEffect(() => {
+  useEffect( () => {
     if (isLoggedIn) {
       // Perform any actions needed to "reload" the screen
       // For example, resetting form fields
@@ -204,17 +205,21 @@ const LoginScreen = () => {
     }
   };
 
-  useEffect(async() => {
-    if (isLoggedIn) {
-      const url = await Linking.getInitialURL();
-      if (url && url.includes("order-confirmation-2")) {
-        // Navigate to OrderConfirmation screen
-        navigation.navigate("OrderConfirmation2");
-      } else {
-        // Navigate to Back screen
-        navigation.navigate("Back");
-      }    }
-  }, [isLoggedIn, navigation]);
+  useEffect(() => {
+    const handleNavigation = async () => {
+       if (isLoggedIn) {
+         const url = await Linking.getInitialURL();
+         if (url && url.includes("order-confirmation-2")) {
+           navigation.navigate("OrderConfirmation2");
+         } else {
+           navigation.navigate("Back");
+         }
+       }
+    };
+   
+    handleNavigation();
+   }, [isLoggedIn, navigation]);
+   
 
   return (
     <>
