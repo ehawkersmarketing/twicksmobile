@@ -16,7 +16,6 @@ import { openBrowserAsync } from "expo-web-browser";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ConfirmOrderDetails = ({ route }) => {
-
   const { formData, shippmentChargeValue } = route.params;
   const navigation = useNavigation();
   const [total, setTotal] = useState(0);
@@ -52,45 +51,35 @@ const ConfirmOrderDetails = ({ route }) => {
   const handleOrderFunction = async (event) => {
     event.preventDefault();
     try {
-       if (shippmentChargeValue === undefined) {
-         alert("Submit address details and calculate shipment before placing order");
-       } else {
-         const { data } = await axios.post(
-           "https://backend.twicks.in/api/putUserAddress",
-           {
-             userId: user?._id,
-             userName: formData.userName,
-             street: formData.Address,
-             landmark: formData.Address2,
-             email: formData.Email,
-             city: formData.City,
-             country: formData.Country,
-             state: formData.State,
-             zipCode: formData.PinCode,
-           }
-         );
-         if (data.success) {
-           const totalPayAmount = total + shippmentChargeValue;
-           const { data } = await axios.post(
-             "https://backend.twicks.in/api/pay/phonePePayment",
-             {
-               amount: totalPayAmount,
-               cartId: cart?._id,
-             }
-           );
-           if (data.success) {
-             url = data?.data; 
-             handlePress(url); 
-           }
-         } else {
-           Alert.alert("phonepe", data.message);
-         }
-       }
-    } catch (error) {
+      if (shippmentChargeValue === undefined) {
+        alert(
+          "Submit address details and calculate shipment before placing order"
+        );
+      } else {
+          const totalPayAmount = total + shippmentChargeValue;
+          const { data } = await axios.post(
+            "https://backend.twicks.in/api/pay/phonePePayment",
+            {
+              amount: totalPayAmount,
+              cartId: cart?._id,
+              street: formData.Address,
+              landmark: formData.Address2,
+              city: formData.City,
+              country: formData.Country,
+              state: formData.State,
+              zipCode: formData.PinCode,
+            }
+          );
+          if (data.success) {
+            url = data?.data;
+            handlePress(url);
+          }
+        }
+      }
+     catch (error) {
       console.error("Failed to submit form", error);
     }
-   };
-   
+  };
 
   const handlePress = useCallback(async (data) => {
     const supported = await Linking.canOpenURL(data);
@@ -103,7 +92,7 @@ const ConfirmOrderDetails = ({ route }) => {
 
   return (
     <>
-      <SafeAreaView 
+      <SafeAreaView
         style={{
           flex: 1,
           backgroundColor: "#F5FCFF",
@@ -268,7 +257,6 @@ const ConfirmOrderDetails = ({ route }) => {
               flex: 1,
             }}
           >
-
             <Text style={{ color: "white", fontSize: 20 }}>Place Order</Text>
           </Pressable>
         </View>
