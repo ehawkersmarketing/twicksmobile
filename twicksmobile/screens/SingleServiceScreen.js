@@ -21,6 +21,7 @@ const SingleServiceScreen = () => {
   const [user, setUser] = useState(null);
   const route = useRoute();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  
   useEffect(() => {
     const checkToken = async () => {
       try {
@@ -38,6 +39,7 @@ const SingleServiceScreen = () => {
 
     checkToken();
   }, [navigate]);
+
   const { serviceId, serviceName, serviceImage, serviceDetais } = route.params;
 
   useEffect(() => {
@@ -68,7 +70,7 @@ const SingleServiceScreen = () => {
         name: user.userName,
         mobile: user.phone,
         email: user.email,
-        message: `Hello, I am interested in [${user.userData}]`,
+        message: `Hello, I am interested in [${serviceName}]`,
       }
     );
     if (data.success) {
@@ -87,7 +89,7 @@ const SingleServiceScreen = () => {
         name: user.userName,
         mobile: user.phone,
         email: user.email,
-        message: `Hello, I am interested in [${user.userName}]`,
+        message: `Hello, I am interested in [${serviceName}]`,
       }
     );
     if (data.data.data.status) {
