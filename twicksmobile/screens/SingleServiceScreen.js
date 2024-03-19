@@ -6,9 +6,11 @@ import {
   Text,
   View,
   Pressable,
+  Alert,
 } from "react-native";
-import React,{useState,useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
+import axios from 'axios'
 
 import { useRoute } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
@@ -16,7 +18,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const SingleServiceScreen = () => {
   const navigate = useNavigation();
-
+  const [user, setUser] = useState(null);
   const route = useRoute();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   useEffect(() => {
@@ -37,6 +39,63 @@ const SingleServiceScreen = () => {
     checkToken();
   }, [navigate]);
   const { serviceId, serviceName, serviceImage, serviceDetais } = route.params;
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const userString = await AsyncStorage.getItem("user");
+        const userData = JSON.parse(userString);
+        setUser(userData);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUser();
+  }, []);
+
+  // console.log("user", user);
+
+  const submitData = () => {
+    submitEnquiry();
+    sendToWhatsapp();
+  };
+
+  const submitEnquiry = async (event) => {
+    const { data } = await axios.post(
+      "https://backend.twicks.in/api/generateEnquiry",
+      {
+        name: user.userName,
+        mobile: user.phone,
+        email: user.email,
+        message: `Hello, I am interested in [${user.userData}]`,
+      }
+    );
+    if (data.success) {
+      Alert.alert(
+        "Twicks ,Thankyou for contacting TAFI - Twicks Agro Farm Industries"
+      );
+    } else {
+      console.log("failed submit");
+    }
+  };
+
+  const sendToWhatsapp = async (event) => {
+    const { data } = await axios.post(
+      "https://backend.twicks.in/api/sendToWhatsapp",
+      {
+        name: user.userName,
+        mobile: user.phone,
+        email: user.email,
+        message: `Hello, I am interested in [${user.userName}]`,
+      }
+    );
+    if (data.data.data.status) {
+      console.log("Data send successfully");
+    } else {
+      console.log("failed submit");
+    }
+  };
 
   return (
     <>
@@ -62,9 +121,7 @@ const SingleServiceScreen = () => {
             </View>
 
             <View style={{ padding: 10 }}>
-              <Text style={{ fontSize: 35 }}>
-                {serviceName}
-              </Text>
+              <Text style={{ fontSize: 35 }}>{serviceName}</Text>
               <View style={styles.line}></View>
 
               <Text style={{ fontSize: 20, textAlign: "justify" }}>
@@ -85,6 +142,7 @@ const SingleServiceScreen = () => {
 
             <View>
               <Pressable
+                onPress={submitData}
                 style={{
                   backgroundColor: "#28635D",
                   padding: 14,
