@@ -16,6 +16,7 @@ import React, { useState, useEffect } from "react";
 import { useFetch } from "../hooks/api_hook";
 import * as WebBrowser from "expo-web-browser";
 import { openBrowserAsync } from "expo-web-browser";
+import { FontAwesome } from "@expo/vector-icons";
 
 const OrderConfirmationScreen2 = ({ route }) => {
   const navigation = useNavigation();
@@ -61,13 +62,13 @@ const OrderConfirmationScreen2 = ({ route }) => {
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        const data = await response.json();                                                               
+        const data = await response.json();
         setTransaction(data);
       } catch (error) {
         console.error("There was a problem with your fetch operation:", error);
         setError(error.message);
       }
-    }; 
+    };
     fetchTransaction();
   }, [merchantTransactionId]);
 
@@ -77,7 +78,7 @@ const OrderConfirmationScreen2 = ({ route }) => {
       const data = await axios.post(
         "https://backend.twicks.in/api/ship/cancelRequest",
         {
-          orderId:transaction?.data?.orderId?._id,
+          orderId: transaction?.data?.orderId?._id,
         },
         {
           headers: {
@@ -137,7 +138,7 @@ const OrderConfirmationScreen2 = ({ route }) => {
                   flex: 1,
                   gap: 10,
                 }}
-              > 
+              >
                 <Pressable
                   onPress={openBrowser}
                   style={{
@@ -201,161 +202,189 @@ const OrderConfirmationScreen2 = ({ route }) => {
           )}
         </View>
         <View style={{}}>
-          <View style={{ backgroundColor: "#437E78", borderRadius: 13 }}>
-            <View style={{ padding: 10 }}>
-              <Text style={{ color: "white", fontSize: 25 }}>
-                Order Details:
-              </Text>
+          {transaction?.data?.orderId?.orderStatus === "PROCESSING" ||
+          transaction?.data?.orderId?.orderStatus === "Packed" ? (
+            <View style={{ backgroundColor: "#437E78", borderRadius: 13 }}>
+              <View style={{ padding: 10 }}>
+                <Text style={{ color: "white", fontSize: 25 }}>
+                  Order Details:
+                </Text>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    flexWrap: "wrap",
+                    paddingVertical: 10,
+                  }}
+                >
+                  <View style={{ flex: 1 }}>
+                    <View style={{ flexDirection: "row" }}>
+                      <Text
+                        style={{
+                          fontSize: 17,
+                          color: "#BAD8D5",
+                          fontWeight: "bold",
+                        }}
+                      >
+                        Order ID:
+                      </Text>
+                      <Text
+                        style={{
+                          fontSize: 17,
+                          color: "#BAD8D5",
+                        }}
+                      >
+                        {transaction?.data?.orderId?._id}
+                      </Text>
+                    </View>
+                    <View style={{ flexDirection: "row" }}>
+                      <Text
+                        style={{
+                          fontSize: 17,
+                          color: "#BAD8D5",
+                        }}
+                      >
+                        <Text style={{ fontWeight: "bold" }}>
+                          Order Total :
+                        </Text>
+                        ₹ {transaction?.data?.amount}/-
+                      </Text>
+                    </View>
+                    <View style={{ flexDirection: "row" }}>
+                      <Text
+                        style={{
+                          fontSize: 17,
+                          color: "#BAD8D5",
+                          fontWeight: "bold",
+                        }}
+                      >
+                        Date:
+                      </Text>
+                      <Text
+                        style={{
+                          fontSize: 17,
+                          color: "#BAD8D5",
+                        }}
+                      >
+                        {transaction?.data?.date}
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+              </View>
               <View
                 style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  flexWrap: "wrap",
-                  paddingVertical: 10,
+                  backgroundColor: "#3F8B64",
+                  padding: 10,
+                  borderRadius: 13,
                 }}
               >
-                <View style={{ flex: 1 }}>
-                  <View style={{ flexDirection: "row" }}>
-                    <Text
-                      style={{
-                        fontSize: 17,
-                        color: "#BAD8D5",
-                        fontWeight: "bold",
-                      }}
-                    >
-                      Order ID:
-                    </Text>
-                    <Text
-                      style={{
-                        fontSize: 17,
-                        color: "#BAD8D5",
-                      }}
-                    >
-                      {transaction?.data?.orderId?._id}
-                    </Text>
-                  </View>
-                  <View style={{ flexDirection: "row" }}>
-                    <Text
-                      style={{
-                        fontSize: 17,
-                        color: "#BAD8D5",
-                      }}
-                    >
-                      <Text style={{ fontWeight: "bold" }}>Order Total :</Text>₹{" "}
-                      {transaction?.data?.amount}/-
-                    </Text>
-                  </View>
-                  <View style={{ flexDirection: "row" }}>
-                    <Text
-                      style={{
-                        fontSize: 17,
-                        color: "#BAD8D5",
-                        fontWeight: "bold",
-                      }}
-                    >
-                      Date:
-                    </Text>
-                    <Text
-                      style={{
-                        fontSize: 17,
-                        color: "#BAD8D5",
-                      }}
-                    >
-                      {transaction?.data?.date}
-                    </Text>
-                  </View>
-                </View>
-              </View>
-            </View>
-            <View
-              style={{
-                backgroundColor: "#3F8B64",
-                padding: 10,
-                borderRadius: 13,
-              }}
-            >
-              <Text style={{ color: "white", fontSize: 25 }}>
-                Shipping Details:
-              </Text>
-              <View style={{ paddingVertical: 10 }}>
-                <View style={{ flexDirection: "row" }}>
-                  <Text
-                    style={{
-                      fontSize: 17,
-                      color: "#BAD8D5",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    Name :
-                  </Text>
-                  <Text
-                    style={{
-                      fontSize: 17,
-                      color: "#BAD8D5",
-                    }}
-                  >
-                    {userData?.userName}
-                  </Text>
-                </View>
-                <View style={{ flexDirection: "row" }}>
-                  <Text
-                    style={{
-                      fontSize: 17,
-                      color: "#BAD8D5",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    Address :
-                  </Text>
-                  <Text
-                    style={{
-                      fontSize: 17,
-                      color: "#BAD8D5",
-                    }}
-                  >
-                     {transaction?.data?.orderId?.userAddress?.street} ,{" "}
-                  {transaction?.data?.orderId?.userAddress?.city} ,{" "}
-                  {transaction?.data?.orderId?.userAddress?.state} ,{" "}
-                  {transaction?.data?.orderId?.userAddress?.country}
-                  </Text>
-                </View>
-              </View>
-            </View>
-            <View style={{ padding: 10 }}>
-              <Text style={{ color: "white", fontSize: 25 }}>
-                Billing Address:
-              </Text>
-              <View style={{ paddingVertical: 10 }}>
-                <Text style={{ fontSize: 17, color: "#BAD8D5" }}>
-                  {transaction?.data?.orderId?.userAddress?.street} ,{" "}
-                  {transaction?.data?.orderId?.userAddress?.city} ,{" "}
-                  {transaction?.data?.orderId?.userAddress?.state} ,{" "}
-                  {transaction?.data?.orderId?.userAddress?.country}
+                <Text style={{ color: "white", fontSize: 25 }}>
+                  Shipping Details:
                 </Text>
-                <View style={{ flexDirection: "row" }}>
-                  <Text
-                    style={{
-                      fontSize: 17,
-                      color: "#BAD8D5",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    Pin:
+                <View style={{ paddingVertical: 10 }}>
+                  <View style={{ flexDirection: "row" }}>
+                    <Text
+                      style={{
+                        fontSize: 17,
+                        color: "#BAD8D5",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      Name :
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 17,
+                        color: "#BAD8D5",
+                      }}
+                    >
+                      {userData?.userName}
+                    </Text>
+                  </View>
+                  <View style={{ flexDirection: "row" }}>
+                    <Text
+                      style={{
+                        fontSize: 17,
+                        color: "#BAD8D5",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      Address :
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 17,
+                        color: "#BAD8D5",
+                      }}
+                    >
+                      {transaction?.data?.orderId?.userAddress?.street} ,{" "}
+                      {transaction?.data?.orderId?.userAddress?.city} ,{" "}
+                      {transaction?.data?.orderId?.userAddress?.state} ,{" "}
+                      {transaction?.data?.orderId?.userAddress?.country}
+                    </Text>
+                  </View>
+                </View>
+              </View>
+              <View style={{ padding: 10 }}>
+                <Text style={{ color: "white", fontSize: 25 }}>
+                  Billing Address:
+                </Text>
+                <View style={{ paddingVertical: 10 }}>
+                  <Text style={{ fontSize: 17, color: "#BAD8D5" }}>
+                    {transaction?.data?.orderId?.userAddress?.street} ,{" "}
+                    {transaction?.data?.orderId?.userAddress?.city} ,{" "}
+                    {transaction?.data?.orderId?.userAddress?.state} ,{" "}
+                    {transaction?.data?.orderId?.userAddress?.country}
                   </Text>
-                  <Text
-                    style={{
-                      fontSize: 17,
-                      color: "#BAD8D5",
-                    }}
-                  >
-                    {transaction?.data?.orderId?.userAddress?.zipCode}
-                  </Text>
+                  <View style={{ flexDirection: "row" }}>
+                    <Text
+                      style={{
+                        fontSize: 17,
+                        color: "#BAD8D5",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      Pin:
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 17,
+                        color: "#BAD8D5",
+                      }}
+                    >
+                      {transaction?.data?.orderId?.userAddress?.zipCode}
+                    </Text>
+                  </View>
                 </View>
               </View>
             </View>
-          </View>
+          ) : (
+            <View>
+              <Pressable
+                onPress={navigation.navigate("Back")}
+                style={{
+                  backgroundColor: "#28635D",
+                  padding: 14,
+                  borderRadius: 10,
+                  alignItems: "center",
+                  marginHorizontal: 10,
+                  marginTop: 10,
+                  flexDirection: "row",
+                  gap: 10,
+                  bottom: 0,
+                  justifyContent: "center",
+                }}
+              >
+                <Text style={{ color: "white", fontSize: 20 }}>
+                  Continue Shopping
+                </Text>
+                <FontAwesome name="whatsapp" size={20} color="white" />
+              </Pressable>
+            </View>
+          )}
         </View>
-      </ScrollView> 
+      </ScrollView>
     </SafeAreaView>
   );
 };
