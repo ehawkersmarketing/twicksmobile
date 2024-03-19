@@ -153,6 +153,24 @@ const ShopScreen = ({ route }) => {
                   }}
                 />
               </View>
+              <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              style={{ backgroundColor: "#FAFAFABC", flex: 1 }}
+            >
+              {categories &&
+                categories.map((item, index) => {
+                  const isSelected = selectedCategory === item;
+                  return (
+                    <ShopCategory
+                      item={item}
+                      key={index}
+                      selected={isSelected}
+                      onPress={() => handleCategoryClick(item)}
+                    />
+                  );
+                })}
+            </ScrollView>
               <View
                 style={{
                   flexDirection: "row",
@@ -187,24 +205,7 @@ const ShopScreen = ({ route }) => {
               </View>
             </View>
 
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              style={{ backgroundColor: "#FAFAFABC", flex: 1 }}
-            >
-              {categories &&
-                categories.map((item, index) => {
-                  const isSelected = selectedCategory === item;
-                  return (
-                    <ShopCategory
-                      item={item}
-                      key={index}
-                      selected={isSelected}
-                      onPress={() => handleCategoryClick(item)}
-                    />
-                  );
-                })}
-            </ScrollView>
+          
             <View
               style={{
                 flex: 1,

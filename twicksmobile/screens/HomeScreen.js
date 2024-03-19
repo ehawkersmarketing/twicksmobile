@@ -145,7 +145,6 @@ const HomeScreen = ({ navigation }) => {
       {isLoggedIn && (
         <SafeAreaView key={user?._id} style={styles.homemain}>
           <ScrollView>
-
             <View
               style={{
                 flex: 1,
@@ -180,28 +179,48 @@ const HomeScreen = ({ navigation }) => {
                 />
               </Pressable>
             </View>
-            <View style={{ padding: 15 }}>
-
-              <View style={styles.searchpress}>
-                <TextInput
-                  ref={inputRef}
-                  placeholder="Search"
-                  onChangeText={(text) => {
-                    setSearchField(text);
-                    if (text === "") {
-                      setHasSearched(false);
-                    } else {
-                      setHasSearched(true);
-                    }
-                  }}
-                  value={searchField}
-                  style={{
-                    marginLeft: 20,
-                    width: "100%",
-                  }}
-                />
+            <View style={{}}>
+              <View style={{ padding: 15 }}>
+                <View style={styles.searchpress}>
+                  <TextInput
+                    ref={inputRef}
+                    placeholder="Search"
+                    placeholderTextColor="gray"
+                    onChangeText={(text) => {
+                      setSearchField(text);
+                      if (text === "") {
+                        setHasSearched(false);
+                      } else {
+                        setHasSearched(true);
+                      }
+                    }}
+                    value={searchField}
+                    style={{
+                      marginLeft: 20,
+                      width: "100%",
+                    }}
+                  />
+                </View>
               </View>
-
+              <View>
+                <View style={styles.header}>
+                  <Text style={{ fontSize: 20}}>
+                    Categories
+                  </Text>
+                </View>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                  {categories &&
+                    categories?.map((item, index) => {
+                      return (
+                        <CategoryComponent
+                          item={item}
+                          key={item?._id}
+                          onPress={() => selectedCategoryHandler(item)}
+                        />
+                      );
+                    })}
+                </ScrollView>
+              </View>
               <View
                 style={{
                   flexDirection: "row",
@@ -240,25 +259,7 @@ const HomeScreen = ({ navigation }) => {
                 ) : null}
               </View>
             </View>
-            <View>
-              <View style={styles.header}>
-                <Text style={{ fontSize: 20, paddingLeft: 15 }}>
-                  Categories
-                </Text>
-              </View>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                {categories &&
-                  categories?.map((item, index) => {
-                    return (
-                      <CategoryComponent
-                        item={item}
-                        key={item?._id}
-                        onPress={() => selectedCategoryHandler(item)}
-                      />
-                    );
-                  })}
-              </ScrollView>
-            </View>
+
             <View>
               <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                 <HomeCarousel />

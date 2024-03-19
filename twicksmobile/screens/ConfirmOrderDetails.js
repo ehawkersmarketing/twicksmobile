@@ -72,7 +72,9 @@ const ConfirmOrderDetails = ({ route }) => {
           );
           if (data.success) {
             url = data?.data;
-            handlePress(url);
+            openBrowserAsync(url);
+            navigation.navigate("OrderConfirmation2", { merchantTransactionId: data?.merchantTransactionId });
+            console.log(data?.merchantTransactionId)
           }
         }
       }
@@ -81,14 +83,6 @@ const ConfirmOrderDetails = ({ route }) => {
     }
   };
 
-  const handlePress = useCallback(async (data) => {
-    const supported = await Linking.canOpenURL(data);
-    if (supported) {
-      await Linking.openURL(data);
-    } else {
-      Alert.alert(`Don't know how to open this URL: ${data}`);
-    }
-  }, []);
 
   return (
     <>
