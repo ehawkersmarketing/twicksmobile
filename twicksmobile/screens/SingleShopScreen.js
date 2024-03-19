@@ -19,7 +19,6 @@ import { useNavigation } from "@react-navigation/core";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { useFetch } from "../hooks/api_hook";
-import { Ionicons } from "@expo/vector-icons";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { FontAwesome6 } from "@expo/vector-icons";
 const SingleShopScreen = ({ route }) => {
@@ -69,8 +68,7 @@ const SingleShopScreen = ({ route }) => {
     fetchUser();
   }, []);
 
-  useEffect(() => {
-  }, [reviews]);
+  useEffect(() => {}, [reviews]);
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
@@ -87,9 +85,13 @@ const SingleShopScreen = ({ route }) => {
     }
   }, [cart]);
   const safeReviews = reviews?.reviews || [];
-const averageRating =safeReviews.length > 0
-    ? Math.round(safeReviews.reduce((sum, review) => sum + review.rating, 0) / safeReviews.length)
-    : 0;
+  const averageRating =
+    safeReviews.length > 0
+      ? Math.round(
+          safeReviews.reduce((sum, review) => sum + review.rating, 0) /
+            safeReviews.length
+        )
+      : 0;
 
   // const fetchReviews = async () => {
   //   try {
@@ -376,19 +378,17 @@ const averageRating =safeReviews.length > 0
                   gap: 1,
                   flexDirection: "row",
                   paddingHorizontal: 10,
-                  alignItems:"center"
+                  alignItems: "center",
                 }}
               >
-                <Text style={{ fontSize: 20 }}>
-                  Add Review
-                </Text>
+                <Text style={{ fontSize: 20 }}>Add Review</Text>
                 <View
                   style={{
                     flexDirection: "row",
                     paddingHorizontal: 3,
                   }}
                 >
-                  <Text style={{ flexDirection: "row" , gap:5 }}>
+                  <Text style={{ flexDirection: "row", gap: 5 }}>
                     {Array.from({ length: 5 }).map((_, i) => (
                       <Icon
                         key={i}
@@ -410,7 +410,7 @@ const averageRating =safeReviews.length > 0
                   justifyContent: "space-between",
                   alignItems: "",
                   paddingHorizontal: 10,
-                  height:"3%"
+                  height: "3%",
                 }}
               >
                 <TextInput
@@ -518,7 +518,7 @@ const averageRating =safeReviews.length > 0
                   alignItems: "center",
                 }}
               >
-                <Ionicons name="bag-outline" size={17} color="black" />
+                <AntDesign name="shoppingcart" size={24} color="black" />
               </Pressable>
               <Pressable
                 style={{
@@ -602,7 +602,7 @@ const averageRating =safeReviews.length > 0
                   alignItems: "center",
                 }}
               >
-                <Ionicons name="bag-outline" size={17} color="black" />
+                <AntDesign name="shoppingcart" size={24} color="black" />
               </Pressable>
               <Pressable
                 style={{

@@ -362,7 +362,7 @@ const OrderConfirmationScreen2 = ({ route }) => {
           ) : (
             <View>
               <Pressable
-                onPress={navigation.navigate("Back")}
+                onPress={()=>navigation.navigate("Back")}
                 style={{
                   backgroundColor: "#28635D",
                   padding: 14,
@@ -379,7 +379,6 @@ const OrderConfirmationScreen2 = ({ route }) => {
                 <Text style={{ color: "white", fontSize: 20 }}>
                   Continue Shopping
                 </Text>
-                <FontAwesome name="whatsapp" size={20} color="white" />
               </Pressable>
             </View>
           )}
