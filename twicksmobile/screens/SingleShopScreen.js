@@ -464,7 +464,7 @@ const averageRating =safeReviews.length > 0
                     <FontAwesome6 name="circle-user" size={17} color="black" />
                     <View>
                       <Text style={{ textAlign: "center", paddingTop: 2 }}>
-                        {item.userId.userName}
+                        {item?.userId?.userName}
                       </Text>
                     </View>
                   </View>
