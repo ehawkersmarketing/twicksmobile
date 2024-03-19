@@ -261,7 +261,9 @@ const HomeScreen = ({ navigation }) => {
             </View>
 
             <View>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              <ScrollView horizontal showsHorizontalScrollIndicator={true}>
+                <HomeCarousel />
+                <HomeCarousel />
                 <HomeCarousel />
               </ScrollView>
             </View>

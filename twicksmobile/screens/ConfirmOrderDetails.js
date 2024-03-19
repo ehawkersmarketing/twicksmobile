@@ -57,6 +57,7 @@ const ConfirmOrderDetails = ({ route }) => {
         );
       } else {
           const totalPayAmount = total + shippmentChargeValue;
+          console.log(formData)
           const { data } = await axios.post(
             "https://backend.twicks.in/api/pay/phonePePayment",
             {
@@ -73,7 +74,7 @@ const ConfirmOrderDetails = ({ route }) => {
           if (data.success) {
             url = data?.data;
             openBrowserAsync(url);
-            navigation.navigate("OrderConfirmation2", { merchantTransactionId: data?.merchantTransactionId });
+            // navigation.navigate("OrderConfirmation2", { merchantTransactionId: data?.merchantTransactionId });
             console.log(data?.merchantTransactionId)
           }
         }
